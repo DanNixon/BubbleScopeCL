@@ -1,3 +1,10 @@
+/*
+ * BubbleScope 360 image unwrap
+ * Allows fast video processing/unwrapping using a pre-computed pixel transformation array.
+ * 
+ * Dan Nixon
+ */
+
 #ifndef UNWRAP_H
 #define UNWRAP_H
 
@@ -17,17 +24,24 @@
 class BubbleScopeUnwrapper
 {
   public:
+    BubbleScopeUnwrapper();
+    ~BubbleScopeUnwrapper();
+
+    void generateTransformation();
+    cv::Mat unwrap(cv::Mat *);
+
+    //Unwrap parameter setters
     void unwrapWidth(int);
     void originalSize(int, int);
     void originalCentre(float, float);
     void imageRadius(float, float);
     void offsetAngle(float);
 
-    void generateTransformation();
-    cv::Mat unwrap(cv::Mat *);
-
   private:
+    //Pixel transformation array
     int *ia_transformation;
+
+    //Unwrap parameters
     int i_originalWidth;
     int i_originalHeight;
     int i_unwrapWidth;
@@ -37,6 +51,7 @@ class BubbleScopeUnwrapper
     float f_radiusMax;
     float f_offsetAngle;
 
+    //Computed unwrap parameters
     int i_unwrapHeight;
     int i_outMatSize;
 };

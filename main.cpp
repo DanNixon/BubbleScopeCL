@@ -1,3 +1,9 @@
+/*
+ * BubbleScope V4L2 capture app
+ * Allows capturing videos and stills from a BubbleScope fitted V4L2 device.
+ * Dan Nixon
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,6 +21,9 @@ enum BubbleScopeCaptureMode
   STILLS
 };
 
+/*
+ * Stores user options defining capture properties.
+ */
 struct BubbleScopeParameters
 {
   int captureDevice;
@@ -32,11 +41,14 @@ struct BubbleScopeParameters
   std::string outputFilename;
 };
 
+/*
+ * Sets a resonable default configuration.
+ */
 void setupDefaultParameters(BubbleScopeParameters *params)
 {
   params->captureDevice = 0;
-  params->originalWidth = 0;
-  params->originalHeight = 0;
+  params->originalWidth = 640;
+  params->originalHeight = 480;
   params->unwrapWidth = 800;
   params->radiusMin = 0.25f;
   params->radiusMax = 0.6f;
@@ -49,6 +61,9 @@ void setupDefaultParameters(BubbleScopeParameters *params)
   params->outputFilename = "BubbleScope_Capture";
 }
 
+/*
+ * Prints the current configuration to stdout.
+ */
 void printParameters(BubbleScopeParameters *params)
 {
   printf("Video caputre device: %d\n", params->captureDevice);
@@ -107,7 +122,6 @@ int main(int argc, char **argv)
   }
 
   int first = 1;
-
   while(1)
   {
     cv::Mat frame;
@@ -128,7 +142,7 @@ int main(int argc, char **argv)
     if(params.showUnwrap)
       imshow("unwrap", out);
 
-    if(cv::waitKey(10) == 27)
+    if(cv::waitKey(1) == 27)
       break;
   }
   return 0;

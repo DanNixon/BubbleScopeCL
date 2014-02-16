@@ -1,5 +1,27 @@
+/*
+ * BubbleScope 360 image unwrap
+ * Allows fast video processing/unwrapping using a pre-computed pixel transformation array.
+ * 
+ * Dan Nixon
+ */
+
 #include "unwrap.h"
 
+BubbleScopeUnwrapper::BubbleScopeUnwrapper()
+{
+  this->ia_transformation = NULL;
+}
+
+BubbleScopeUnwrapper::~BubbleScopeUnwrapper()
+{
+  delete this->ia_transformation;
+}
+
+/*
+ * Computes the pixel transformation array.
+ * All unwrap paremeters must be set beforehand.
+ * Any changes to unwrap parameters must be followed by a call to this function before any further calls to unwrap()
+ */
 void BubbleScopeUnwrapper::generateTransformation()
 {
   this->ia_transformation = new int[this->i_outMatSize];
@@ -42,9 +64,15 @@ void BubbleScopeUnwrapper::generateTransformation()
   }
 }
 
+/*
+ * Creates a 360 degree unwrap using the pre-computed array.
+ * Must call generateTransformation() before calling this function.
+ */
 cv::Mat BubbleScopeUnwrapper::unwrap(cv::Mat *imageIn)
 {
-  cv::Mat imageOut = cv::Mat(this->i_unwrapHeight, this->i_unwrapWidth, CV_8UC3, cv::Scalar::all(0));
+  assert(this->ia_transformation != NULL);
+
+  cv::Mat imageOut(this->i_unwrapHeight, this->i_unwrapWidth, CV_8UC3, cv::Scalar::all(0));
   unsigned char *unwrapPixels = imageOut.data;
   unsigned char *originalPixels = imageIn->data;
 
@@ -57,6 +85,7 @@ cv::Mat BubbleScopeUnwrapper::unwrap(cv::Mat *imageIn)
 
 void BubbleScopeUnwrapper::unwrapWidth(int width)
 {
+  assert(width > 0);
   this->i_unwrapWidth = width;
   this->i_unwrapHeight = (int) (this->i_unwrapWidth / D_PI);
   this->i_outMatSize = this->i_unwrapWidth * this->i_unwrapHeight * 3;
@@ -64,23 +93,31 @@ void BubbleScopeUnwrapper::unwrapWidth(int width)
 
 void BubbleScopeUnwrapper::originalSize(int width, int height)
 {
+  assert(width > 0);
+  assert(height > 0);
   this->i_originalWidth = width;
   this->i_originalHeight = height;
 }
 
 void BubbleScopeUnwrapper::originalCentre(float u, float v)
 {
+  assert((u >= 0.0f) && (u <= 1.0f));
+  assert((v >= 0.0f) && (v <= 1.0f));
   this->f_uCentre = u;
   this->f_vCentre = v;
 }
 
 void BubbleScopeUnwrapper::imageRadius(float min, float max)
 {
+  assert((min >= 0.0f) && (min <= 1.0f));
+  assert((max >= 0.0f) && (max <= 1.0f));
+  assert(min < max);
   this->f_radiusMin = min;
   this->f_radiusMax = max;
 }
 
 void BubbleScopeUnwrapper::offsetAngle(float angle)
 {
+  assert((angle >= 0.0f) && (angle <= D_PI)); //TODO: Is this range correct?
   this->f_offsetAngle = angle;
 }
