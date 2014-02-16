@@ -14,6 +14,7 @@ BubbleScopeUnwrapper::BubbleScopeUnwrapper()
 
 BubbleScopeUnwrapper::~BubbleScopeUnwrapper()
 {
+  //Deallocate memory used for transformation array
   delete this->ia_transformation;
 }
 
@@ -83,6 +84,10 @@ cv::Mat BubbleScopeUnwrapper::unwrap(cv::Mat *imageIn)
   return imageOut;
 }
 
+/*
+ * Width of unwrapped image.
+ * Used to calculate height of unwrapped image and to allocate memory for transformation array.
+ */
 void BubbleScopeUnwrapper::unwrapWidth(int width)
 {
   assert(width > 0);
@@ -91,6 +96,10 @@ void BubbleScopeUnwrapper::unwrapWidth(int width)
   this->i_outMatSize = this->i_unwrapWidth * this->i_unwrapHeight * 3;
 }
 
+/*
+ * Sets the width and height of the original captured image.
+ * Used to generate pixel transformation values.
+ */
 void BubbleScopeUnwrapper::originalSize(int width, int height)
 {
   assert(width > 0);
@@ -99,6 +108,9 @@ void BubbleScopeUnwrapper::originalSize(int width, int height)
   this->i_originalHeight = height;
 }
 
+/*
+ * Sets the centre of the image relative to it's dimensions.
+ */
 void BubbleScopeUnwrapper::originalCentre(float u, float v)
 {
   assert((u >= 0.0f) && (u <= 1.0f));
@@ -107,6 +119,9 @@ void BubbleScopeUnwrapper::originalCentre(float u, float v)
   this->f_vCentre = v;
 }
 
+/*
+ * Sets the upper and lower radii defining the section of the original image to unwrap.
+ */
 void BubbleScopeUnwrapper::imageRadius(float min, float max)
 {
   assert((min >= 0.0f) && (min <= 1.0f));
@@ -116,8 +131,12 @@ void BubbleScopeUnwrapper::imageRadius(float min, float max)
   this->f_radiusMax = max;
 }
 
+/*
+ * Sets offset angle for unwrapped image.
+ * Equivalent of rotating BubbleScope on camera.
+ */
 void BubbleScopeUnwrapper::offsetAngle(float angle)
 {
-  assert((angle >= 0.0f) && (angle <= D_PI)); //TODO: Is this range correct?
-  this->f_offsetAngle = angle;
+  assert((angle >= 0.0f) && (angle <= 360.0f));
+  this->f_offsetAngle = angle * DEG_2_RAD;
 }

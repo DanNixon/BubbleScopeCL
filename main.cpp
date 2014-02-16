@@ -1,6 +1,7 @@
 /*
  * BubbleScope V4L2 capture app
  * Allows capturing videos and stills from a BubbleScope fitted V4L2 device.
+ *
  * Dan Nixon
  */
 
@@ -54,7 +55,7 @@ void setupDefaultParameters(BubbleScopeParameters *params)
   params->radiusMax = 0.6f;
   params->uCentre = 0.5f;
   params->vCentre = 0.5f;
-  params->offsetAngle = (180.0f * 0.0174532925f);
+  params->offsetAngle = 180.0f;
   params->showOriginal = 0;
   params->showUnwrap = 1;
   params->capMode = PREVIEW;
@@ -71,7 +72,7 @@ void printParameters(BubbleScopeParameters *params)
   printf("Unwrap image width: %d\n", params->unwrapWidth);
   printf("Unwrap image radius: min=%f, max=%f\n", params->radiusMin, params->radiusMax);
   printf("Orignal image centre: u=%f, v=%f\n", params->uCentre, params->vCentre);
-  printf("Offset angle: %f rad.\n", params->offsetAngle);
+  printf("Offset angle: %fdeg.\n", params->offsetAngle);
   printf("Show original: %d\nShow unwrap: %d\n", params->showOriginal, params->showUnwrap);
   std::string mode;
   switch(params->capMode)
@@ -92,9 +93,11 @@ void printParameters(BubbleScopeParameters *params)
 
 int main(int argc, char **argv)
 {
+  //Get some storage for parameters
   BubbleScopeParameters params;
   setupDefaultParameters(&params);
 
+  //Get parameters  TODO: Nice argument parsing
   sscanf(argv[1], "%d", &params.captureDevice);
   sscanf(argv[2], "%d", &params.originalWidth);
   sscanf(argv[3], "%d", &params.originalHeight);
@@ -104,44 +107,53 @@ int main(int argc, char **argv)
   sscanf(argv[7], "%f", &params.uCentre);
   sscanf(argv[8], "%f", &params.vCentre);
   sscanf(argv[9], "%d", &params.showOriginal);
+  sscanf(argv[10], "%f", &params.offsetAngle);
 
+  //Tell the user how things are going to happen
   printParameters(&params);
 
-  BubbleScopeUnwrapper bsu;
-  bsu.unwrapWidth(params.unwrapWidth);
-  bsu.originalCentre(params.uCentre, params.vCentre);
-  bsu.imageRadius(params.radiusMin, params.radiusMax);
-  bsu.offsetAngle(params.offsetAngle);
+  //Setup the image unwrapper
+  BubbleScopeUnwrapper unwrapper;
+  unwrapper.unwrapWidth(params.unwrapWidth);
+  unwrapper.originalCentre(params.uCentre, params.vCentre);
+  unwrapper.imageRadius(params.radiusMin, params.radiusMax);
+  unwrapper.offsetAngle(params.offsetAngle);
 
+  //Open the capture device and check it is working
   cv::VideoCapture cap(params.captureDevice);
-
   if(!cap.isOpened())
   {
-    printf("Can't open capture\n");
+    printf("Can't open video capture source\n");
     return -1;
   }
 
-  int first = 1;
+  //The container for captured frames
+  cv::Mat frame;
+
+  //Capture an initial frame and generate the unwrap transformation
+  cap >> frame;
+  unwrapper.originalSize(frame.cols, frame.rows);
+  unwrapper.generateTransformation();
+
   while(1)
   {
-    cv::Mat frame;
+    //Capture a frame
     cap >> frame;
 
-    if(first)
-    {
-      bsu.originalSize(frame.cols, frame.rows);
-      bsu.generateTransformation();
-      first = 0;
-    }
+    //Unwrap it
+    cv::Mat unwrap = unwrapper.unwrap(&frame);
 
-    cv::Mat out = bsu.unwrap(&frame);
-
+    //Show the original if asked to
     if(params.showOriginal)
-      imshow("original", frame);
+      imshow("BubbleScope Original Image", frame);
 
+    //Show the unwrapped if asked to
     if(params.showUnwrap)
-      imshow("unwrap", out);
+      imshow("BubbleScope Unwrapped Image", unwrap);
 
+    //TODO: Add video saving, MJPG saving and stills capture on keypress
+
+    //Exit if asked to  TODO: Should only do this if showing images in windows
     if(cv::waitKey(1) == 27)
       break;
   }
