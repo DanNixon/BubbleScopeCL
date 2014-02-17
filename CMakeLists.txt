@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
 project(bubblescope)
 find_package(OpenCV REQUIRED)
-add_executable(bubblescope main.cpp unwrap.cpp)
+add_executable(bubblescope main.cpp unwrap.cpp bubblescope_capture_params.cpp command_line_params.cpp)
 target_link_libraries(bubblescope ${OpenCV_LIBS})
