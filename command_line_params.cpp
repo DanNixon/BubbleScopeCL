@@ -111,14 +111,13 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
 
 /*
  * Prints the parameters and their usage to stdout
- * TODO: This looks pretty bad when printed
  */
 void printParameterUsage()
 {
   int i;
   for(i = 0; i < clParamCount; i++)
   {
-    printf(" %s\t%s\t\t%s\t\t%s\n",
+    printf(" %-5s\t%-12s\t: %-25s%s\n",
         clParams[i].shortParam, clParams[i].longParam,
         clParams[i].name, clParams[i].description);
   }
