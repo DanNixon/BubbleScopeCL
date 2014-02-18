@@ -140,3 +140,11 @@ void BubbleScopeUnwrapper::offsetAngle(float angle)
   assert((angle >= 0.0f) && (angle <= 360.0f));
   this->f_offsetAngle = angle * DEG_2_RAD;
 }
+
+/*
+ * Gets the computed height of the unwrapped images.
+ */
+int BubbleScopeUnwrapper::getUnwrapHeight()
+{
+  return this->i_unwrapHeight;
+}

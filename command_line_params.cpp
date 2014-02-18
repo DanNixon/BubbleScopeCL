@@ -12,25 +12,27 @@
 CLParameter clParams[] = {
   CLParameter{HELP,             "-h",     "--help",       "Show help",          "Shows this help text"},
   CLParameter{CAPTURE_DEVICE,   "-d",     "--device",     "Capture device",     "Specified the V4L2 capture device"},
-  CLParameter{ORIGINAL_WIDTH,   "-iw",    "--inwidth",    "Original width",     ""},
-  CLParameter{ORIGINAL_HEIGHT,  "-ih",    "--inheight",   "Original height",    ""},
-  CLParameter{UNWRAP_WIDTH,     "-ow",    "--outwidth",   "Unwrap width",       ""},
-  CLParameter{RADIUS_MIN,       "-rmin",  "--minradius",  "Radius min",         ""},
-  CLParameter{RADIUS_MAX,       "-rmax",  "--maxradius",  "Radius max",         ""},
-  CLParameter{U_CENTRE,         "-uc",    "--ucentre",    "U centre",           ""},
-  CLParameter{V_CENTRE,         "-vc",    "--vcentre",    "V centre",           ""},
-  CLParameter{OFFSET_ANGLE,     "-a",     "--offset",     "Offset angle",       ""},
-  CLParameter{SHOW_ORIGINAL,    "-o",     "--original",   "Show original",      ""},
-  CLParameter{SHOW_UNWRAP,      "-u",     "--unwrap",     "Show unwrap",        ""},
-  CLParameter{OUTPUT_STILLS,    "-s",     "--stills",     "Output stills",      ""},
-  CLParameter{OUTPUT_VIDEO,     "-v",     "--video",      "Output video",       ""},
-  CLParameter{OUTPUT_MJPG,      "-m",     "--mjpg",       "Output MJPG stream", ""}
+  CLParameter{FPS,              "-f",     "--fps",        "Frame rate",         "Set desired capture frame rate"},
+  CLParameter{ORIGINAL_WIDTH,   "-iw",    "--inwidth",    "Original width",     "Set desired capture width"},
+  CLParameter{ORIGINAL_HEIGHT,  "-ih",    "--inheight",   "Original height",    "Set desired capture height"},
+  CLParameter{SHOW_PROPS,       "-p",     "--showprops",  "Show capture props.","Shows the actual image capture properties"},
+  CLParameter{UNWRAP_WIDTH,     "-ow",    "--outwidth",   "Unwrap width",       "Set width of unwrapped image"},
+  CLParameter{RADIUS_MIN,       "-rmin",  "--minradius",  "Radius min",         "Set lower unwrap radius"},
+  CLParameter{RADIUS_MAX,       "-rmax",  "--maxradius",  "Radius max",         "Set upper unwrap radius"},
+  CLParameter{U_CENTRE,         "-uc",    "--ucentre",    "U centre",           "Set U original image centre"},
+  CLParameter{V_CENTRE,         "-vc",    "--vcentre",    "V centre",           "Set V original image centre"},
+  CLParameter{OFFSET_ANGLE,     "-a",     "--offset",     "Offset angle",       "Set unwrap image offset angle"},
+  CLParameter{SHOW_ORIGINAL,    "-o",     "--original",   "Show original",      "Show original video"},
+  CLParameter{SHOW_UNWRAP,      "-u",     "--unwrap",     "Show unwrap",        "Show unwrapped video"},
+  CLParameter{OUTPUT_STILLS,    "-s",     "--stills",     "Output stills",      "Capture unwrapped stills on spacebar press"},
+  CLParameter{OUTPUT_VIDEO,     "-v",     "--video",      "Output video",       "Capture unwrapped AVI video"},
+  CLParameter{OUTPUT_MJPG,      "-m",     "--mjpg",       "Output MJPG stream", "Output unwrapped frames for MJPG streamer"}
 };
 
 /*
  * Size of params array
  */
-int clParamCount = 15;
+int clParamCount = 17;
 
 /*
  * Populates a set of BubbleScopeParameters based on contents of argv
@@ -76,15 +78,19 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
           case OFFSET_ANGLE:
             sscanf(argv[i], "%f", &params->offsetAngle);
             break;
+          case FPS:
+            sscanf(argv[i], "%f", &params->fps);
+            break;
           case SHOW_ORIGINAL:
             i--;
             params->mode[MODE_SHOW_ORIGINAL] = 1;
             break;
-          case SHOW_UNWRAP:
+          case SHOW_PROPS:
             i--;
-            params->mode[MODE_SHOW_UNWRAP] = 1;
+            params->showCaptureProps = 1;
             break;
           case OUTPUT_STILLS:
+            params->mode[MODE_SHOW_UNWRAP] = 1;
             params->mode[MODE_STILLS] = 1;
             params->outputFilename[MODE_STILLS] = argv[i];
             break;
@@ -105,13 +111,14 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
 
 /*
  * Prints the parameters and their usage to stdout
+ * TODO: This looks pretty bad when printed
  */
 void printParameterUsage()
 {
   int i;
   for(i = 0; i < clParamCount; i++)
   {
-    printf("\t%s\t%s\t\t%s\t\t%s\n",
+    printf(" %s\t%s\t\t%s\t\t%s\n",
         clParams[i].shortParam, clParams[i].longParam,
         clParams[i].name, clParams[i].description);
   }

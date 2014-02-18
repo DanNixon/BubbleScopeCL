@@ -29,6 +29,8 @@ enum ParameterType
   OUTPUT_VIDEO,
   OUTPUT_STILLS,
   OUTPUT_MJPG,
+  FPS,
+  SHOW_PROPS,
 
   HELP = 255
 };

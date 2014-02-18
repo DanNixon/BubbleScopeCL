@@ -16,6 +16,7 @@
 #include "bubblescope_capture_params.h"
 #include "unwrap.h"
 #include "command_line_params.h"
+#include "Timer.h"
 
 int main(int argc, char **argv)
 {
@@ -53,9 +54,13 @@ int main(int argc, char **argv)
   cv::VideoCapture cap(params.captureDevice);
   if(!cap.isOpened())
   {
-    printf("Can't open video capture source\n");
+    printf("Can't open video capture source!\n");
     return 2;
   }
+
+  cap.set(CV_CAP_PROP_FPS, params.fps);
+  cap.set(CV_CAP_PROP_FRAME_WIDTH, params.originalWidth);
+  cap.set(CV_CAP_PROP_FRAME_HEIGHT, params.originalHeight);
 
   //The container for captured frames
   cv::Mat frame;
@@ -65,8 +70,32 @@ int main(int argc, char **argv)
   unwrapper.originalSize(frame.cols, frame.rows);
   unwrapper.generateTransformation();
 
-  while(1)
+  //Setup video output
+  cv::VideoWriter videoOut;
+  if(params.mode[MODE_VIDEO])
   {
+    cv::Size videoSize = cv::Size(params.unwrapWidth, unwrapper.getUnwrapHeight());
+    videoOut.open(params.outputFilename[MODE_VIDEO].c_str(), CV_FOURCC('M','J','P','G'), params.fps, videoSize, true);
+    if(!videoOut.isOpened())
+      printf("Can't open video output file! (will continue with capture)\n");
+  }
+
+  //Number of still frames already captures, used for filename formatting
+  int stillFrameNumber = 0;
+
+  //Stuff for measuring capture properites
+  Timer fpsTimer;
+  float measuredFPS = 0.0f;
+  int capPropFrame = 0;
+
+  printf("Starting capture.\n");
+  int run = 1;
+  while(run)
+  {
+    //Start FPS timer for capture properties
+    if(params.showCaptureProps)
+      fpsTimer.start();
+
     //Capture a frame
     cap >> frame;
 
@@ -80,12 +109,55 @@ int main(int argc, char **argv)
     //Show the unwrapped if asked to
     if(params.mode[MODE_SHOW_UNWRAP])
       imshow("BubbleScope Unwrapped Image", unwrap);
+  
+    //Record video if asked to
+    if(params.mode[MODE_VIDEO])
+      videoOut.write(unwrap);
 
-    //TODO: Add video saving, MJPG saving and stills capture on keypress
+    //Save an MJPG frame if asked to
+    if(params.mode[MODE_MJPG])
+      imwrite(params.outputFilename[MODE_MJPG], unwrap);
 
-    //Exit if asked to  TODO: Should only do this if showing images in windows
-    if(cv::waitKey(1) == 27)
-      break;
+    char keyPress = cv::waitKey(10);
+    switch(keyPress)
+    {
+      //Exit on 'q' or ESC
+      case 'q':
+      case 27:
+        printf("Exiting.\n");
+        run = 0;
+        break;
+      case ' ':
+        if(params.mode[MODE_STILLS])
+        {
+          //FOrmat filename with frame number
+          int filenameLen = strlen(params.outputFilename[MODE_STILLS].c_str()) + 2;
+          char stillFilename[filenameLen];
+          sprintf(stillFilename, params.outputFilename[MODE_STILLS].c_str(), stillFrameNumber);
+          printf("Saving still image: %s\n", stillFilename);
+          //Save still image
+          imwrite(stillFilename, unwrap);
+          stillFrameNumber++;
+        }
+        break;
+    }
+    
+    if(params.showCaptureProps)
+    {
+      //Measure time for single frame
+      fpsTimer.stop();
+      //Calculate rolling FPS average
+      float measuredFPS = 0.7 * (1000.0f / fpsTimer.getElapsedTimeInMilliSec()) + 0.3 * measuredFPS;
+
+      //Show capture properties every 10 frames
+      if(capPropFrame % 10 == 0)
+      {
+        printf("Average FPS: %f\n", measuredFPS);
+        printf("Input image size: %dx%d\n", frame.cols, frame.rows);
+        capPropFrame = 0;
+      }
+    }
   }
+
   return 0;
 }

@@ -21,13 +21,15 @@ void setupDefaultParameters(BubbleScopeParameters *params)
   params->vCentre = 0.5f;
   params->offsetAngle = 180.0f;
   params->mode[MODE_SHOW_ORIGINAL] = 0;
-  params->mode[MODE_SHOW_UNWRAP] = 1;
+  params->mode[MODE_SHOW_UNWRAP] = 0;
   params->mode[MODE_STILLS] = 0;
   params->mode[MODE_VIDEO] = 0;
   params->mode[MODE_MJPG] = 0;
-  params->outputFilename[MODE_STILLS] = "BubbleScope_Capture_Stills";
-  params->outputFilename[MODE_VIDEO] = "BubbleScope_Capture_Video";
-  params->outputFilename[MODE_MJPG] = "BubbleScope_Capture_MJPG";
+  params->outputFilename[MODE_STILLS] = "BubbleScope_Still_Capture_%d.jpg";
+  params->outputFilename[MODE_VIDEO] = "BubbleScope_Video_Capture.avi";
+  params->outputFilename[MODE_MJPG] = "BubbleScope_MJPG_Frame.jpg";
+  params->fps = 10.0f;
+  params->showCaptureProps = 0;
 }
 
 /*
@@ -36,7 +38,9 @@ void setupDefaultParameters(BubbleScopeParameters *params)
 void printParameters(BubbleScopeParameters *params)
 {
   printf("Video caputre device: %d\n", params->captureDevice);
+  printf("Framerate: %ffps\n", params->fps);
   printf("Original image size: %dx%d\n", params->originalWidth, params->originalHeight);
+  printf("Show actual capture props.: %d\n", params->showCaptureProps);
   printf("Unwrap image width: %d\n", params->unwrapWidth);
   printf("Unwrap image radius: min=%f, max=%f\n", params->radiusMin, params->radiusMax);
   printf("Orignal image centre: u=%f, v=%f\n", params->uCentre, params->vCentre);

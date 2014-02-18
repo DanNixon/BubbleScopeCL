@@ -30,6 +30,8 @@ class BubbleScopeUnwrapper
     void generateTransformation();
     cv::Mat unwrap(cv::Mat *);
 
+    int getUnwrapHeight();
+
     //Unwrap parameter setters
     void unwrapWidth(int);
     void originalSize(int, int);

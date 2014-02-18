@@ -29,6 +29,8 @@ struct BubbleScopeParameters
   float offsetAngle;
   int mode[5];
   std::string outputFilename[3];
+  float fps;
+  int showCaptureProps;
 };
 
 void setupDefaultParameters(BubbleScopeParameters *);
