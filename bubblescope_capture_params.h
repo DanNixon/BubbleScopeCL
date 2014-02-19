@@ -9,6 +9,7 @@ enum BubbleScopeCaptureMode
   MODE_STILLS         = 0,
   MODE_VIDEO          = 1,
   MODE_MJPG           = 2,
+  MODE_SINGLE_STILL,
   MODE_SHOW_ORIGINAL,
   MODE_SHOW_UNWRAP,
 };
@@ -27,7 +28,7 @@ struct BubbleScopeParameters
   float uCentre;
   float vCentre;
   float offsetAngle;
-  int mode[5];
+  int mode[6];
   std::string outputFilename[3];
   float fps;
   int showCaptureProps;

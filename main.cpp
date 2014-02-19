@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -18,8 +19,42 @@
 #include "command_line_params.h"
 #include "Timer.h"
 
+//Cross platform delay, taken from: http://www.cplusplus.com/forum/unices/10491/
+#if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__WINDOWS__) || defined(__TOS_WIN__)
+  #include <windows.h>
+  inline void delay(unsigned long ms)
+  {
+    Sleep(ms);
+  }
+#else
+  #include <unistd.h>
+  inline void delay(unsigned long ms)
+  {
+    usleep(ms * 1000);
+  }
+#endif 
+
+const unsigned long loopDelayTime = 10;
+int run = 1;
+
+/*
+ * Set run to false on SIGINT
+ */
+void handleSigInt(int sig)
+{
+  printf("Caught signal %d, will exit.\n", sig);
+  run = 0;
+}
+
 int main(int argc, char **argv)
 {
+  //Setup SIGINT handler
+  struct sigaction sigIntHandler;
+  sigIntHandler.sa_handler = handleSigInt;
+  sigemptyset(&sigIntHandler.sa_mask);
+  sigIntHandler.sa_flags = 0;
+  sigaction(SIGINT, &sigIntHandler, NULL);
+
   //Get some storage for parameters
   BubbleScopeParameters params;
   setupDefaultParameters(&params);
@@ -89,7 +124,6 @@ int main(int argc, char **argv)
   int capPropFrame = 0;
 
   printf("Starting capture.\n");
-  int run = 1;
   while(run)
   {
     //Start FPS timer for capture properties
@@ -115,32 +149,37 @@ int main(int argc, char **argv)
       videoOut.write(unwrap);
 
     //Save an MJPG frame if asked to
-    if(params.mode[MODE_MJPG])
+    if(params.mode[MODE_MJPG] || params.mode[MODE_SINGLE_STILL])
       imwrite(params.outputFilename[MODE_MJPG], unwrap);
 
-    char keyPress = cv::waitKey(10);
-    switch(keyPress)
+    if(params.mode[MODE_SHOW_ORIGINAL] || params.mode[MODE_SHOW_UNWRAP])
     {
-      //Exit on 'q' or ESC
-      case 'q':
-      case 27:
-        printf("Exiting.\n");
-        run = 0;
-        break;
-      case ' ':
-        if(params.mode[MODE_STILLS])
-        {
-          //FOrmat filename with frame number
-          int filenameLen = strlen(params.outputFilename[MODE_STILLS].c_str()) + 2;
-          char stillFilename[filenameLen];
-          sprintf(stillFilename, params.outputFilename[MODE_STILLS].c_str(), stillFrameNumber);
-          printf("Saving still image: %s\n", stillFilename);
-          //Save still image
-          imwrite(stillFilename, unwrap);
-          stillFrameNumber++;
-        }
-        break;
+      char keyPress = cv::waitKey(loopDelayTime);
+      switch(keyPress)
+      {
+        //Exit on 'q' or ESC
+        case 'q':
+        case 27:
+          printf("Exiting.\n");
+          run = 0;
+          break;
+        case ' ':
+          if(params.mode[MODE_STILLS])
+          {
+            //Format filename with frame number
+            int filenameLen = strlen(params.outputFilename[MODE_STILLS].c_str()) + 2;
+            char stillFilename[filenameLen];
+            sprintf(stillFilename, params.outputFilename[MODE_STILLS].c_str(), stillFrameNumber);
+            printf("Saving still image: %s\n", stillFilename);
+            //Save still image
+            imwrite(stillFilename, unwrap);
+            stillFrameNumber++;
+          }
+          break;
+      }
     }
+    else
+      delay(loopDelayTime);
     
     if(params.showCaptureProps)
     {
@@ -157,6 +196,10 @@ int main(int argc, char **argv)
         capPropFrame = 0;
       }
     }
+
+    //Done a single capture, can now exit
+    if(params.mode[MODE_SINGLE_STILL])
+      run = 0;
   }
 
   return 0;

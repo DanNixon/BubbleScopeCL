@@ -26,13 +26,14 @@ CLParameter clParams[] = {
   CLParameter{SHOW_UNWRAP,      "-u",     "--unwrap",     "Show unwrap",        "Show unwrapped video"},
   CLParameter{OUTPUT_STILLS,    "-s",     "--stills",     "Output stills",      "Capture unwrapped stills on spacebar press"},
   CLParameter{OUTPUT_VIDEO,     "-v",     "--video",      "Output video",       "Capture unwrapped AVI video"},
-  CLParameter{OUTPUT_MJPG,      "-m",     "--mjpg",       "Output MJPG stream", "Output unwrapped frames for MJPG streamer"}
+  CLParameter{OUTPUT_MJPG,      "-m",     "--mjpg",       "Output MJPG stream", "Output unwrapped frames for MJPG streamer"},
+  CLParameter{SINGLE_STILL,     "-ss",    "--single",     "Capture 1 still",    "Capture a single still image and exit"}
 };
 
 /*
  * Size of params array
  */
-int clParamCount = 17;
+int clParamCount = 18;
 
 /*
  * Populates a set of BubbleScopeParameters based on contents of argv
@@ -85,6 +86,10 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
             i--;
             params->mode[MODE_SHOW_ORIGINAL] = 1;
             break;
+          case SHOW_UNWRAP:
+            i--;
+            params->mode[MODE_SHOW_UNWRAP] = 1;
+            break;
           case SHOW_PROPS:
             i--;
             params->showCaptureProps = 1;
@@ -100,6 +105,16 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
             break;
           case OUTPUT_MJPG:
             params->mode[MODE_MJPG] = 1;
+            params->outputFilename[MODE_MJPG] = argv[i];
+            break;
+          case SINGLE_STILL:
+            //Other capture modes will not work correctly in this mode
+            params->mode[MODE_SHOW_ORIGINAL] = 0;
+            params->mode[MODE_SHOW_UNWRAP] = 0;
+            params->mode[MODE_VIDEO] = 0;
+            params->mode[MODE_STILLS] = 0;
+            params->mode[MODE_SINGLE_STILL] = 1;
+            //Recycle some MJPG code to output image
             params->outputFilename[MODE_MJPG] = argv[i];
             break;
         }

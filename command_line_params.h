@@ -31,6 +31,7 @@ enum ParameterType
   OUTPUT_MJPG,
   FPS,
   SHOW_PROPS,
+  SINGLE_STILL,
 
   HELP = 255
 };

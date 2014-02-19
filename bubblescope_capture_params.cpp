@@ -22,6 +22,7 @@ void setupDefaultParameters(BubbleScopeParameters *params)
   params->offsetAngle = 180.0f;
   params->mode[MODE_SHOW_ORIGINAL] = 0;
   params->mode[MODE_SHOW_UNWRAP] = 0;
+  params->mode[MODE_SINGLE_STILL] = 0;
   params->mode[MODE_STILLS] = 0;
   params->mode[MODE_VIDEO] = 0;
   params->mode[MODE_MJPG] = 0;
@@ -48,5 +49,6 @@ void printParameters(BubbleScopeParameters *params)
   printf("Show original: %d\nShow unwrap: %d\n", params->mode[MODE_SHOW_ORIGINAL], params->mode[MODE_SHOW_UNWRAP]);
   printf("Stills output: %d, filename: %s\n", params->mode[MODE_STILLS], params->outputFilename[MODE_STILLS].c_str());
   printf("Video output: %d, filename: %s\n", params->mode[MODE_VIDEO], params->outputFilename[MODE_VIDEO].c_str());
-  printf("MJPG output: %d, filename: %s\n", params->mode[MODE_MJPG], params->outputFilename[MODE_MJPG].c_str());
+  printf("MJPG output: %d, Single still mode: %d, filename: %s\n", params->mode[MODE_MJPG], params->mode[MODE_SINGLE_STILL],
+      params->outputFilename[MODE_MJPG].c_str());
 }
