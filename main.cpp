@@ -18,6 +18,7 @@
 #include "unwrap.h"
 #include "command_line_params.h"
 #include "Timer.h"
+#include "OCVCapture.h"
 
 //Cross platform delay, taken from: http://www.cplusplus.com/forum/unices/10491/
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__WINDOWS__) || defined(__TOS_WIN__)
