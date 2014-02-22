@@ -125,14 +125,12 @@ uint32_t OCVCapture::frameRate() const
 	return m_final_frame_rate;
 }
 
-bool OCVCapture::open()
+bool OCVCapture::open(const char *deviceName)
 {
 	if (isOpen())
 		return true;
 	
 	m_first_grab = true;
-
-	const char* deviceName = "/dev/video1";
 	
 	m_camera_handle = v4l2_open(deviceName, O_RDWR | O_NONBLOCK, 0);
 	if (m_camera_handle <= 0)

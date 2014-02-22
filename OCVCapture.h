@@ -63,7 +63,7 @@ public:
 	// Before capturing images you must open the capture object.
 	// The open call returns true if it was successful.
 	// Open to read from the camera.
-	bool open();
+	bool open(const char *);
 	// Returns true if the capture object is open.
 	bool isOpen() const;
 

@@ -87,22 +87,22 @@ int main(int argc, char **argv)
   unwrapper.offsetAngle(params.offsetAngle);
 
   //Open the capture device and check it is working
-  cv::VideoCapture cap(params.captureDevice);
-  if(!cap.isOpened())
+  OCVCapture cap;
+  cap.setVerbose(false);
+  cap.setDesiredSize(params.originalWidth, params.originalHeight);
+  cap.open(params.captureDevice.c_str());
+  if(!cap.isOpen())
   {
     printf("Can't open video capture source!\n");
     return 2;
   }
 
-  cap.set(CV_CAP_PROP_FPS, params.fps);
-  cap.set(CV_CAP_PROP_FRAME_WIDTH, params.originalWidth);
-  cap.set(CV_CAP_PROP_FRAME_HEIGHT, params.originalHeight);
-
   //The container for captured frames
   cv::Mat frame;
 
   //Capture an initial frame and generate the unwrap transformation
-  cap >> frame;
+  cap.grab();
+  cap.rgb(frame);
   unwrapper.originalSize(frame.cols, frame.rows);
   unwrapper.generateTransformation();
 
@@ -132,7 +132,8 @@ int main(int argc, char **argv)
       fpsTimer.start();
 
     //Capture a frame
-    cap >> frame;
+    cap.grab();
+    cap.rgb(frame);
 
     //Unwrap it
     cv::Mat unwrap = unwrapper.unwrap(&frame);

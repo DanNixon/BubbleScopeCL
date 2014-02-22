@@ -19,7 +19,7 @@ enum BubbleScopeCaptureMode
  */
 struct BubbleScopeParameters
 {
-  int captureDevice;
+  std::string captureDevice;
   int originalWidth;
   int originalHeight;
   int unwrapWidth;
