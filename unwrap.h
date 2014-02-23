@@ -41,7 +41,7 @@ class BubbleScopeUnwrapper
 
   private:
     //Pixel transformation array
-    int *ia_transformation;
+    unsigned long *ia_transformation;
 
     //Unwrap parameters
     unsigned int i_originalWidth;

@@ -25,7 +25,7 @@ BubbleScopeUnwrapper::~BubbleScopeUnwrapper()
  */
 void BubbleScopeUnwrapper::generateTransformation()
 {
-  this->ia_transformation = new int[this->i_outMatSize];
+  this->ia_transformation = new unsigned long[this->i_outMatSize];
 
   float radius_delta = this->f_radiusMax - this->f_radiusMin;
   float aspect = (float) this->i_originalWidth / (float) this->i_originalHeight;
@@ -51,8 +51,13 @@ void BubbleScopeUnwrapper::generateTransformation()
       u += this->f_uCentre;
       v += (1.0f - this->f_vCentre);
 
-      unsigned int xPixel = (unsigned int) ((1 - v) * this->i_originalWidth);
-      unsigned int yPixel = (unsigned int) ((1 - u) * this->i_originalHeight);
+      if(u > 1.0f)
+        u = 1.0f;
+      if(v > 1.0f)
+        v = 1.0f;
+
+      int xPixel = (int) ((1.0f - v) * this->i_originalWidth);
+      int yPixel = (int) ((1.0f - u) * this->i_originalHeight);
 
       unsigned long oldPixelIndex = ((yPixel * this->i_originalWidth) + xPixel) * 3;
 

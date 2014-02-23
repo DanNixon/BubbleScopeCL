@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(bubblescope)
+set(CMAKE_BUILD_TYPE Debug)
 find_package(OpenCV REQUIRED)
 find_path(V4L_INCLUDE_DIR NAMES libv4l2.h)
 find_library(V4L_LIB NAMES v4l2)
