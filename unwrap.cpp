@@ -25,8 +25,6 @@ BubbleScopeUnwrapper::~BubbleScopeUnwrapper()
  */
 void BubbleScopeUnwrapper::generateTransformation()
 {
-  printf("odsize %d\n", this->i_outMatSize);
-
   this->ia_transformation = new int[this->i_outMatSize];
 
   float radius_delta = this->f_radiusMax - this->f_radiusMin;
@@ -73,8 +71,6 @@ void BubbleScopeUnwrapper::generateTransformation()
  */
 cv::Mat BubbleScopeUnwrapper::unwrap(cv::Mat *imageIn)
 {
-  printf("image size %dx%d\n", imageIn->cols, imageIn->rows);
-
   assert(this->ia_transformation != NULL);
 
   cv::Mat imageOut(this->i_unwrapHeight, this->i_unwrapWidth, CV_8UC3, cv::Scalar::all(0));

@@ -37,6 +37,7 @@
 
 const unsigned long loopDelayTime = 10;
 int run = 1;
+int captureStill = 0;
 
 /*
  * Set run to false on SIGINT
@@ -47,6 +48,15 @@ void handleSigInt(int sig)
   run = 0;
 }
 
+/*
+ * Capture a frame on SIGUSR1
+ */
+void handleStillCapSig(int sig)
+{
+  printf("Caught signal %d, will capture still image.\n", sig);
+  captureStill = 1;
+}
+
 int main(int argc, char **argv)
 {
   //Setup SIGINT handler
@@ -55,6 +65,13 @@ int main(int argc, char **argv)
   sigemptyset(&sigIntHandler.sa_mask);
   sigIntHandler.sa_flags = 0;
   sigaction(SIGINT, &sigIntHandler, NULL);
+
+  //Setup SIGUSR1 handler
+  struct sigaction stillCapSigHandler;
+  stillCapSigHandler.sa_handler = handleStillCapSig;
+  sigemptyset(&stillCapSigHandler.sa_mask);
+  stillCapSigHandler.sa_flags = 0;
+  sigaction(SIGUSR1, &stillCapSigHandler, NULL);
 
   //Get some storage for parameters
   BubbleScopeParameters params;
@@ -164,23 +181,27 @@ int main(int argc, char **argv)
           run = 0;
           break;
         case ' ':
-          if(params.mode[MODE_STILLS])
-          {
-            //Format filename with frame number
-            int filenameLen = strlen(params.outputFilename[MODE_STILLS].c_str()) + 2;
-            char stillFilename[filenameLen];
-            sprintf(stillFilename, params.outputFilename[MODE_STILLS].c_str(), stillFrameNumber);
-            printf("Saving still image: %s\n", stillFilename);
-            //Save still image
-            imwrite(stillFilename, unwrap);
-            stillFrameNumber++;
-          }
+          captureStill = 1;
           break;
       }
     }
     else
       delay(loopDelayTime);
     
+
+    if(params.mode[MODE_STILLS] && captureStill)
+    {
+      //Format filename with frame number
+      int filenameLen = strlen(params.outputFilename[MODE_STILLS].c_str()) + 2;
+      char stillFilename[filenameLen];
+      sprintf(stillFilename, params.outputFilename[MODE_STILLS].c_str(), stillFrameNumber);
+      printf("Saving still image: %s\n", stillFilename);
+      //Save still image
+      imwrite(stillFilename, unwrap);
+      stillFrameNumber++;
+      captureStill = 0;
+    }
+
     if(params.showCaptureProps)
     {
       //Measure time for single frame
