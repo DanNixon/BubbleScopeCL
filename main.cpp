@@ -97,14 +97,12 @@ int main(int argc, char **argv)
     return 2;
   }
 
+  //After capture size is determined setup transofrmation array
+  unwrapper.originalSize(cap.width(), cap.height());
+  unwrapper.generateTransformation();
+
   //The container for captured frames
   cv::Mat frame;
-
-  //Capture an initial frame and generate the unwrap transformation
-  cap.grab();
-  cap.rgb(frame);
-  unwrapper.originalSize(frame.cols, frame.rows);
-  unwrapper.generateTransformation();
 
   //Setup video output
   cv::VideoWriter videoOut;
