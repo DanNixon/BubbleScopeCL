@@ -53,7 +53,9 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
           case HELP:
             return HELP;
           case CAPTURE_DEVICE:
-            sscanf(argv[i], "%d", &params->captureDevice);
+            char buffer[100];
+            sscanf(argv[i], "%s", &buffer);
+            params->captureDevice = buffer;
             break;
           case ORIGINAL_WIDTH:
             sscanf(argv[i], "%d", &params->originalWidth);

@@ -25,13 +25,13 @@ BubbleScopeUnwrapper::~BubbleScopeUnwrapper()
  */
 void BubbleScopeUnwrapper::generateTransformation()
 {
-  this->ia_transformation = new int[this->i_outMatSize];
+  this->ia_transformation = new unsigned long[this->i_outMatSize];
 
   float radius_delta = this->f_radiusMax - this->f_radiusMin;
   float aspect = (float) this->i_originalWidth / (float) this->i_originalHeight;
 
-  int index = 0;
-  int i, j;
+  unsigned long index = 0;
+  unsigned int i, j;
   for (i = this->i_unwrapHeight - 1; i > 0; i--)
   {
     float amplitutde = (radius_delta * (i / (float) this->i_unwrapHeight)) + this->f_radiusMin;
@@ -51,10 +51,15 @@ void BubbleScopeUnwrapper::generateTransformation()
       u += this->f_uCentre;
       v += (1.0f - this->f_vCentre);
 
-      int xPixel = (int) ((1 - v) * this->i_originalWidth);
-      int yPixel = (int) ((1 - u) * this->i_originalHeight);
+      if(u > 1.0f)
+        u = 1.0f;
+      if(v > 1.0f)
+        v = 1.0f;
 
-      int oldPixelIndex = ((yPixel * this->i_originalWidth) + xPixel) * 3;
+      int xPixel = (int) ((1.0f - v) * this->i_originalWidth);
+      int yPixel = (int) ((1.0f - u) * this->i_originalHeight);
+
+      unsigned long oldPixelIndex = ((yPixel * this->i_originalWidth) + xPixel) * 3;
 
       this->ia_transformation[index] = oldPixelIndex;
       this->ia_transformation[index + 1] = oldPixelIndex + 1;
@@ -77,7 +82,7 @@ cv::Mat BubbleScopeUnwrapper::unwrap(cv::Mat *imageIn)
   unsigned char *unwrapPixels = imageOut.data;
   unsigned char *originalPixels = imageIn->data;
 
-  int i;
+  unsigned long i;
   for(i = 0; i < this->i_outMatSize; i++)
     unwrapPixels[i] = originalPixels[this->ia_transformation[i]];
 
@@ -144,7 +149,7 @@ void BubbleScopeUnwrapper::offsetAngle(float angle)
 /*
  * Gets the computed height of the unwrapped images.
  */
-int BubbleScopeUnwrapper::getUnwrapHeight()
+unsigned int BubbleScopeUnwrapper::getUnwrapHeight()
 {
   return this->i_unwrapHeight;
 }

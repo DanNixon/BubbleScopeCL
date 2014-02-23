@@ -18,6 +18,7 @@
 #include "unwrap.h"
 #include "command_line_params.h"
 #include "Timer.h"
+#include "OCVCapture.h"
 
 //Cross platform delay, taken from: http://www.cplusplus.com/forum/unices/10491/
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__WINDOWS__) || defined(__TOS_WIN__)
@@ -36,6 +37,7 @@
 
 const unsigned long loopDelayTime = 10;
 int run = 1;
+int captureStill = 0;
 
 /*
  * Set run to false on SIGINT
@@ -46,6 +48,15 @@ void handleSigInt(int sig)
   run = 0;
 }
 
+/*
+ * Capture a frame on SIGUSR1
+ */
+void handleStillCapSig(int sig)
+{
+  printf("Caught signal %d, will capture still image.\n", sig);
+  captureStill = 1;
+}
+
 int main(int argc, char **argv)
 {
   //Setup SIGINT handler
@@ -54,6 +65,13 @@ int main(int argc, char **argv)
   sigemptyset(&sigIntHandler.sa_mask);
   sigIntHandler.sa_flags = 0;
   sigaction(SIGINT, &sigIntHandler, NULL);
+
+  //Setup SIGUSR1 handler
+  struct sigaction stillCapSigHandler;
+  stillCapSigHandler.sa_handler = handleStillCapSig;
+  sigemptyset(&stillCapSigHandler.sa_mask);
+  stillCapSigHandler.sa_flags = 0;
+  sigaction(SIGUSR1, &stillCapSigHandler, NULL);
 
   //Get some storage for parameters
   BubbleScopeParameters params;
@@ -86,24 +104,22 @@ int main(int argc, char **argv)
   unwrapper.offsetAngle(params.offsetAngle);
 
   //Open the capture device and check it is working
-  cv::VideoCapture cap(params.captureDevice);
-  if(!cap.isOpened())
+  OCVCapture cap;
+  cap.setVerbose(false);
+  cap.setDesiredSize(params.originalWidth, params.originalHeight);
+  cap.open(params.captureDevice.c_str());
+  if(!cap.isOpen())
   {
     printf("Can't open video capture source!\n");
     return 2;
   }
 
-  cap.set(CV_CAP_PROP_FPS, params.fps);
-  cap.set(CV_CAP_PROP_FRAME_WIDTH, params.originalWidth);
-  cap.set(CV_CAP_PROP_FRAME_HEIGHT, params.originalHeight);
+  //After capture size is determined setup transofrmation array
+  unwrapper.originalSize(cap.width(), cap.height());
+  unwrapper.generateTransformation();
 
   //The container for captured frames
   cv::Mat frame;
-
-  //Capture an initial frame and generate the unwrap transformation
-  cap >> frame;
-  unwrapper.originalSize(frame.cols, frame.rows);
-  unwrapper.generateTransformation();
 
   //Setup video output
   cv::VideoWriter videoOut;
@@ -131,7 +147,8 @@ int main(int argc, char **argv)
       fpsTimer.start();
 
     //Capture a frame
-    cap >> frame;
+    cap.grab();
+    cap.rgb(frame);
 
     //Unwrap it
     cv::Mat unwrap = unwrapper.unwrap(&frame);
@@ -164,23 +181,27 @@ int main(int argc, char **argv)
           run = 0;
           break;
         case ' ':
-          if(params.mode[MODE_STILLS])
-          {
-            //Format filename with frame number
-            int filenameLen = strlen(params.outputFilename[MODE_STILLS].c_str()) + 2;
-            char stillFilename[filenameLen];
-            sprintf(stillFilename, params.outputFilename[MODE_STILLS].c_str(), stillFrameNumber);
-            printf("Saving still image: %s\n", stillFilename);
-            //Save still image
-            imwrite(stillFilename, unwrap);
-            stillFrameNumber++;
-          }
+          captureStill = 1;
           break;
       }
     }
     else
       delay(loopDelayTime);
     
+
+    if(params.mode[MODE_STILLS] && captureStill)
+    {
+      //Format filename with frame number
+      int filenameLen = strlen(params.outputFilename[MODE_STILLS].c_str()) + 2;
+      char stillFilename[filenameLen];
+      sprintf(stillFilename, params.outputFilename[MODE_STILLS].c_str(), stillFrameNumber);
+      printf("Saving still image: %s\n", stillFilename);
+      //Save still image
+      imwrite(stillFilename, unwrap);
+      stillFrameNumber++;
+      captureStill = 0;
+    }
+
     if(params.showCaptureProps)
     {
       //Measure time for single frame

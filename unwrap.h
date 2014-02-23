@@ -30,7 +30,7 @@ class BubbleScopeUnwrapper
     void generateTransformation();
     cv::Mat unwrap(cv::Mat *);
 
-    int getUnwrapHeight();
+    unsigned int getUnwrapHeight();
 
     //Unwrap parameter setters
     void unwrapWidth(int);
@@ -41,12 +41,12 @@ class BubbleScopeUnwrapper
 
   private:
     //Pixel transformation array
-    int *ia_transformation;
+    unsigned long *ia_transformation;
 
     //Unwrap parameters
-    int i_originalWidth;
-    int i_originalHeight;
-    int i_unwrapWidth;
+    unsigned int i_originalWidth;
+    unsigned int i_originalHeight;
+    unsigned int i_unwrapWidth;
     float f_uCentre;
     float f_vCentre;
     float f_radiusMin;
@@ -54,8 +54,8 @@ class BubbleScopeUnwrapper
     float f_offsetAngle;
 
     //Computed unwrap parameters
-    int i_unwrapHeight;
-    int i_outMatSize;
+    unsigned int i_unwrapHeight;
+    unsigned long i_outMatSize;
 };
 
 #endif
