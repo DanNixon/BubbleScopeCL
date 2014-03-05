@@ -14,11 +14,12 @@ class V4L2Source: public FrameSource
 {
   public:
     V4L2Source();
+    ~V4L2Source();
 
     void open(std::string);
     void close();
     int isOpen();
-    cv::Mat grab();
+    void grab(cv::Mat *);
     int getWidth();
     int getHeight();
 
@@ -26,7 +27,7 @@ class V4L2Source: public FrameSource
     int getFrameRate();
 
   private:
-    OCVCapture cap;
+    OCVCapture *cap;
 };
 
 #endif

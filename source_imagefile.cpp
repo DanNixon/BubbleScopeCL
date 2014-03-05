@@ -15,9 +15,9 @@ int StillImageSource::isOpen()
   return this->i_open;
 }
 
-cv::Mat StillImageSource::grab()
+void StillImageSource::grab(cv::Mat *out)
 {
-  return this->image;
+  out = &(this->image);
 }
 
 int StillImageSource::getWidth()

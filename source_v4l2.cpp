@@ -3,46 +3,53 @@
 
 V4L2Source::V4L2Source()
 {
-  this->cap.setVerbose(false);
+  this->cap = new OCVCapture();
+  this->cap->setVerbose(false);
+}
+
+V4L2Source::~V4L2Source()
+{
+  this->close();
+  delete this->cap;
 }
 
 void V4L2Source::open(std::string deviceName)
 {
-  printf("Opening %s\n", deviceName.c_str());
-  this->cap.open(deviceName.c_str());
+  this->cap->open(deviceName.c_str());
 }
 
 void V4L2Source::close()
 {
-  this->cap.close();
+  this->cap->close();
 }
 
 int V4L2Source::isOpen()
 {
-  return this->cap.isOpen();
+  return this->cap->isOpen();
 }
 
-cv::Mat V4L2Source::grab()
+void V4L2Source::grab(cv::Mat *out)
 {
-  this->cap.grab();
+  this->cap->grab();
+  this->cap->rgb(*out);
 }
 
 int V4L2Source::getWidth()
 {
-  return this->cap.width();
+  return this->cap->width();
 }
 
 int V4L2Source::getHeight()
 {
-  return this->cap.height();
+  return this->cap->height();
 }
 
 void V4L2Source::setCaptureSize(int width, int height)
 {
-  this->cap.setDesiredSize(width, height);
+  this->cap->setDesiredSize(width, height);
 }
 
 int V4L2Source::getFrameRate()
 {
-  return 0;
+  return this->cap->frameRate();
 }

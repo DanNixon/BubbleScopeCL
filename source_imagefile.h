@@ -16,7 +16,7 @@ class StillImageSource : public FrameSource
     void open(std::string);
     void close();
     int isOpen();
-    cv::Mat grab();
+    void grab(cv::Mat *);
     int getWidth();
     int getHeight();
 

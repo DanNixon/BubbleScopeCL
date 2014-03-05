@@ -14,7 +14,7 @@ int VideoSource::isOpen()
   return 0;
 }
 
-cv::Mat VideoSource::grab()
+void VideoSource::grab(cd::Mat *out)
 {
   return NULL;
 }

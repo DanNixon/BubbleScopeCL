@@ -21,7 +21,7 @@ class FrameSource
     virtual void open(std::string) = 0;
     virtual void close() = 0;
     virtual int isOpen() = 0;
-    virtual cv::Mat grab() = 0;
+    virtual void grab(cv::Mat *) = 0;
     virtual int getWidth() = 0;
     virtual int getHeight() = 0;
 };

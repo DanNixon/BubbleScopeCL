@@ -39,7 +39,7 @@ void setupDefaultParameters(BubbleScopeParameters *params)
  */
 void printParameters(BubbleScopeParameters *params)
 {
-  printf("Source: %d, Location %s\n", params->captureSource, params->captureLocation.c_str());
+  printf("Source: %d, Location: %s\n", params->captureSource, params->captureLocation.c_str());
   printf("Framerate: %ffps\n", params->fps);
   printf("Original image size: %dx%d\n", params->originalWidth, params->originalHeight);
   printf("Show actual capture props.: %d\n", params->showCaptureProps);

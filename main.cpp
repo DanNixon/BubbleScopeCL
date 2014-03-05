@@ -126,27 +126,24 @@ int main(int argc, char **argv)
   unwrapper.imageRadius(params.radiusMin, params.radiusMax);
   unwrapper.offsetAngle(params.offsetAngle);
 
-  //Get the correct capture source
+  //Get the correct capture source and open it
   FrameSource *cap;
   switch(params.captureSource)
   {
     case SOURCE_V4L2:
-      *cap = V4L2Source();
-      printf("d\n");
+      cap = new V4L2Source();
       dynamic_cast<V4L2Source*>(cap)->setCaptureSize(params.originalWidth, params.originalHeight);
-      cap->open(params.captureLocation);
-      printf("open state %d\n", cap->isOpen());
       break;
     case SOURCE_VIDEO:
+      //TODO
       break;
     case SOURCE_STILL:
-      *cap = StillImageSource();
-      cap->open("/home/dan/Desktop/i.jpg");
+      cap = new StillImageSource();
       break;
   }
+  cap->open(params.captureLocation);
 
   //Check capture is working
-  printf("open state %d\n", cap->isOpen());
   if(!cap->isOpen())
   {
     printf("Can't open video capture source!\n");
@@ -186,7 +183,7 @@ int main(int argc, char **argv)
       fpsTimer.start();
 
     //Capture a frame
-    frame = cap->grab();
+    cap->grab(&frame);
 
     //Unwrap it
     cv::Mat unwrap = unwrapper.unwrap(&frame);
@@ -261,5 +258,6 @@ int main(int argc, char **argv)
       run = 0;
   }
 
+  cap->close();
   return 0;
 }
