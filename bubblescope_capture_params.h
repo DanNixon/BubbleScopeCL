@@ -14,12 +14,20 @@ enum BubbleScopeCaptureMode
   MODE_SHOW_UNWRAP,
 };
 
+enum BubbleScopeCaptureSource
+{
+  SOURCE_V4L2,
+  SOURCE_VIDEO,
+  SOURCE_STILL
+};
+
 /*
  * Stores user options defining capture properties.
  */
 struct BubbleScopeParameters
 {
-  std::string captureDevice;
+  BubbleScopeCaptureSource captureSource;
+  std::string captureLocation;
   int originalWidth;
   int originalHeight;
   int unwrapWidth;

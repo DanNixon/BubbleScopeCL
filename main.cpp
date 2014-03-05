@@ -18,7 +18,11 @@
 #include "unwrap.h"
 #include "command_line_params.h"
 #include "Timer.h"
-#include "OCVCapture.h"
+
+#include "frame_source.h"
+#include "source_v4l2.h"
+#include "source_imagefile.h"
+//#include "source_videofile.h"
 
 //Cross platform delay, taken from: http://www.cplusplus.com/forum/unices/10491/
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__WINDOWS__) || defined(__TOS_WIN__)
@@ -93,6 +97,25 @@ int main(int argc, char **argv)
       return 1;
   }
 
+  if(params.captureSource != SOURCE_V4L2)
+  {
+    params.mode[MODE_SHOW_ORIGINAL] = 0;
+    params.mode[MODE_SHOW_UNWRAP] = 0;
+    params.mode[MODE_MJPG] = 0;
+  }
+
+  switch(params.captureSource)
+  {
+    case SOURCE_V4L2:
+      break;
+    case SOURCE_STILL:
+      params.mode[MODE_VIDEO] = 0;
+      break;
+    case SOURCE_VIDEO:
+      params.mode[MODE_STILLS] = 0;
+      break;
+  }
+
   //Tell the user how things are going to happen
   printParameters(&params);
 
@@ -103,19 +126,35 @@ int main(int argc, char **argv)
   unwrapper.imageRadius(params.radiusMin, params.radiusMax);
   unwrapper.offsetAngle(params.offsetAngle);
 
-  //Open the capture device and check it is working
-  OCVCapture cap;
-  cap.setVerbose(false);
-  cap.setDesiredSize(params.originalWidth, params.originalHeight);
-  cap.open(params.captureDevice.c_str());
-  if(!cap.isOpen())
+  //Get the correct capture source
+  FrameSource *cap;
+  switch(params.captureSource)
+  {
+    case SOURCE_V4L2:
+      *cap = V4L2Source();
+      printf("d\n");
+      dynamic_cast<V4L2Source*>(cap)->setCaptureSize(params.originalWidth, params.originalHeight);
+      cap->open(params.captureLocation);
+      printf("open state %d\n", cap->isOpen());
+      break;
+    case SOURCE_VIDEO:
+      break;
+    case SOURCE_STILL:
+      *cap = StillImageSource();
+      cap->open("/home/dan/Desktop/i.jpg");
+      break;
+  }
+
+  //Check capture is working
+  printf("open state %d\n", cap->isOpen());
+  if(!cap->isOpen())
   {
     printf("Can't open video capture source!\n");
     return 2;
   }
 
   //After capture size is determined setup transofrmation array
-  unwrapper.originalSize(cap.width(), cap.height());
+  unwrapper.originalSize(cap->getWidth(), cap->getHeight());
   unwrapper.generateTransformation();
 
   //The container for captured frames
@@ -147,8 +186,7 @@ int main(int argc, char **argv)
       fpsTimer.start();
 
     //Capture a frame
-    cap.grab();
-    cap.rgb(frame);
+    frame = cap->grab();
 
     //Unwrap it
     cv::Mat unwrap = unwrapper.unwrap(&frame);
