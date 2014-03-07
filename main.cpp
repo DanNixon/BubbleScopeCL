@@ -89,33 +89,15 @@ int main(int argc, char **argv)
       break;
     case HELP:  //User wants help
       printf("BubbleScopeApp\n");
+      printf("See https://github.com/DanNixon/BubbleScopeApp for more info.\n");
       printParameterUsage();
       return 0;
       break;
     default:    //Parameter error
       printf("Invalid parameters!\n");
+      printf("See https://github.com/DanNixon/BubbleScopeApp for more info.\n");
       printParameterUsage();
       return 1;
-  }
-
-  if(params.captureSource != SOURCE_V4L2)
-  {
-    params.mode[MODE_SHOW_ORIGINAL] = 0;
-    params.mode[MODE_SHOW_UNWRAP] = 0;
-    params.mode[MODE_MJPG] = 0;
-  }
-
-  //Configure output options to match input
-  switch(params.captureSource)
-  {
-    case SOURCE_V4L2:
-      break;
-    case SOURCE_STILL:
-      params.mode[MODE_VIDEO] = 0;
-      break;
-    case SOURCE_VIDEO:
-      params.mode[MODE_STILLS] = 0;
-      break;
   }
 
   //Setup the image unwrapper
@@ -200,18 +182,9 @@ int main(int argc, char **argv)
   //Number of still frames already captures, used for filename formatting
   int stillFrameNumber = 0;
 
-  //Stuff for measuring capture properites
-  Timer fpsTimer;
-  float measuredFPS = 0.0f;
-  int capPropFrame = 0;
-
   printf("Starting capture.\n");
   while(run)
   {
-    //Start FPS timer for capture properties
-    if(params.showCaptureProps)
-      fpsTimer.start();
-
     //Capture a frame
     cap->grab(&frame);
 
@@ -278,22 +251,6 @@ int main(int argc, char **argv)
       imwrite(stillFilename, unwrap);
       stillFrameNumber++;
       captureStill = false;
-    }
-
-    if(params.showCaptureProps)
-    {
-      //Measure time for single frame
-      fpsTimer.stop();
-      //Calculate rolling FPS average
-      float measuredFPS = 0.7 * (1000.0f / fpsTimer.getElapsedTimeInMilliSec()) + 0.3 * measuredFPS;
-
-      //Show capture properties every 10 frames
-      if(capPropFrame % 10 == 0)
-      {
-        printf("Average FPS: %f\n", measuredFPS);
-        printf("Input image size: %dx%d\n", frame.cols, frame.rows);
-        capPropFrame = 0;
-      }
     }
 
     //Done a single capture, can now exit

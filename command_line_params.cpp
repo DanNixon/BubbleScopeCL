@@ -11,13 +11,11 @@
  */
 CLParameter clParams[] = {
   CLParameter{HELP,             "-h",     "--help",       "Show help",          "Shows this help text"},
-  CLParameter{CAPTURE_DEVICE,   "-d",     "--device",     "Capture device",     "Specifies the V4L2 capture device"},
-  CLParameter{P_SOURCE_STILL,     "-ss",    "--sourcestill","Source still",       "Specifies a pre captured still to unwrap"},
-  CLParameter{P_SOURCE_VIDEO,     "-sv",    "--sourcevideo","Source video",       "Specifies a pre recorded video to unwrap"},
-  CLParameter{FPS,              "-f",     "--fps",        "Frame rate",         "Set desired capture frame rate"},
-  CLParameter{ORIGINAL_WIDTH,   "-iw",    "--inwidth",    "Original width",     "Set desired capture width"},
-  CLParameter{ORIGINAL_HEIGHT,  "-ih",    "--inheight",   "Original height",    "Set desired capture height"},
-  CLParameter{SHOW_PROPS,       "-p",     "--showprops",  "Show capture props.","Shows the actual image capture properties"},
+  CLParameter{CAPTURE_DEVICE,   "-d",     "--device",     "Capture device",     "Specifies a V4L2 capture device"},
+  CLParameter{P_SOURCE_STILL,   "-ss",    "--sourcestill","Source still",       "Specifies a pre captured still to unwrap"},
+  CLParameter{P_SOURCE_VIDEO,   "-sv",    "--sourcevideo","Source video",       "Specifies a pre recorded video to unwrap"},
+  CLParameter{ORIGINAL_WIDTH,   "-iw",    "--inwidth",    "Original width",     "Set desired capture width (V4L2 only)"},
+  CLParameter{ORIGINAL_HEIGHT,  "-ih",    "--inheight",   "Original height",    "Set desired capture height (V4L2 only)"},
   CLParameter{UNWRAP_WIDTH,     "-ow",    "--outwidth",   "Unwrap width",       "Set width of unwrapped image"},
   CLParameter{RADIUS_MIN,       "-rmin",  "--minradius",  "Radius min",         "Set lower unwrap radius"},
   CLParameter{RADIUS_MAX,       "-rmax",  "--maxradius",  "Radius max",         "Set upper unwrap radius"},
@@ -29,14 +27,14 @@ CLParameter clParams[] = {
   CLParameter{OUTPUT_STILLS,    "-s",     "--stills",     "Output stills",      "Capture unwrapped stills on spacebar press"},
   CLParameter{OUTPUT_VIDEO,     "-v",     "--video",      "Output video",       "Capture unwrapped AVI video"},
   CLParameter{OUTPUT_MJPG,      "-m",     "--mjpg",       "Output MJPG stream", "Output unwrapped frames for MJPG streamer"},
-  CLParameter{SINGLE_STILL,     "-ss",    "--single",     "Capture 1 still",    "Capture a single still image and exit"},
-  CLParameter{SAMPLE_FPS,       "-sfr",   "--samplefps",  "Sample frame rate",  "Specified how many samples to use in measuring capture frame rate"}
+  CLParameter{SINGLE_STILL,     "-sin"    "--single",     "Capture 1 still",    "Capture a single still image and exit"},
+  CLParameter{SAMPLE_FPS,       "-sfr",   "--samplefps",  "Sample frame rate",  "Specifies how many samples to use in measuring capture frame rate"}
 };
 
 /*
  * Size of params array
  */
-int clParamCount = 21;
+int clParamCount = 19;
 
 /*
  * Populates a set of BubbleScopeParameters based on contents of argv
@@ -65,11 +63,21 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
             params->captureSource = SOURCE_STILL;
             sscanf(argv[i], "%s", &buffer);
             params->captureLocation = buffer;
+            //Required to allow capture mode to function correctly
+            params->mode[MODE_SHOW_ORIGINAL] = 0;
+            params->mode[MODE_SHOW_UNWRAP] = 0;
+            params->mode[MODE_MJPG] = 0;
+            params->mode[MODE_VIDEO] = 0;
             break;
           case P_SOURCE_VIDEO:
             params->captureSource = SOURCE_VIDEO;
             sscanf(argv[i], "%s", &buffer);
             params->captureLocation = buffer;
+            //Required to allow capture mode to function correctly
+            params->mode[MODE_SHOW_ORIGINAL] = 0;
+            params->mode[MODE_SHOW_UNWRAP] = 0;
+            params->mode[MODE_MJPG] = 0;
+            params->mode[MODE_STILLS] = 0;
             break;
           case ORIGINAL_WIDTH:
             sscanf(argv[i], "%d", &params->originalWidth);
@@ -95,41 +103,34 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
           case OFFSET_ANGLE:
             sscanf(argv[i], "%f", &params->offsetAngle);
             break;
-          case FPS:
-            sscanf(argv[i], "%f", &params->fps);
-            break;
           case SHOW_ORIGINAL:
             i--;
-            params->mode[MODE_SHOW_ORIGINAL] = 1;
+            params->mode[MODE_SHOW_ORIGINAL] = true;
             break;
           case SHOW_UNWRAP:
             i--;
-            params->mode[MODE_SHOW_UNWRAP] = 1;
-            break;
-          case SHOW_PROPS:
-            i--;
-            params->showCaptureProps = 1;
+            params->mode[MODE_SHOW_UNWRAP] = true;
             break;
           case OUTPUT_STILLS:
-            params->mode[MODE_SHOW_UNWRAP] = 1;
-            params->mode[MODE_STILLS] = 1;
+            params->mode[MODE_SHOW_UNWRAP] = true;
+            params->mode[MODE_STILLS] = true;
             params->outputFilename[MODE_STILLS] = argv[i];
             break;
           case OUTPUT_VIDEO:
-            params->mode[MODE_VIDEO] = 1;
+            params->mode[MODE_VIDEO] = true;
             params->outputFilename[MODE_VIDEO] = argv[i];
             break;
           case OUTPUT_MJPG:
-            params->mode[MODE_MJPG] = 1;
+            params->mode[MODE_MJPG] = true;
             params->outputFilename[MODE_MJPG] = argv[i];
             break;
           case SINGLE_STILL:
             //Other capture modes will not work correctly in this mode
-            params->mode[MODE_SHOW_ORIGINAL] = 0;
-            params->mode[MODE_SHOW_UNWRAP] = 0;
-            params->mode[MODE_VIDEO] = 0;
-            params->mode[MODE_STILLS] = 0;
-            params->mode[MODE_SINGLE_STILL] = 1;
+            params->mode[MODE_SHOW_ORIGINAL] = false;
+            params->mode[MODE_SHOW_UNWRAP] = false;
+            params->mode[MODE_VIDEO] = false;
+            params->mode[MODE_STILLS] = false;
+            params->mode[MODE_SINGLE_STILL] = true;
             //Recycle some MJPG code to output image
             params->outputFilename[MODE_MJPG] = argv[i];
             break;

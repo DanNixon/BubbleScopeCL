@@ -39,7 +39,6 @@ struct BubbleScopeParameters
   bool mode[6];
   std::string outputFilename[3];
   float fps;
-  bool showCaptureProps;
   unsigned int sampleFPS;
 };
 

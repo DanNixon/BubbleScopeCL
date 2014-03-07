@@ -31,7 +31,6 @@ void setupDefaultParameters(BubbleScopeParameters *params)
   params->outputFilename[MODE_VIDEO] = "BubbleScope_Video_Capture.avi";
   params->outputFilename[MODE_MJPG] = "BubbleScope_MJPG_Frame.jpg";
   params->fps = 10.0f;
-  params->showCaptureProps = false;
   params->sampleFPS = 0;
 }
 
@@ -43,7 +42,6 @@ void printParameters(BubbleScopeParameters *params)
   printf("Source: %d, Location: %s\n", params->captureSource, params->captureLocation.c_str());
   printf("Framerate: %ffps\n", params->fps);
   printf("Original image size: %dx%d\n", params->originalWidth, params->originalHeight);
-  printf("Show actual capture props.: %d\n", params->showCaptureProps);
   printf("Unwrap image width: %d\n", params->unwrapWidth);
   printf("Unwrap image radius: min=%f, max=%f\n", params->radiusMin, params->radiusMax);
   printf("Orignal image centre: u=%f, v=%f\n", params->uCentre, params->vCentre);
