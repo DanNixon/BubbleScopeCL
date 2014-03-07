@@ -17,10 +17,10 @@ class FrameSource
   public:
     virtual void open(std::string) = 0;
     virtual void close() = 0;
-    virtual int isOpen() = 0;
+    virtual bool isOpen() = 0;
     virtual void grab(cv::Mat *) = 0;
-    virtual int getWidth() = 0;
-    virtual int getHeight() = 0;
+    virtual unsigned int getWidth() = 0;
+    virtual unsigned int getHeight() = 0;
 };
 
 #endif

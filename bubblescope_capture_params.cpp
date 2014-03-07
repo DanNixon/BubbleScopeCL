@@ -21,17 +21,17 @@ void setupDefaultParameters(BubbleScopeParameters *params)
   params->uCentre = 0.5f;
   params->vCentre = 0.5f;
   params->offsetAngle = 180.0f;
-  params->mode[MODE_SHOW_ORIGINAL] = 0;
-  params->mode[MODE_SHOW_UNWRAP] = 0;
-  params->mode[MODE_SINGLE_STILL] = 0;
-  params->mode[MODE_STILLS] = 0;
-  params->mode[MODE_VIDEO] = 0;
-  params->mode[MODE_MJPG] = 0;
+  params->mode[MODE_SHOW_ORIGINAL] = false;
+  params->mode[MODE_SHOW_UNWRAP] = false;
+  params->mode[MODE_SINGLE_STILL] = false;
+  params->mode[MODE_STILLS] = false;
+  params->mode[MODE_VIDEO] = false;
+  params->mode[MODE_MJPG] = false;
   params->outputFilename[MODE_STILLS] = "BubbleScope_Still_Capture_%d.jpg";
   params->outputFilename[MODE_VIDEO] = "BubbleScope_Video_Capture.avi";
   params->outputFilename[MODE_MJPG] = "BubbleScope_MJPG_Frame.jpg";
   params->fps = 10.0f;
-  params->showCaptureProps = 0;
+  params->showCaptureProps = false;
 }
 
 /*

@@ -24,16 +24,16 @@ class V4L2Source: public FrameSource
 
     void open(std::string);
     void close();
-    int isOpen();
+    bool isOpen();
     void grab(cv::Mat *);
-    int getWidth();
-    int getHeight();
+    unsigned int getWidth();
+    unsigned int getHeight();
 
-    void setCaptureSize(int, int);
-    int getFrameRate();
+    void setCaptureSize(unsigned int, unsigned int);
+    double getFrameRate();
 
   private:
-    OCVCapture *cap;
+    OCVCapture *o_capture;
 };
 
 #endif

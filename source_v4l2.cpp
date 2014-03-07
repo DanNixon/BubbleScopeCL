@@ -9,53 +9,53 @@
 
 V4L2Source::V4L2Source()
 {
-  this->cap = new OCVCapture();
-  this->cap->setVerbose(false);
+  this->o_capture = new OCVCapture();
+  this->o_capture->setVerbose(false);
 }
 
 V4L2Source::~V4L2Source()
 {
   this->close();
-  delete this->cap;
+  delete this->o_capture;
 }
 
 void V4L2Source::open(std::string deviceName)
 {
-  this->cap->open(deviceName.c_str());
+  this->o_capture->open(deviceName.c_str());
 }
 
 void V4L2Source::close()
 {
-  this->cap->close();
+  this->o_capture->close();
 }
 
-int V4L2Source::isOpen()
+bool V4L2Source::isOpen()
 {
-  return this->cap->isOpen();
+  return this->o_capture->isOpen();
 }
 
 void V4L2Source::grab(cv::Mat *out)
 {
-  this->cap->grab();
-  this->cap->rgb(*out);
+  this->o_capture->grab();
+  this->o_capture->rgb(*out);
 }
 
-int V4L2Source::getWidth()
+unsigned int V4L2Source::getWidth()
 {
-  return this->cap->width();
+  return this->o_capture->width();
 }
 
-int V4L2Source::getHeight()
+unsigned int V4L2Source::getHeight()
 {
-  return this->cap->height();
+  return this->o_capture->height();
 }
 
-void V4L2Source::setCaptureSize(int width, int height)
+void V4L2Source::setCaptureSize(unsigned int width, unsigned int height)
 {
-  this->cap->setDesiredSize(width, height);
+  this->o_capture->setDesiredSize(width, height);
 }
 
-int V4L2Source::getFrameRate()
+double V4L2Source::getFrameRate()
 {
-  return this->cap->frameRate();
+  return this->o_capture->frameRate();
 }

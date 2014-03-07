@@ -9,51 +9,51 @@
 
 VideoFileSource::VideoFileSource()
 {
-  this->cap = NULL;
+  this->o_capture = NULL;
   this->i_grabbedFrameCount = 0;
 }
 
 VideoFileSource::~VideoFileSource()
 {
-  delete this->cap;
+  delete this->o_capture;
 }
 
 void VideoFileSource::open(std::string videoFile)
 {
-  this->cap = new cv::VideoCapture(videoFile);
-  this->cap->set(CV_CAP_PROP_CONVERT_RGB, 1);
+  this->o_capture = new cv::VideoCapture(videoFile);
+  this->o_capture->set(CV_CAP_PROP_CONVERT_RGB, 1);
   this->i_grabbedFrameCount = 0;
 }
 
 void VideoFileSource::close()
 {
-  this->cap->release();
+  this->o_capture->release();
 }
 
-int VideoFileSource::isOpen()
+bool VideoFileSource::isOpen()
 {
-  return this->cap->isOpened();
+  return this->o_capture->isOpened();
 }
 
 void VideoFileSource::grab(cv::Mat *out)
 {
-  this->cap->read(*out);
+  this->o_capture->read(*out);
   this->i_grabbedFrameCount++;
 }
 
-int VideoFileSource::getWidth()
+unsigned int VideoFileSource::getWidth()
 {
-  return this->cap->get(CV_CAP_PROP_FRAME_WIDTH);
+  return this->o_capture->get(CV_CAP_PROP_FRAME_WIDTH);
 }
 
-int VideoFileSource::getHeight()
+unsigned int VideoFileSource::getHeight()
 {
-  return this->cap->get(CV_CAP_PROP_FRAME_HEIGHT);
+  return this->o_capture->get(CV_CAP_PROP_FRAME_HEIGHT);
 }
 
-int VideoFileSource::getFrameRate()
+double VideoFileSource::getFrameRate()
 {
-  return this->cap->get(CV_CAP_PROP_FPS);
+  return this->o_capture->get(CV_CAP_PROP_FPS);
 }
 
 unsigned int VideoFileSource::getGrabbedFrameCount()
@@ -61,12 +61,12 @@ unsigned int VideoFileSource::getGrabbedFrameCount()
   return this->i_grabbedFrameCount;
 }
 
-int VideoFileSource::getFrameCount()
+unsigned int VideoFileSource::getFrameCount()
 {
-  return this->cap->get(CV_CAP_PROP_FRAME_COUNT);
+  return this->o_capture->get(CV_CAP_PROP_FRAME_COUNT);
 }
 
-int VideoFileSource::atEndOfVideo()
+bool VideoFileSource::atEndOfVideo()
 {
   return (this->getGrabbedFrameCount() >= this->getFrameCount());
 }

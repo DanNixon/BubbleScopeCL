@@ -9,30 +9,30 @@
 
 void ImageFileSource::open(std::string imageFile)
 {
-  this->i_open = 1;
-  this->image = cv::imread(imageFile);
+  this->b_open = true;
+  this->o_image = cv::imread(imageFile);
 }
 
 void ImageFileSource::close()
 {
 }
 
-int ImageFileSource::isOpen()
+bool ImageFileSource::isOpen()
 {
-  return this->i_open;
+  return this->b_open;
 }
 
 void ImageFileSource::grab(cv::Mat *out)
 {
-  *out = this->image;
+  *out = this->o_image;
 }
 
-int ImageFileSource::getWidth()
+unsigned int ImageFileSource::getWidth()
 {
-  return this->image.cols;
+  return this->o_image.cols;
 }
 
-int ImageFileSource::getHeight()
+unsigned int ImageFileSource::getHeight()
 {
-  return this->image.rows;
+  return this->o_image.rows;
 }

@@ -28,18 +28,18 @@ struct BubbleScopeParameters
 {
   BubbleScopeCaptureSource captureSource;
   std::string captureLocation;
-  int originalWidth;
-  int originalHeight;
-  int unwrapWidth;
+  unsigned int originalWidth;
+  unsigned int originalHeight;
+  unsigned int unwrapWidth;
   float radiusMin;
   float radiusMax;
   float uCentre;
   float vCentre;
   float offsetAngle;
-  int mode[6];
+  bool mode[6];
   std::string outputFilename[3];
   float fps;
-  int showCaptureProps;
+  bool showCaptureProps;
 };
 
 void setupDefaultParameters(BubbleScopeParameters *);

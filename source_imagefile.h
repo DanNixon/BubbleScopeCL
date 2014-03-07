@@ -22,14 +22,14 @@ class ImageFileSource : public FrameSource
   public:
     void open(std::string);
     void close();
-    int isOpen();
+    bool isOpen();
     void grab(cv::Mat *);
-    int getWidth();
-    int getHeight();
+    unsigned int getWidth();
+    unsigned int getHeight();
 
   private:
-    cv::Mat image;
-    int i_open;
+    cv::Mat o_image;
+    bool b_open;
 };
 
 #endif

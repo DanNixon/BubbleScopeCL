@@ -25,18 +25,18 @@ class VideoFileSource: public FrameSource
 
     void open(std::string);
     void close();
-    int isOpen();
+    bool isOpen();
     void grab(cv::Mat *);
-    int getWidth();
-    int getHeight();
+    unsigned int getWidth();
+    unsigned int getHeight();
 
-    int getFrameRate();
+    double getFrameRate();
     unsigned int getGrabbedFrameCount();
-    int getFrameCount();
-    int atEndOfVideo();
+    unsigned  getFrameCount();
+    bool atEndOfVideo();
 
   private:
-    cv::VideoCapture *cap;
+    cv::VideoCapture *o_capture;
     unsigned int i_grabbedFrameCount;
 };
 

@@ -40,8 +40,9 @@
 #endif 
 
 const unsigned long loopDelayTime = 10;
-int run = 1;
-int captureStill = 0;
+
+bool run = 1;
+bool captureStill = 0;
 
 /*
  * Set run to false on SIGINT
@@ -49,7 +50,7 @@ int captureStill = 0;
 void handleSigInt(int sig)
 {
   printf("Caught signal %d, will exit.\n", sig);
-  run = 0;
+  run = false;
 }
 
 /*
@@ -58,7 +59,7 @@ void handleSigInt(int sig)
 void handleStillCapSig(int sig)
 {
   printf("Caught signal %d, will capture still image.\n", sig);
-  captureStill = 1;
+  captureStill = true;
 }
 
 int main(int argc, char **argv)
@@ -104,6 +105,7 @@ int main(int argc, char **argv)
     params.mode[MODE_MJPG] = 0;
   }
 
+  //Configure output options to match input
   switch(params.captureSource)
   {
     case SOURCE_V4L2:
@@ -115,9 +117,6 @@ int main(int argc, char **argv)
       params.mode[MODE_STILLS] = 0;
       break;
   }
-
-  //Tell the user how things are going to happen
-  printParameters(&params);
 
   //Setup the image unwrapper
   BubbleScopeUnwrapper unwrapper;
@@ -143,6 +142,10 @@ int main(int argc, char **argv)
   }
   cap->open(params.captureLocation);
 
+  //Update some vars for user feedback
+  params.originalWidth = cap->getWidth();
+  params.originalHeight = cap->getHeight();
+
   //Check capture is working
   if(!cap->isOpen())
   {
@@ -150,6 +153,7 @@ int main(int argc, char **argv)
     return 2;
   }
 
+  //Get the input video frame rate if used
   if(params.captureSource == SOURCE_VIDEO)
     params.fps = dynamic_cast<VideoFileSource *>(cap)->getFrameRate();
 
@@ -169,6 +173,11 @@ int main(int argc, char **argv)
     if(!videoOut.isOpened())
       printf("Can't open video output file! (will continue with capture)\n");
   }
+
+  //Tell the user how things are going to happen
+  printf("Capture parameters:\n");
+  printParameters(&params);
+  printf("\n");
 
   //Number of still frames already captures, used for filename formatting
   int stillFrameNumber = 0;
@@ -216,10 +225,10 @@ int main(int argc, char **argv)
         case 'q':
         case 27:
           printf("Exiting.\n");
-          run = 0;
+          run = false;
           break;
         case ' ':
-          captureStill = 1;
+          captureStill = true;
           break;
       }
     }
@@ -230,12 +239,11 @@ int main(int argc, char **argv)
     switch(params.captureSource)
     {
       case SOURCE_STILL:
-        run = 0;
-        captureStill = 1;
+        run = false;
+        captureStill = true;
         break;
       case SOURCE_VIDEO:
-        if(dynamic_cast<VideoFileSource *>(cap)->atEndOfVideo())
-          run = 0;
+        run = !dynamic_cast<VideoFileSource *>(cap)->atEndOfVideo();
         break;
       case SOURCE_V4L2:
         break;
@@ -251,7 +259,7 @@ int main(int argc, char **argv)
       //Save still image
       imwrite(stillFilename, unwrap);
       stillFrameNumber++;
-      captureStill = 0;
+      captureStill = false;
     }
 
     if(params.showCaptureProps)
@@ -272,7 +280,7 @@ int main(int argc, char **argv)
 
     //Done a single capture, can now exit
     if(params.mode[MODE_SINGLE_STILL])
-      run = 0;
+      run = false;
   }
 
   cap->close();
