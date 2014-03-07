@@ -1,3 +1,9 @@
+/*
+ * V4L2 frame grabber
+ * Grabs frames and image information from a V4L2 source
+ *
+ * Dan Nixon
+ */
 
 #ifndef SV4L2_H
 #define SV4L2_H

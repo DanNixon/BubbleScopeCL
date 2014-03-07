@@ -1,3 +1,10 @@
+/*
+ * Still image frame grabber
+ * Grabs still image frame and image information from file
+ *
+ * Dan Nixon
+ */
+
 #include "source_imagefile.h"
 
 void StillImageSource::open(std::string imageFile)
@@ -17,7 +24,7 @@ int StillImageSource::isOpen()
 
 void StillImageSource::grab(cv::Mat *out)
 {
-  out = &(this->image);
+  *out = this->image;
 }
 
 int StillImageSource::getWidth()

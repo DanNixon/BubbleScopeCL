@@ -1,6 +1,6 @@
 /*
- * BubbleScope frame grabber
- * Grabs frames for a specified source
+ * Frame grabber
+ * Grabs frames and image information for a specified source
  *
  * Dan Nixon
  */
@@ -14,9 +14,6 @@
 
 class FrameSource
 {
-  protected:
-    uint8_t i_open;
-
   public:
     virtual void open(std::string) = 0;
     virtual void close() = 0;

@@ -223,6 +223,19 @@ int main(int argc, char **argv)
     else
       delay(loopDelayTime);
     
+    //Handle specific capture loop exit conditions
+    switch(params.captureSource)
+    {
+      case SOURCE_STILL:
+        run = 0;
+        captureStill = 1;
+        break;
+      case SOURCE_VIDEO:
+        //TODO
+        break;
+      case SOURCE_V4L2:
+        break;
+    }
 
     if(params.mode[MODE_STILLS] && captureStill)
     {

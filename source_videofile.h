@@ -1,3 +1,9 @@
+/*
+ * Video file frame grabber
+ * Grabs frames and image information for a video file
+ *
+ * Dan Nixon
+ */
 
 #ifndef SVIDEOFILE_H
 #define SVIDEOFILE_H

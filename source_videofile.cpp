@@ -1,3 +1,9 @@
+/*
+ * Video file frame grabber
+ * Grabs frames and image information for a video file
+ *
+ * Dan Nixon
+ */
 
 #include "source_videofile.h"
 
@@ -14,7 +20,7 @@ int VideoSource::isOpen()
   return 0;
 }
 
-void VideoSource::grab(cd::Mat *out)
+void VideoSource::grab(cv::Mat *out)
 {
   return NULL;
 }
