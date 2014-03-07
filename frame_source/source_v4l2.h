@@ -14,7 +14,7 @@
 #include "frame_source.h"
 
 #include <opencv2/core/core.hpp>
-#include "OCVCapture.h"
+#include "../OCVCapture.h"
 
 class V4L2Source: public FrameSource
 {

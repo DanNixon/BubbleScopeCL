@@ -19,10 +19,10 @@
 #include "command_line_params.h"
 #include "Timer.h"
 
-#include "frame_source.h"
-#include "source_v4l2.h"
-#include "source_imagefile.h"
-#include "source_videofile.h"
+#include "frame_source/frame_source.h"
+#include "frame_source/source_v4l2.h"
+#include "frame_source/source_imagefile.h"
+#include "frame_source/source_videofile.h"
 
 //Cross platform delay, taken from: http://www.cplusplus.com/forum/unices/10491/
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__WINDOWS__) || defined(__TOS_WIN__)
