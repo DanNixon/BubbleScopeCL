@@ -18,7 +18,11 @@
 #include "unwrap.h"
 #include "command_line_params.h"
 #include "Timer.h"
-#include "OCVCapture.h"
+
+#include "frame_source/frame_source.h"
+#include "frame_source/source_v4l2.h"
+#include "frame_source/source_imagefile.h"
+#include "frame_source/source_videofile.h"
 
 //Cross platform delay, taken from: http://www.cplusplus.com/forum/unices/10491/
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__WINDOWS__) || defined(__TOS_WIN__)
@@ -36,8 +40,9 @@
 #endif 
 
 const unsigned long loopDelayTime = 10;
-int run = 1;
-int captureStill = 0;
+
+bool run = 1;
+bool captureStill = 0;
 
 /*
  * Set run to false on SIGINT
@@ -45,7 +50,7 @@ int captureStill = 0;
 void handleSigInt(int sig)
 {
   printf("Caught signal %d, will exit.\n", sig);
-  run = 0;
+  run = false;
 }
 
 /*
@@ -54,7 +59,7 @@ void handleSigInt(int sig)
 void handleStillCapSig(int sig)
 {
   printf("Caught signal %d, will capture still image.\n", sig);
-  captureStill = 1;
+  captureStill = true;
 }
 
 int main(int argc, char **argv)
@@ -93,8 +98,25 @@ int main(int argc, char **argv)
       return 1;
   }
 
-  //Tell the user how things are going to happen
-  printParameters(&params);
+  if(params.captureSource != SOURCE_V4L2)
+  {
+    params.mode[MODE_SHOW_ORIGINAL] = 0;
+    params.mode[MODE_SHOW_UNWRAP] = 0;
+    params.mode[MODE_MJPG] = 0;
+  }
+
+  //Configure output options to match input
+  switch(params.captureSource)
+  {
+    case SOURCE_V4L2:
+      break;
+    case SOURCE_STILL:
+      params.mode[MODE_VIDEO] = 0;
+      break;
+    case SOURCE_VIDEO:
+      params.mode[MODE_STILLS] = 0;
+      break;
+  }
 
   //Setup the image unwrapper
   BubbleScopeUnwrapper unwrapper;
@@ -103,19 +125,40 @@ int main(int argc, char **argv)
   unwrapper.imageRadius(params.radiusMin, params.radiusMax);
   unwrapper.offsetAngle(params.offsetAngle);
 
-  //Open the capture device and check it is working
-  OCVCapture cap;
-  cap.setVerbose(false);
-  cap.setDesiredSize(params.originalWidth, params.originalHeight);
-  cap.open(params.captureDevice.c_str());
-  if(!cap.isOpen())
+  //Get the correct capture source and open it
+  FrameSource *cap;
+  switch(params.captureSource)
   {
-    printf("Can't open video capture source!\n");
+    case SOURCE_V4L2:
+      cap = new V4L2Source();
+      dynamic_cast<V4L2Source *>(cap)->setCaptureSize(params.originalWidth, params.originalHeight);
+      break;
+    case SOURCE_VIDEO:
+      cap = new VideoFileSource();
+      break;
+    case SOURCE_STILL:
+      cap = new ImageFileSource();
+      break;
+  }
+  cap->open(params.captureLocation);
+
+  //Update some vars for user feedback
+  params.originalWidth = cap->getWidth();
+  params.originalHeight = cap->getHeight();
+
+  //Check capture is working
+  if(!cap->isOpen())
+  {
+    printf("Can't open image capture source!\n");
     return 2;
   }
 
+  //Get the input video frame rate if used
+  if(params.captureSource == SOURCE_VIDEO)
+    params.fps = dynamic_cast<VideoFileSource *>(cap)->getFrameRate();
+
   //After capture size is determined setup transofrmation array
-  unwrapper.originalSize(cap.width(), cap.height());
+  unwrapper.originalSize(cap->getWidth(), cap->getHeight());
   unwrapper.generateTransformation();
 
   //The container for captured frames
@@ -130,6 +173,11 @@ int main(int argc, char **argv)
     if(!videoOut.isOpened())
       printf("Can't open video output file! (will continue with capture)\n");
   }
+
+  //Tell the user how things are going to happen
+  printf("Capture parameters:\n");
+  printParameters(&params);
+  printf("\n");
 
   //Number of still frames already captures, used for filename formatting
   int stillFrameNumber = 0;
@@ -147,8 +195,7 @@ int main(int argc, char **argv)
       fpsTimer.start();
 
     //Capture a frame
-    cap.grab();
-    cap.rgb(frame);
+    cap->grab(&frame);
 
     //Unwrap it
     cv::Mat unwrap = unwrapper.unwrap(&frame);
@@ -178,16 +225,29 @@ int main(int argc, char **argv)
         case 'q':
         case 27:
           printf("Exiting.\n");
-          run = 0;
+          run = false;
           break;
         case ' ':
-          captureStill = 1;
+          captureStill = true;
           break;
       }
     }
     else
       delay(loopDelayTime);
     
+    //Handle specific capture loop exit conditions
+    switch(params.captureSource)
+    {
+      case SOURCE_STILL:
+        run = false;
+        captureStill = true;
+        break;
+      case SOURCE_VIDEO:
+        run = !dynamic_cast<VideoFileSource *>(cap)->atEndOfVideo();
+        break;
+      case SOURCE_V4L2:
+        break;
+    }
 
     if(params.mode[MODE_STILLS] && captureStill)
     {
@@ -199,7 +259,7 @@ int main(int argc, char **argv)
       //Save still image
       imwrite(stillFilename, unwrap);
       stillFrameNumber++;
-      captureStill = 0;
+      captureStill = false;
     }
 
     if(params.showCaptureProps)
@@ -220,8 +280,9 @@ int main(int argc, char **argv)
 
     //Done a single capture, can now exit
     if(params.mode[MODE_SINGLE_STILL])
-      run = 0;
+      run = false;
   }
 
+  cap->close();
   return 0;
 }

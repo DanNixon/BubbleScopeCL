@@ -11,26 +11,27 @@
  */
 void setupDefaultParameters(BubbleScopeParameters *params)
 {
-  params->captureDevice = "/dev/video0";
+  params->captureSource = SOURCE_V4L2;
+  params->captureLocation = "/dev/video0";
   params->originalWidth = 640;
   params->originalHeight = 480;
   params->unwrapWidth = 800;
   params->radiusMin = 0.25f;
-  params->radiusMax = 0.6f;
+  params->radiusMax = 0.45f;
   params->uCentre = 0.5f;
   params->vCentre = 0.5f;
   params->offsetAngle = 180.0f;
-  params->mode[MODE_SHOW_ORIGINAL] = 0;
-  params->mode[MODE_SHOW_UNWRAP] = 0;
-  params->mode[MODE_SINGLE_STILL] = 0;
-  params->mode[MODE_STILLS] = 0;
-  params->mode[MODE_VIDEO] = 0;
-  params->mode[MODE_MJPG] = 0;
+  params->mode[MODE_SHOW_ORIGINAL] = false;
+  params->mode[MODE_SHOW_UNWRAP] = false;
+  params->mode[MODE_SINGLE_STILL] = false;
+  params->mode[MODE_STILLS] = false;
+  params->mode[MODE_VIDEO] = false;
+  params->mode[MODE_MJPG] = false;
   params->outputFilename[MODE_STILLS] = "BubbleScope_Still_Capture_%d.jpg";
   params->outputFilename[MODE_VIDEO] = "BubbleScope_Video_Capture.avi";
   params->outputFilename[MODE_MJPG] = "BubbleScope_MJPG_Frame.jpg";
   params->fps = 10.0f;
-  params->showCaptureProps = 0;
+  params->showCaptureProps = false;
 }
 
 /*
@@ -38,7 +39,7 @@ void setupDefaultParameters(BubbleScopeParameters *params)
  */
 void printParameters(BubbleScopeParameters *params)
 {
-  printf("Video caputre device: %s\n", params->captureDevice.c_str());
+  printf("Source: %d, Location: %s\n", params->captureSource, params->captureLocation.c_str());
   printf("Framerate: %ffps\n", params->fps);
   printf("Original image size: %dx%d\n", params->originalWidth, params->originalHeight);
   printf("Show actual capture props.: %d\n", params->showCaptureProps);

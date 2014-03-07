@@ -11,7 +11,9 @@
  */
 CLParameter clParams[] = {
   CLParameter{HELP,             "-h",     "--help",       "Show help",          "Shows this help text"},
-  CLParameter{CAPTURE_DEVICE,   "-d",     "--device",     "Capture device",     "Specified the V4L2 capture device"},
+  CLParameter{CAPTURE_DEVICE,   "-d",     "--device",     "Capture device",     "Specifies the V4L2 capture device"},
+  CLParameter{P_SOURCE_STILL,     "-ss",    "--sourcestill","Source still",       "Specifies a pre captured still to unwrap"},
+  CLParameter{P_SOURCE_VIDEO,     "-sv",    "--sourcevideo","Source video",       "Specifies a pre recorded video to unwrap"},
   CLParameter{FPS,              "-f",     "--fps",        "Frame rate",         "Set desired capture frame rate"},
   CLParameter{ORIGINAL_WIDTH,   "-iw",    "--inwidth",    "Original width",     "Set desired capture width"},
   CLParameter{ORIGINAL_HEIGHT,  "-ih",    "--inheight",   "Original height",    "Set desired capture height"},
@@ -48,14 +50,25 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
       if((strcmp(clParams[j].shortParam, argv[i]) == 0) || (strcmp(clParams[j].longParam, argv[i]) == 0))
       {
         i++;
+        char buffer[100];
         switch(clParams[j].type)
         {
           case HELP:
             return HELP;
           case CAPTURE_DEVICE:
-            char buffer[100];
+            params->captureSource = SOURCE_V4L2;
             sscanf(argv[i], "%s", &buffer);
-            params->captureDevice = buffer;
+            params->captureLocation = buffer;
+            break;
+          case P_SOURCE_STILL:
+            params->captureSource = SOURCE_STILL;
+            sscanf(argv[i], "%s", &buffer);
+            params->captureLocation = buffer;
+            break;
+          case P_SOURCE_VIDEO:
+            params->captureSource = SOURCE_VIDEO;
+            sscanf(argv[i], "%s", &buffer);
+            params->captureLocation = buffer;
             break;
           case ORIGINAL_WIDTH:
             sscanf(argv[i], "%d", &params->originalWidth);
