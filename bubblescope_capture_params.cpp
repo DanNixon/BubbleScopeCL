@@ -17,7 +17,7 @@ void setupDefaultParameters(BubbleScopeParameters *params)
   params->originalHeight = 480;
   params->unwrapWidth = 800;
   params->radiusMin = 0.25f;
-  params->radiusMax = 0.6f;
+  params->radiusMax = 0.45f;
   params->uCentre = 0.5f;
   params->vCentre = 0.5f;
   params->offsetAngle = 180.0f;

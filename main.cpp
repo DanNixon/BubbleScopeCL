@@ -22,7 +22,7 @@
 #include "frame_source.h"
 #include "source_v4l2.h"
 #include "source_imagefile.h"
-//#include "source_videofile.h"
+#include "source_videofile.h"
 
 //Cross platform delay, taken from: http://www.cplusplus.com/forum/unices/10491/
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__WINDOWS__) || defined(__TOS_WIN__)
@@ -132,13 +132,13 @@ int main(int argc, char **argv)
   {
     case SOURCE_V4L2:
       cap = new V4L2Source();
-      dynamic_cast<V4L2Source*>(cap)->setCaptureSize(params.originalWidth, params.originalHeight);
+      dynamic_cast<V4L2Source *>(cap)->setCaptureSize(params.originalWidth, params.originalHeight);
       break;
     case SOURCE_VIDEO:
-      //TODO
+      cap = new VideoFileSource();
       break;
     case SOURCE_STILL:
-      cap = new StillImageSource();
+      cap = new ImageFileSource();
       break;
   }
   cap->open(params.captureLocation);
@@ -146,9 +146,12 @@ int main(int argc, char **argv)
   //Check capture is working
   if(!cap->isOpen())
   {
-    printf("Can't open video capture source!\n");
+    printf("Can't open image capture source!\n");
     return 2;
   }
+
+  if(params.captureSource == SOURCE_VIDEO)
+    params.fps = dynamic_cast<VideoFileSource *>(cap)->getFrameRate();
 
   //After capture size is determined setup transofrmation array
   unwrapper.originalSize(cap->getWidth(), cap->getHeight());
@@ -231,7 +234,8 @@ int main(int argc, char **argv)
         captureStill = 1;
         break;
       case SOURCE_VIDEO:
-        //TODO
+        if(dynamic_cast<VideoFileSource *>(cap)->atEndOfVideo())
+          run = 0;
         break;
       case SOURCE_V4L2:
         break;

@@ -7,32 +7,32 @@
 
 #include "source_imagefile.h"
 
-void StillImageSource::open(std::string imageFile)
+void ImageFileSource::open(std::string imageFile)
 {
   this->i_open = 1;
   this->image = cv::imread(imageFile);
 }
 
-void StillImageSource::close()
+void ImageFileSource::close()
 {
 }
 
-int StillImageSource::isOpen()
+int ImageFileSource::isOpen()
 {
   return this->i_open;
 }
 
-void StillImageSource::grab(cv::Mat *out)
+void ImageFileSource::grab(cv::Mat *out)
 {
   *out = this->image;
 }
 
-int StillImageSource::getWidth()
+int ImageFileSource::getWidth()
 {
   return this->image.cols;
 }
 
-int StillImageSource::getHeight()
+int ImageFileSource::getHeight()
 {
   return this->image.rows;
 }

@@ -129,8 +129,8 @@ void BubbleScopeUnwrapper::originalCentre(float u, float v)
  */
 void BubbleScopeUnwrapper::imageRadius(float min, float max)
 {
-  assert((min >= 0.0f) && (min <= 1.0f));
-  assert((max >= 0.0f) && (max <= 1.0f));
+  assert((min >= 0.0f) && (min <= 0.5f));
+  assert((max >= 0.0f) && (max <= 0.5f));
   assert(min < max);
   this->f_radiusMin = min;
   this->f_radiusMax = max;
