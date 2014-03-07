@@ -40,6 +40,7 @@ struct BubbleScopeParameters
   std::string outputFilename[3];
   float fps;
   bool showCaptureProps;
+  unsigned int sampleFPS;
 };
 
 void setupDefaultParameters(BubbleScopeParameters *);

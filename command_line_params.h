@@ -34,6 +34,7 @@ enum ParameterType
   FPS,
   SHOW_PROPS,
   SINGLE_STILL,
+  SAMPLE_FPS,
 
   HELP = 255
 };

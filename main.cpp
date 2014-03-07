@@ -164,6 +164,24 @@ int main(int argc, char **argv)
   //The container for captured frames
   cv::Mat frame;
 
+  if(params.sampleFPS && params.mode[MODE_VIDEO] && params.captureSource == SOURCE_V4L2)
+  {
+    printf("Measuring V4L2 capture frame rate over %d frames...\n", params.sampleFPS);
+    unsigned int frames = 0;
+    Timer fpsSampleTimer;
+    fpsSampleTimer.start();
+    while(frames < params.sampleFPS)
+    {
+      cap->grab(&frame);
+      delay(loopDelayTime);
+      frames++;
+    }
+    fpsSampleTimer.stop();
+    double measuredFPS = (double) params.sampleFPS / (fpsSampleTimer.getElapsedTimeInMilliSec() / 1000.0f);
+    printf("Measured %f FPS\n", measuredFPS);
+    params.fps = measuredFPS;
+  }
+
   //Setup video output
   cv::VideoWriter videoOut;
   if(params.mode[MODE_VIDEO])

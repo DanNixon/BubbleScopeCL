@@ -5,8 +5,8 @@
  * Dan Nixon
  */
 
-#ifndef SVIDEOFILE_H
-#define SVIDEOFILE_H
+#ifndef VIDEOFILESOURCE_H
+#define VIDEOFILESOURCE_H
 
 #include <stdlib.h>
 #include <stdio.h>

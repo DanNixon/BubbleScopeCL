@@ -5,8 +5,8 @@
  * Dan Nixon
  */
 
-#ifndef SIMAGEFILE_H
-#define SIMAGEFILE_H
+#ifndef IMAGEFILESOURCE_H
+#define IMAGEFILESOURCE_H
 
 #include <stdlib.h>
 #include <stdio.h>

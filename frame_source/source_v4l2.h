@@ -5,8 +5,8 @@
  * Dan Nixon
  */
 
-#ifndef SV4L2_H
-#define SV4L2_H
+#ifndef V4L2SOURCE_H
+#define V4L2SOURCE_H
 
 #include <stdio.h>
 #include <stdlib.h>

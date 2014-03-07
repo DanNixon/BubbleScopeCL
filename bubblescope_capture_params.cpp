@@ -32,6 +32,7 @@ void setupDefaultParameters(BubbleScopeParameters *params)
   params->outputFilename[MODE_MJPG] = "BubbleScope_MJPG_Frame.jpg";
   params->fps = 10.0f;
   params->showCaptureProps = false;
+  params->sampleFPS = 0;
 }
 
 /*
@@ -49,7 +50,7 @@ void printParameters(BubbleScopeParameters *params)
   printf("Offset angle: %fdeg.\n", params->offsetAngle);
   printf("Show original: %d\nShow unwrap: %d\n", params->mode[MODE_SHOW_ORIGINAL], params->mode[MODE_SHOW_UNWRAP]);
   printf("Stills output: %d, filename: %s\n", params->mode[MODE_STILLS], params->outputFilename[MODE_STILLS].c_str());
-  printf("Video output: %d, filename: %s\n", params->mode[MODE_VIDEO], params->outputFilename[MODE_VIDEO].c_str());
+  printf("Video output: %d, FPS samples: %d, filename: %s\n", params->mode[MODE_VIDEO], params->sampleFPS,  params->outputFilename[MODE_VIDEO].c_str());
   printf("MJPG output: %d, Single still mode: %d, filename: %s\n", params->mode[MODE_MJPG], params->mode[MODE_SINGLE_STILL],
       params->outputFilename[MODE_MJPG].c_str());
 }

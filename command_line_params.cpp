@@ -29,13 +29,14 @@ CLParameter clParams[] = {
   CLParameter{OUTPUT_STILLS,    "-s",     "--stills",     "Output stills",      "Capture unwrapped stills on spacebar press"},
   CLParameter{OUTPUT_VIDEO,     "-v",     "--video",      "Output video",       "Capture unwrapped AVI video"},
   CLParameter{OUTPUT_MJPG,      "-m",     "--mjpg",       "Output MJPG stream", "Output unwrapped frames for MJPG streamer"},
-  CLParameter{SINGLE_STILL,     "-ss",    "--single",     "Capture 1 still",    "Capture a single still image and exit"}
+  CLParameter{SINGLE_STILL,     "-ss",    "--single",     "Capture 1 still",    "Capture a single still image and exit"},
+  CLParameter{SAMPLE_FPS,       "-sfr",   "--samplefps",  "Sample frame rate",  "Specified how many samples to use in measuring capture frame rate"}
 };
 
 /*
  * Size of params array
  */
-int clParamCount = 18;
+int clParamCount = 21;
 
 /*
  * Populates a set of BubbleScopeParameters based on contents of argv
@@ -131,6 +132,9 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
             params->mode[MODE_SINGLE_STILL] = 1;
             //Recycle some MJPG code to output image
             params->outputFilename[MODE_MJPG] = argv[i];
+            break;
+          case SAMPLE_FPS:
+            sscanf(argv[i], "%d", &params->sampleFPS);
             break;
         }
       }
