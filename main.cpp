@@ -88,14 +88,14 @@ int main(int argc, char **argv)
     case 0:     //All is good, carry on
       break;
     case HELP:  //User wants help
-      printf("BubbleScopeApp\n");
-      printf("See https://github.com/DanNixon/BubbleScopeApp for more info.\n");
+      printf("BubbleScopeCL\n");
+      printf("See https://github.com/DanNixon/BubbleScopeCL for more info.\n");
       printParameterUsage();
       return 0;
       break;
     default:    //Parameter error
       printf("Invalid parameters!\n");
-      printf("See https://github.com/DanNixon/BubbleScopeApp for more info.\n");
+      printf("See https://github.com/DanNixon/BubbleScopeCL for more info.\n");
       printParameterUsage();
       return 1;
   }

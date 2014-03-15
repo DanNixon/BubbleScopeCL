@@ -1,5 +1,5 @@
 /*
- * BubbleScopeApp capture parameter functions.
+ * BubbleScopeCL capture parameter functions.
  *
  * Dan Nixon
  */

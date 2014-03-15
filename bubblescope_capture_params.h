@@ -1,3 +1,9 @@
+/*
+ * BubbleScopeCL capture parameter functions.
+ *
+ * Dan Nixon
+ */
+
 #ifndef BUBBLESCOPECAPPARMAS_H
 #define BUBBLESCOPECAPPARMAS_H
 

@@ -1,5 +1,5 @@
 /*
- * Command line argument parser for BubbleScopeApp parameters.
+ * Command line argument parser for BubbleScopeCL parameters.
  *
  * Dan Nixon
  */
