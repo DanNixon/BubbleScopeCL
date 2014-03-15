@@ -36,6 +36,7 @@ struct BubbleScopeParameters
   std::string captureLocation;
   unsigned int originalWidth;
   unsigned int originalHeight;
+  bool unwrapCapture;
   unsigned int unwrapWidth;
   float radiusMin;
   float radiusMax;

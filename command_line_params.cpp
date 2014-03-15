@@ -28,13 +28,14 @@ CLParameter clParams[] = {
   CLParameter{OUTPUT_VIDEO,     "-v",     "--video",      "Output video",       "Capture unwrapped AVI video"},
   CLParameter{OUTPUT_MJPG,      "-m",     "--mjpg",       "Output MJPG stream", "Output unwrapped frames for MJPG streamer"},
   CLParameter{SINGLE_STILL,     "-sin"    "--single",     "Capture 1 still",    "Capture a single still image and exit"},
-  CLParameter{SAMPLE_FPS,       "-sfr",   "--samplefps",  "Sample frame rate",  "Specifies how many samples to use in measuring capture frame rate"}
+  CLParameter{SAMPLE_FPS,       "-sfr",   "--samplefps",  "Sample frame rate",  "Specifies how many samples to use in measuring capture frame rate"},
+  CLParameter{NO_UNWRAP,        "-nuw",   "--nounwrap",   "Do not unwrap image","Does not unwrap the captured image"}
 };
 
 /*
  * Size of params array
  */
-int clParamCount = 19;
+int clParamCount = 20;
 
 /*
  * Populates a set of BubbleScopeParameters based on contents of argv
@@ -136,6 +137,11 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
             break;
           case SAMPLE_FPS:
             sscanf(argv[i], "%d", &params->sampleFPS);
+            break;
+          case NO_UNWRAP:
+            params->unwrapCapture = false;
+            params->mode[MODE_SHOW_UNWRAP] = false;
+            i--;
             break;
         }
       }

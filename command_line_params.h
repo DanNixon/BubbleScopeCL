@@ -33,6 +33,7 @@ enum ParameterType
   OUTPUT_MJPG,
   SINGLE_STILL,
   SAMPLE_FPS,
+  NO_UNWRAP,
 
   HELP = 255
 };

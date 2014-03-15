@@ -15,6 +15,7 @@ void setupDefaultParameters(BubbleScopeParameters *params)
   params->captureLocation = "/dev/video0";
   params->originalWidth = 640;
   params->originalHeight = 480;
+  params->unwrapCapture = true;
   params->unwrapWidth = 800;
   params->radiusMin = 0.25f;
   params->radiusMax = 0.45f;
@@ -42,6 +43,7 @@ void printParameters(BubbleScopeParameters *params)
   printf("Source: %d, Location: %s\n", params->captureSource, params->captureLocation.c_str());
   printf("Framerate: %ffps\n", params->fps);
   printf("Original image size: %dx%d\n", params->originalWidth, params->originalHeight);
+  printf("Unwrap capture: %d\n", params->unwrapCapture);
   printf("Unwrap image width: %d\n", params->unwrapWidth);
   printf("Unwrap image radius: min=%f, max=%f\n", params->radiusMin, params->radiusMax);
   printf("Orignal image centre: u=%f, v=%f\n", params->uCentre, params->vCentre);

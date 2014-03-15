@@ -100,13 +100,6 @@ int main(int argc, char **argv)
       return 1;
   }
 
-  //Setup the image unwrapper
-  BubbleScopeUnwrapper unwrapper;
-  unwrapper.unwrapWidth(params.unwrapWidth);
-  unwrapper.originalCentre(params.uCentre, params.vCentre);
-  unwrapper.imageRadius(params.radiusMin, params.radiusMax);
-  unwrapper.offsetAngle(params.offsetAngle);
-
   //Get the correct capture source and open it
   FrameSource *cap;
   switch(params.captureSource)
@@ -117,9 +110,11 @@ int main(int argc, char **argv)
       break;
     case SOURCE_VIDEO:
       cap = new VideoFileSource();
+      params.unwrapCapture = true;
       break;
     case SOURCE_STILL:
       cap = new ImageFileSource();
+      params.unwrapCapture = true;
       break;
   }
   cap->open(params.captureLocation);
@@ -127,6 +122,16 @@ int main(int argc, char **argv)
   //Update some vars for user feedback
   params.originalWidth = cap->getWidth();
   params.originalHeight = cap->getHeight();
+
+  //Setup the image unwrapper
+  BubbleScopeUnwrapper unwrapper;
+  if(params.unwrapCapture)
+  {
+    unwrapper.unwrapWidth(params.unwrapWidth);
+    unwrapper.originalCentre(params.uCentre, params.vCentre);
+    unwrapper.imageRadius(params.radiusMin, params.radiusMax);
+    unwrapper.offsetAngle(params.offsetAngle);
+  }
 
   //Check capture is working
   if(!cap->isOpen())
@@ -139,9 +144,12 @@ int main(int argc, char **argv)
   if(params.captureSource == SOURCE_VIDEO)
     params.fps = dynamic_cast<VideoFileSource *>(cap)->getFrameRate();
 
-  //After capture size is determined setup transofrmation array
-  unwrapper.originalSize(cap->getWidth(), cap->getHeight());
-  unwrapper.generateTransformation();
+  if(params.unwrapCapture)
+  {
+    //After capture size is determined setup transofrmation array
+    unwrapper.originalSize(cap->getWidth(), cap->getHeight());
+    unwrapper.generateTransformation();
+  }
 
   //The container for captured frames
   cv::Mat frame;
@@ -168,7 +176,11 @@ int main(int argc, char **argv)
   cv::VideoWriter videoOut;
   if(params.mode[MODE_VIDEO])
   {
-    cv::Size videoSize = cv::Size(params.unwrapWidth, unwrapper.getUnwrapHeight());
+    cv::Size videoSize;
+    if(params.unwrapCapture)
+      videoSize = cv::Size(params.unwrapWidth, unwrapper.getUnwrapHeight());
+    else
+      videoSize = cv::Size(params.originalWidth, params.originalHeight);
     videoOut.open(params.outputFilename[MODE_VIDEO].c_str(), CV_FOURCC('M','J','P','G'), params.fps, videoSize, true);
     if(!videoOut.isOpened())
       printf("Can't open video output file! (will continue with capture)\n");
@@ -189,7 +201,11 @@ int main(int argc, char **argv)
     cap->grab(&frame);
 
     //Unwrap it
-    cv::Mat unwrap = unwrapper.unwrap(&frame);
+    cv::Mat unwrap;
+    if(params.unwrapCapture)
+      unwrap = unwrapper.unwrap(&frame);
+    else
+      unwrap = frame;
 
     //Show the original if asked to
     if(params.mode[MODE_SHOW_ORIGINAL])
