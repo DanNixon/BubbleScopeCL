@@ -112,8 +112,8 @@ int main(int argc, char **argv)
       cap = new VideoFileSource();
       params.unwrapCapture = true;
       break;
-    case SOURCE_STILL:
-      cap = new ImageFileSource();
+    case SOURCE_TIMELAPSE:
+//      cap = NULL;
       params.unwrapCapture = true;
       break;
   }
@@ -186,6 +186,9 @@ int main(int argc, char **argv)
       printf("Can't open video output file! (will continue with capture)\n");
   }
 
+  //Timelaspe capture timer
+  Timer *timelapseTimer;
+
   //Tell the user how things are going to happen
   printf("Capture parameters:\n");
   printParameters(&params);
@@ -193,10 +196,27 @@ int main(int argc, char **argv)
 
   //Number of still frames already captures, used for filename formatting
   int stillFrameNumber = 0;
+  int timelapseFrameNumber = 0;
 
   printf("Starting capture.\n");
+
+  //Start timelapse timing
+  if(params.mode[MODE_TIMELAPSE])
+  {
+    timelapseTimer = new Timer();
+    timelapseTimer->start();
+  }
+
   while(run)
   {
+    //Check if capture is still open
+    //Required for TimelapseSource, non essential for others
+    if(!cap->isOpen())
+    {
+      run = false;
+      break;
+    }
+
     //Capture a frame
     cap->grab(&frame);
 
@@ -222,6 +242,24 @@ int main(int argc, char **argv)
     //Save an MJPG frame if asked to
     if(params.mode[MODE_MJPG] || params.mode[MODE_SINGLE_STILL])
       imwrite(params.outputFilename[MODE_MJPG], unwrap);
+
+    //If time has elepsed save a timelapse frame
+    if(params.mode[MODE_TIMELAPSE] &&
+        (timelapseTimer->getElapsedTimeInMilliSec() > params.mode[MODE_TIMELAPSE]))
+    {
+      //Format filename with frame number
+      int filenameLen = strlen(params.outputFilename[MODE_TIMELAPSE].c_str()) + 5;
+      char timelapseFilename[filenameLen];
+      sprintf(timelapseFilename, params.outputFilename[MODE_TIMELAPSE].c_str(), timelapseFrameNumber);
+      printf("Saving still image: %s\n", timelapseFilename);
+      //Save timelapse frame
+      imwrite(timelapseFilename, unwrap);
+      timelapseFrameNumber++;
+      //Restart timer
+      timelapseTimer->stop();
+      timelapseTimer = new Timer();
+      timelapseTimer->start();
+    }
 
     if(params.mode[MODE_SHOW_ORIGINAL] || params.mode[MODE_SHOW_UNWRAP])
     {
@@ -259,7 +297,7 @@ int main(int argc, char **argv)
     if(params.mode[MODE_STILLS] && captureStill)
     {
       //Format filename with frame number
-      int filenameLen = strlen(params.outputFilename[MODE_STILLS].c_str()) + 2;
+      int filenameLen = strlen(params.outputFilename[MODE_STILLS].c_str()) + 5;
       char stillFilename[filenameLen];
       sprintf(stillFilename, params.outputFilename[MODE_STILLS].c_str(), stillFrameNumber);
       printf("Saving still image: %s\n", stillFilename);

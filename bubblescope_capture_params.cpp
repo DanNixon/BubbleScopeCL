@@ -28,9 +28,11 @@ void setupDefaultParameters(BubbleScopeParameters *params)
   params->mode[MODE_STILLS] = false;
   params->mode[MODE_VIDEO] = false;
   params->mode[MODE_MJPG] = false;
+  params->mode[MODE_TIMELAPSE] = 0;
   params->outputFilename[MODE_STILLS] = "BubbleScope_Still_Capture_%d.jpg";
   params->outputFilename[MODE_VIDEO] = "BubbleScope_Video_Capture.avi";
   params->outputFilename[MODE_MJPG] = "BubbleScope_MJPG_Frame.jpg";
+  params->outputFilename[MODE_TIMELAPSE] = "BubbleScope_Timelapse_Caoture_%d.jpg";
   params->fps = 10.0f;
   params->sampleFPS = 0;
 }
@@ -53,4 +55,5 @@ void printParameters(BubbleScopeParameters *params)
   printf("Video output: %d, FPS samples: %d, filename: %s\n", params->mode[MODE_VIDEO], params->sampleFPS,  params->outputFilename[MODE_VIDEO].c_str());
   printf("MJPG output: %d, Single still mode: %d, filename: %s\n", params->mode[MODE_MJPG], params->mode[MODE_SINGLE_STILL],
       params->outputFilename[MODE_MJPG].c_str());
+  printf("Timelapse output delay: %dms, filename: %s\n", params->mode[MODE_TIMELAPSE], params->outputFilename[MODE_TIMELAPSE].c_str());
 }

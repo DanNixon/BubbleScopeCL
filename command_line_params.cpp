@@ -10,32 +10,34 @@
  * Array of parameters which may be passed to BubbleScope app
  */
 CLParameter clParams[] = {
-  CLParameter{HELP,             "-h",     "--help",       "Show help",          "Shows this help text"},
-  CLParameter{CAPTURE_DEVICE,   "-d",     "--device",     "Capture device",     "Specifies a V4L2 capture device"},
-  CLParameter{P_SOURCE_STILL,   "-ss",    "--sourcestill","Source still",       "Specifies a pre captured still to unwrap"},
-  CLParameter{P_SOURCE_VIDEO,   "-sv",    "--sourcevideo","Source video",       "Specifies a pre recorded video to unwrap"},
-  CLParameter{ORIGINAL_WIDTH,   "-iw",    "--inwidth",    "Original width",     "Set desired capture width (V4L2 only)"},
-  CLParameter{ORIGINAL_HEIGHT,  "-ih",    "--inheight",   "Original height",    "Set desired capture height (V4L2 only)"},
-  CLParameter{UNWRAP_WIDTH,     "-ow",    "--outwidth",   "Unwrap width",       "Set width of unwrapped image"},
-  CLParameter{RADIUS_MIN,       "-rmin",  "--minradius",  "Radius min",         "Set lower unwrap radius"},
-  CLParameter{RADIUS_MAX,       "-rmax",  "--maxradius",  "Radius max",         "Set upper unwrap radius"},
-  CLParameter{U_CENTRE,         "-uc",    "--ucentre",    "U centre",           "Set U original image centre"},
-  CLParameter{V_CENTRE,         "-vc",    "--vcentre",    "V centre",           "Set V original image centre"},
-  CLParameter{OFFSET_ANGLE,     "-a",     "--offset",     "Offset angle",       "Set unwrap image offset angle"},
-  CLParameter{SHOW_ORIGINAL,    "-o",     "--original",   "Show original",      "Show original video"},
-  CLParameter{SHOW_UNWRAP,      "-u",     "--unwrap",     "Show unwrap",        "Show unwrapped video"},
-  CLParameter{OUTPUT_STILLS,    "-s",     "--stills",     "Output stills",      "Capture unwrapped stills on spacebar press"},
-  CLParameter{OUTPUT_VIDEO,     "-v",     "--video",      "Output video",       "Capture unwrapped AVI video"},
-  CLParameter{OUTPUT_MJPG,      "-m",     "--mjpg",       "Output MJPG stream", "Output unwrapped frames for MJPG streamer"},
-  CLParameter{SINGLE_STILL,     "-sin"    "--single",     "Capture 1 still",    "Capture a single still image and exit"},
-  CLParameter{SAMPLE_FPS,       "-sfr",   "--samplefps",  "Sample frame rate",  "Specifies how many samples to use in measuring capture frame rate"},
-  CLParameter{NO_UNWRAP,        "-nuw",   "--nounwrap",   "Do not unwrap image","Does not unwrap the captured image"}
+  CLParameter{HELP,             "-h",     "--help",           "Show help",          "Shows this help text"},
+  CLParameter{CAPTURE_DEVICE,   "-d",     "--device",         "Capture device",     "Specifies a V4L2 capture device"},
+  CLParameter{P_SOURCE_STILL,   "-ss",    "--sourcestill",    "Source still",       "Specifies a pre captured still to unwrap"},
+  CLParameter{P_SOURCE_VIDEO,   "-sv",    "--sourcevideo",    "Source video",       "Specifies a pre recorded video to unwrap"},
+  CLParameter{P_SOURCE_TLAPSE,  "-stl",   "--sourcetimelapse","Source timelapse",  "Specifies a set of pre captured timelapse frames to unwrap"},
+  CLParameter{ORIGINAL_WIDTH,   "-iw",    "--inwidth",        "Original width",     "Set desired capture width (V4L2 only)"},
+  CLParameter{ORIGINAL_HEIGHT,  "-ih",    "--inheight",       "Original height",    "Set desired capture height (V4L2 only)"},
+  CLParameter{UNWRAP_WIDTH,     "-ow",    "--outwidth",       "Unwrap width",       "Set width of unwrapped image"},
+  CLParameter{RADIUS_MIN,       "-rmin",  "--minradius",      "Radius min",         "Set lower unwrap radius"},
+  CLParameter{RADIUS_MAX,       "-rmax",  "--maxradius",      "Radius max",         "Set upper unwrap radius"},
+  CLParameter{U_CENTRE,         "-uc",    "--ucentre",        "U centre",           "Set U original image centre"},
+  CLParameter{V_CENTRE,         "-vc",    "--vcentre",        "V centre",           "Set V original image centre"},
+  CLParameter{OFFSET_ANGLE,     "-a",     "--offset",         "Offset angle",       "Set unwrap image offset angle"},
+  CLParameter{SHOW_ORIGINAL,    "-o",     "--original",       "Show original",      "Show original video"},
+  CLParameter{SHOW_UNWRAP,      "-u",     "--unwrap",         "Show unwrap",        "Show unwrapped video"},
+  CLParameter{OUTPUT_STILLS,    "-s",     "--stills",         "Output stills",      "Capture stills on spacebar press"},
+  CLParameter{OUTPUT_VIDEO,     "-v",     "--video",          "Output video",       "Capture AVI video"},
+  CLParameter{OUTPUT_MJPG,      "-m",     "--mjpg",           "Output MJPG stream", "Output frames for MJPG streamer"},
+  CLParameter{OUTPUT_TIMELAPSE, "-t",     "--timelapse",      "Output timelapse",   "Output captured frames as timelapse at specified interval"},
+  CLParameter{SINGLE_STILL,     "-sin"    "--single",         "Capture 1 still",    "Capture a single still image and exit"},
+  CLParameter{SAMPLE_FPS,       "-sfr",   "--samplefps",      "Sample frame rate",  "Specifies how many samples to use in measuring capture frame rate"},
+  CLParameter{NO_UNWRAP,        "-nuw",   "--nounwrap",       "Do not unwrap image","Does not unwrap the captured image"}
 };
 
 /*
  * Size of params array
  */
-int clParamCount = 20;
+int clParamCount = 21;
 
 /*
  * Populates a set of BubbleScopeParameters based on contents of argv
@@ -72,6 +74,16 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
             break;
           case P_SOURCE_VIDEO:
             params->captureSource = SOURCE_VIDEO;
+            sscanf(argv[i], "%s", &buffer);
+            params->captureLocation = buffer;
+            //Required to allow capture mode to function correctly
+            params->mode[MODE_SHOW_ORIGINAL] = 0;
+            params->mode[MODE_SHOW_UNWRAP] = 0;
+            params->mode[MODE_MJPG] = 0;
+            params->mode[MODE_STILLS] = 0;
+            break;
+          case P_SOURCE_TLAPSE:
+            params->captureSource = SOURCE_TIMELAPSE;
             sscanf(argv[i], "%s", &buffer);
             params->captureLocation = buffer;
             //Required to allow capture mode to function correctly
@@ -124,6 +136,11 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
           case OUTPUT_MJPG:
             params->mode[MODE_MJPG] = true;
             params->outputFilename[MODE_MJPG] = argv[i];
+            break;
+          case OUTPUT_TIMELAPSE:
+            sscanf(argv[i], "%d", &params->mode[MODE_TIMELAPSE]);
+            params->outputFilename[MODE_TIMELAPSE] = argv[i + 1];
+            i++;
             break;
           case SINGLE_STILL:
             //Other capture modes will not work correctly in this mode
