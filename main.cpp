@@ -218,9 +218,6 @@ int main(int argc, char **argv)
       break;
     }
 
-    imshow("test", frame);
-    cv::waitKey(1000);
-
     //Unwrap it
     cv::Mat unwrap;
     if(params.unwrapCapture)
