@@ -11,3 +11,5 @@ You may encounter issues setting original image capture properties, this is eith
 This can be used to correct the framerate for the video output, if the camera does not support user defined framerate then passing the measured FPS using ```-f``` will ensure the recorded video is of the correct framerate.
 
 Requires OpenCV (tested with version 2.4) and uses the [High Resolution Timer](http://www.songho.ca/misc/timer/timer.html) C++ library.
+
+Almost certainly not cross platform, although will probably work when compiled with Cygwin.

@@ -37,7 +37,7 @@ CLParameter clParams[] = {
 /*
  * Size of params array
  */
-int clParamCount = 21;
+int clParamCount = 22;
 
 /*
  * Populates a set of BubbleScopeParameters based on contents of argv
@@ -175,7 +175,7 @@ void printParameterUsage()
   int i;
   for(i = 0; i < clParamCount; i++)
   {
-    printf(" %-5s\t%-12s\t: %-25s%s\n",
+    printf(" %-4s\t%-20s\t: %-25s%s\n",
         clParams[i].shortParam, clParams[i].longParam,
         clParams[i].name, clParams[i].description);
   }

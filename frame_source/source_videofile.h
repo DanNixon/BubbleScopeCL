@@ -26,7 +26,7 @@ class VideoFileSource: public FrameSource
     void open(std::string);
     void close();
     bool isOpen();
-    void grab(cv::Mat *);
+    bool grab(cv::Mat *);
     unsigned int getWidth();
     unsigned int getHeight();
 

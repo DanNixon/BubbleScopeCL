@@ -22,9 +22,10 @@ bool ImageFileSource::isOpen()
   return this->b_open;
 }
 
-void ImageFileSource::grab(cv::Mat *out)
+bool ImageFileSource::grab(cv::Mat *out)
 {
   *out = this->o_image;
+  return true;
 }
 
 unsigned int ImageFileSource::getWidth()

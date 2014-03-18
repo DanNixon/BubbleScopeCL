@@ -23,6 +23,7 @@
 #include "frame_source/source_v4l2.h"
 #include "frame_source/source_imagefile.h"
 #include "frame_source/source_videofile.h"
+#include "frame_source/source_timelapse.h"
 
 //Cross platform delay, taken from: http://www.cplusplus.com/forum/unices/10491/
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__WINDOWS__) || defined(__TOS_WIN__)
@@ -113,7 +114,7 @@ int main(int argc, char **argv)
       params.unwrapCapture = true;
       break;
     case SOURCE_TIMELAPSE:
-//      cap = NULL;
+      cap = new TimelapseSource();
       params.unwrapCapture = true;
       break;
   }
@@ -195,8 +196,8 @@ int main(int argc, char **argv)
   printf("\n");
 
   //Number of still frames already captures, used for filename formatting
-  int stillFrameNumber = 0;
-  int timelapseFrameNumber = 0;
+  unsigned long stillFrameNumber = 0;
+  unsigned long timelapseFrameNumber = 0;
 
   printf("Starting capture.\n");
 
@@ -209,16 +210,16 @@ int main(int argc, char **argv)
 
   while(run)
   {
-    //Check if capture is still open
-    //Required for TimelapseSource, non essential for others
-    if(!cap->isOpen())
+    //Try to capture a frame
+    if(!cap->grab(&frame))
     {
-      run = false;
+      printf("Capture returned no frame, exiting.\n");
+      run = 0;
       break;
     }
 
-    //Capture a frame
-    cap->grab(&frame);
+    imshow("test", frame);
+    cv::waitKey(1000);
 
     //Unwrap it
     cv::Mat unwrap;
@@ -245,13 +246,13 @@ int main(int argc, char **argv)
 
     //If time has elepsed save a timelapse frame
     if(params.mode[MODE_TIMELAPSE] &&
-        (timelapseTimer->getElapsedTimeInMilliSec() > params.mode[MODE_TIMELAPSE]))
+        ((timelapseTimer->getElapsedTimeInMilliSec() > params.mode[MODE_TIMELAPSE])
+         || params.captureSource == SOURCE_TIMELAPSE))
     {
       //Format filename with frame number
       int filenameLen = strlen(params.outputFilename[MODE_TIMELAPSE].c_str()) + 5;
       char timelapseFilename[filenameLen];
       sprintf(timelapseFilename, params.outputFilename[MODE_TIMELAPSE].c_str(), timelapseFrameNumber);
-      printf("Saving still image: %s\n", timelapseFilename);
       //Save timelapse frame
       imwrite(timelapseFilename, unwrap);
       timelapseFrameNumber++;

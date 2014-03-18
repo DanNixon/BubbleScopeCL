@@ -34,10 +34,11 @@ bool V4L2Source::isOpen()
   return this->o_capture->isOpen();
 }
 
-void V4L2Source::grab(cv::Mat *out)
+bool V4L2Source::grab(cv::Mat *out)
 {
   this->o_capture->grab();
   this->o_capture->rgb(*out);
+  return true;
 }
 
 unsigned int V4L2Source::getWidth()
