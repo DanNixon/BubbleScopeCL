@@ -32,7 +32,7 @@ void setupDefaultParameters(BubbleScopeParameters *params)
   params->outputFilename[MODE_STILLS] = "BubbleScope_Still_Capture_%d.jpg";
   params->outputFilename[MODE_VIDEO] = "BubbleScope_Video_Capture.avi";
   params->outputFilename[MODE_MJPG] = "BubbleScope_MJPG_Frame.jpg";
-  params->outputFilename[MODE_TIMELAPSE] = "BubbleScope_Timelapse_Caoture_%d.jpg";
+  params->outputFilename[MODE_TIMELAPSE] = "BubbleScope_Timelapse_Capture_%d.jpg";
   params->fps = 10.0f;
   params->sampleFPS = 0;
 }
