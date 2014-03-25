@@ -113,6 +113,10 @@ int main(int argc, char **argv)
       cap = new VideoFileSource();
       params.unwrapCapture = true;
       break;
+    case SOURCE_STILL:
+      cap = new ImageFileSource();
+      params.unwrapCapture = true;
+      break;
     case SOURCE_TIMELAPSE:
       cap = new TimelapseSource();
       params.unwrapCapture = true;
