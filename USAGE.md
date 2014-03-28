@@ -8,10 +8,10 @@ Short parameter | Long paremetr         | Description
 ----------------|-----------------------|-----------------------------------------------------------------------
 ```-h```        |```--help```           |Shows in app help text
 ```-d```        |```--device```         |Sets the capture source to V4L2 and specifies the path to the device
-```-ss``        |```--sourcestill```    |Sets the capture source to a still image file and specified its source
-```-sv``        |```--sourcevideo```    |Sets the capture source to a video file (currently only tested with MJPEG wrapped in AVI) and specifies its source
+```-ss```       |```--sourcestill```    |Sets the capture source to a still image file and specified its source
+```-sv```       |```--sourcevideo```    |Sets the capture source to a video file (currently only tested with MJPEG wrapped in AVI) and specifies its source
 ```-stl```      |```--sourcetimelapse```|Sets the capture source to a set of pre captured timelapse frames
-```-iw``        |```--inwidth```        |Set the desired capture width (V4L2 only)
+```-iw```       |```--inwidth```        |Set the desired capture width (V4L2 only)
 ```-ih```       |```--inheight```       |Set the desired capture height (V4L2 only)
 ```-ow```       |```--outwidth```       |Set the width of the unwrapped image frames (height is calculated from this value)
 ```-rmin```     |```--minradius```      |Set the lower unwrap radius (0 - 0.5)

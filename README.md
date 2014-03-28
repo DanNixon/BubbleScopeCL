@@ -12,6 +12,8 @@ This can be used to correct the framerate for the video output, if the camera do
 
 Almost certainly not cross platform, although will probably work when compiled with Cygwin.
 
+See [usage](https://github.com/DanNixon/BubbleScopeCL/blob/master/USAGE.md) for complete instructions and parameter listing.
+
 Requirements
 ------------
 
