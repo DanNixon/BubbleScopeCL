@@ -315,5 +315,7 @@ int main(int argc, char **argv)
   }
 
   cap->close();
+
+  printf("Complete.\n");
   return 0;
 }

@@ -37,9 +37,10 @@ bool VideoFileSource::isOpen()
 
 bool VideoFileSource::grab(cv::Mat *out)
 {
-  this->o_capture->read(*out);
-  this->i_grabbedFrameCount++;
-  return true;
+  bool result = this->o_capture->read(*out);
+  if(result)
+    this->i_grabbedFrameCount++;
+  return result;
 }
 
 unsigned int VideoFileSource::getWidth()
