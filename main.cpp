@@ -203,7 +203,7 @@ int main(int argc, char **argv)
   unsigned long stillFrameNumber = 0;
   unsigned long timelapseFrameNumber = 0;
 
-  printf("Starting capture.\n");
+  printf("Starting capture/conversion.\n");
 
   //Start timelapse timing
   if(params.mode[MODE_TIMELAPSE])
