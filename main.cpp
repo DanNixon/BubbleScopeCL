@@ -40,7 +40,7 @@
   }
 #endif 
 
-const unsigned long loopDelayTime = 10;
+unsigned long loopDelayTime = 10;
 
 bool run = 1;
 bool captureStill = 0;
@@ -112,14 +112,17 @@ int main(int argc, char **argv)
     case SOURCE_VIDEO:
       cap = new VideoFileSource();
       params.unwrapCapture = true;
+      loopDelayTime = 0;
       break;
     case SOURCE_STILL:
       cap = new ImageFileSource();
       params.unwrapCapture = true;
+      loopDelayTime = 0;
       break;
     case SOURCE_TIMELAPSE:
       cap = new TimelapseSource();
       params.unwrapCapture = true;
+      loopDelayTime = 0;
       break;
   }
   cap->open(params.captureLocation);
