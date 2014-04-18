@@ -139,6 +139,10 @@ int main(int argc, char **argv)
     unwrapper.originalCentre(params.uCentre, params.vCentre);
     unwrapper.imageRadius(params.radiusMin, params.radiusMax);
     unwrapper.offsetAngle(params.offsetAngle);
+
+    //After capture size is determined setup transformation array
+    unwrapper.originalSize(params.originalWidth, params.originalHeight);
+    unwrapper.generateTransformation();
   }
 
   //Check capture is working
@@ -151,13 +155,6 @@ int main(int argc, char **argv)
   //Get the input video frame rate if used
   if(params.captureSource == SOURCE_VIDEO)
     params.fps = dynamic_cast<VideoFileSource *>(cap)->getFrameRate();
-
-  if(params.unwrapCapture)
-  {
-    //After capture size is determined setup transofrmation array
-    unwrapper.originalSize(cap->getWidth(), cap->getHeight());
-    unwrapper.generateTransformation();
-  }
 
   //The container for captured frames
   cv::Mat frame;
@@ -232,11 +229,11 @@ int main(int argc, char **argv)
     else
       unwrap = frame;
 
-    //Show the original if asked to
+    //Show the original image if asked to
     if(params.mode[MODE_SHOW_ORIGINAL])
       imshow("BubbleScope Original Image", frame);
 
-    //Show the unwrapped if asked to
+    //Show the unwrapped image if asked to
     if(params.mode[MODE_SHOW_UNWRAP])
       imshow("BubbleScope Unwrapped Image", unwrap);
   

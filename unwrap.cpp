@@ -84,7 +84,9 @@ cv::Mat BubbleScopeUnwrapper::unwrap(cv::Mat *imageIn)
 
   unsigned long i;
   for(i = 0; i < this->i_outMatSize; i++)
+  {
     unwrapPixels[i] = originalPixels[this->ia_transformation[i]];
+  }
 
   return imageOut;
 }

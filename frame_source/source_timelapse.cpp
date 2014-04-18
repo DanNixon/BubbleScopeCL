@@ -45,7 +45,8 @@ bool TimelapseSource::grab(cv::Mat *out)
   if(stat (imageFilename, &buffer))
     return false;
 
-  *out = cv::imread(imageFilename);
+  this->o_frame = cv::imread(imageFilename);
+  *out = this->o_frame;
 
   //Increment frame number
   this->frameNumber++;

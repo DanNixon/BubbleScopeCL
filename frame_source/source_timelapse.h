@@ -30,6 +30,7 @@ class TimelapseSource: public FrameSource
     unsigned int getHeight();
 
   private:
+    cv::Mat o_frame;
     char *filenamePattern;
     unsigned long frameNumber;
 };
