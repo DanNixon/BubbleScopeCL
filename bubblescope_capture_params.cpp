@@ -35,6 +35,7 @@ void setupDefaultParameters(BubbleScopeParameters *params)
   params->outputFilename[MODE_TIMELAPSE] = "BubbleScope_Timelapse_Capture_%d.jpg";
   params->fps = 10.0f;
   params->sampleFPS = 0;
+  params->forceFPS = -1.0;
 }
 
 /*
@@ -43,7 +44,7 @@ void setupDefaultParameters(BubbleScopeParameters *params)
 void printParameters(BubbleScopeParameters *params)
 {
   printf("Source: %d, Location: %s\n", params->captureSource, params->captureLocation.c_str());
-  printf("Framerate: %ffps\n", params->fps);
+  printf("Framerate: %ffps (force %f)\n", params->fps, params->forceFPS);
   printf("Original image size: %dx%d\n", params->originalWidth, params->originalHeight);
   printf("Unwrap capture: %d\n", params->unwrapCapture);
   printf("Unwrap image width: %d\n", params->unwrapWidth);

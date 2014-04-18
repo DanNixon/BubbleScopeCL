@@ -35,6 +35,7 @@ enum ParameterType
   OUTPUT_TIMELAPSE,
   SINGLE_STILL,
   SAMPLE_FPS,
+  FORCE_FPS,
   NO_UNWRAP,
 
   HELP = 255

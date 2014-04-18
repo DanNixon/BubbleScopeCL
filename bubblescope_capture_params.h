@@ -49,6 +49,7 @@ struct BubbleScopeParameters
   std::string outputFilename[4];
   float fps;
   unsigned int sampleFPS;
+  float forceFPS;
 };
 
 void setupDefaultParameters(BubbleScopeParameters *);

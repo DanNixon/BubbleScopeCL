@@ -31,13 +31,14 @@ CLParameter clParams[] = {
   CLParameter{OUTPUT_TIMELAPSE, "-t",     "--timelapse",      "Output timelapse",   "Output captured frames as timelapse at specified interval"},
   CLParameter{SINGLE_STILL,     "-sin"    "--single",         "Capture 1 still",    "Capture a single still image and exit"},
   CLParameter{SAMPLE_FPS,       "-sfr",   "--samplefps",      "Sample frame rate",  "Specifies how many samples to use in measuring capture frame rate"},
+  CLParameter{FORCE_FPS,        "-fps",   "--forcefps",       "Force frame rate",   "Force a specified frame rate"},
   CLParameter{NO_UNWRAP,        "-nuw",   "--nounwrap",       "Do not unwrap image","Does not unwrap the captured image"}
 };
 
 /*
  * Size of params array
  */
-int clParamCount = 22;
+int clParamCount = 23;
 
 /*
  * Populates a set of BubbleScopeParameters based on contents of argv
@@ -154,6 +155,9 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
             break;
           case SAMPLE_FPS:
             sscanf(argv[i], "%d", &params->sampleFPS);
+            break;
+          case FORCE_FPS:
+            sscanf(argv[i], "%f", &params->forceFPS);
             break;
           case NO_UNWRAP:
             params->unwrapCapture = false;

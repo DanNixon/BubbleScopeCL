@@ -177,6 +177,9 @@ int main(int argc, char **argv)
     params.fps = measuredFPS;
   }
 
+  if(params.forceFPS > 0.0f)
+    params.fps = params.forceFPS;
+
   //Setup video output
   cv::VideoWriter videoOut;
   if(params.mode[MODE_VIDEO])
