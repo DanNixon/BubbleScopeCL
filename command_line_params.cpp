@@ -67,31 +67,16 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
             params->captureSource = SOURCE_STILL;
             sscanf(argv[i], "%s", &buffer);
             params->captureLocation = buffer;
-            //Required to allow capture mode to function correctly
-            params->mode[MODE_SHOW_ORIGINAL] = 0;
-            params->mode[MODE_SHOW_UNWRAP] = 0;
-            params->mode[MODE_MJPG] = 0;
-            params->mode[MODE_VIDEO] = 0;
             break;
           case P_SOURCE_VIDEO:
             params->captureSource = SOURCE_VIDEO;
             sscanf(argv[i], "%s", &buffer);
             params->captureLocation = buffer;
-            //Required to allow capture mode to function correctly
-            params->mode[MODE_SHOW_ORIGINAL] = 0;
-            params->mode[MODE_SHOW_UNWRAP] = 0;
-            params->mode[MODE_MJPG] = 0;
-            params->mode[MODE_STILLS] = 0;
             break;
           case P_SOURCE_TLAPSE:
             params->captureSource = SOURCE_TIMELAPSE;
             sscanf(argv[i], "%s", &buffer);
             params->captureLocation = buffer;
-            //Required to allow capture mode to function correctly
-            params->mode[MODE_SHOW_ORIGINAL] = 0;
-            params->mode[MODE_SHOW_UNWRAP] = 0;
-            params->mode[MODE_MJPG] = 0;
-            params->mode[MODE_STILLS] = 0;
             break;
           case ORIGINAL_WIDTH:
             sscanf(argv[i], "%d", &params->originalWidth);

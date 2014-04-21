@@ -127,6 +127,14 @@ int main(int argc, char **argv)
   }
   cap->open(params.captureLocation);
 
+  if(params.captureSource != SOURCE_V4L2)
+  {
+    params.mode[MODE_SHOW_ORIGINAL] = 0;
+    params.mode[MODE_SHOW_UNWRAP] = 0;
+    params.mode[MODE_MJPG] = 0;
+    params.mode[MODE_VIDEO] = 0;
+  }
+
   //Check capture is working
   if(!cap->isOpen())
   {
