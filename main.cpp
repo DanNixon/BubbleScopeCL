@@ -90,7 +90,7 @@ int main(int argc, char **argv)
       break;
     case HELP:  //User wants help
       printf("BubbleScopeCL\n");
-      printf("See https://github.com/DanNixon/BubbleScopeCL for more info.\n");
+      printf("See https://github.com/DanNixon/BubbleScopeCL for more info.\n\n");
       printParameterUsage();
       return 0;
       break;
@@ -127,6 +127,13 @@ int main(int argc, char **argv)
   }
   cap->open(params.captureLocation);
 
+  //Check capture is working
+  if(!cap->isOpen())
+  {
+    printf("Can't open image capture source!\n");
+    return 2;
+  }
+
   //Update some vars for user feedback
   params.originalWidth = cap->getWidth();
   params.originalHeight = cap->getHeight();
@@ -143,13 +150,6 @@ int main(int argc, char **argv)
     //After capture size is determined setup transformation array
     unwrapper.originalSize(params.originalWidth, params.originalHeight);
     unwrapper.generateTransformation();
-  }
-
-  //Check capture is working
-  if(!cap->isOpen())
-  {
-    printf("Can't open image capture source!\n");
-    return 2;
   }
 
   //Get the input video frame rate if used
