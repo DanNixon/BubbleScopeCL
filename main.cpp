@@ -127,6 +127,17 @@ int main(int argc, char **argv)
   }
   cap->open(params.captureLocation);
 
+  //Set filenames
+  if(params.outputFilename[MODE_VIDEO] == "NONE")
+    params.outputFilename[MODE_VIDEO] = params.captureLocation + "_unwrap.mkv";
+  if(params.outputFilename[MODE_STILLS] == "NONE")
+    params.outputFilename[MODE_STILLS] = params.captureLocation + "_unwrap_%d.jpg";
+  if(params.outputFilename[MODE_TIMELAPSE] == "NONE")
+    params.outputFilename[MODE_TIMELAPSE] = params.captureLocation + "_unwrap_tl_%d.jpg";
+  if(params.outputFilename[MODE_MJPG] == "NONE")
+    params.outputFilename[MODE_MJPG] = params.captureLocation + "_unwrap_frame.jpg";
+
+  //Dont show video display windows unless using V4L2
   if(params.captureSource != SOURCE_V4L2)
   {
     params.mode[MODE_SHOW_ORIGINAL] = 0;
