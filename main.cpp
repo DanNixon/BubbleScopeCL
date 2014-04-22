@@ -227,6 +227,11 @@ int main(int argc, char **argv)
   printParameters(&params);
   printf("\n");
 
+  //Save the config to file
+  if(params.configFilename[CONFIG_WRITE] != "NONE")
+    if(!writeConfigToFile(&params))
+      printf("Could not write config file %s\n", params.configFilename[CONFIG_WRITE].c_str());
+
   //Number of still frames already captures, used for filename formatting
   unsigned long stillFrameNumber = 0;
   unsigned long timelapseFrameNumber = 0;

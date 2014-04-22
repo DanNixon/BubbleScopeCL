@@ -36,6 +36,8 @@ void setupDefaultParameters(BubbleScopeParameters *params)
   params->fps = 10.0f;
   params->sampleFPS = 0;
   params->forceFPS = -1.0;
+  params->configFilename[CONFIG_READ] = "NONE";  //TODO: There must be a better way to do this
+  params->configFilename[CONFIG_WRITE] = "NONE";
 }
 
 /*
@@ -57,4 +59,28 @@ void printParameters(BubbleScopeParameters *params)
   printf("MJPG output: %d, Single still mode: %d, filename: %s\n", params->mode[MODE_MJPG], params->mode[MODE_SINGLE_STILL],
       params->outputFilename[MODE_MJPG].c_str());
   printf("Timelapse output delay: %dms, filename: %s\n", params->mode[MODE_TIMELAPSE], params->outputFilename[MODE_TIMELAPSE].c_str());
+  printf("Read config: %s, write config: %s\n", params->configFilename[CONFIG_READ].c_str(), params->configFilename[CONFIG_WRITE].c_str());
+}
+
+/*
+ * Reads the config file defined in configFilename[CONFIG_READ] and
+ * overwrites all parameters in params.
+ */
+bool readConfigFromFile(BubbleScopeParameters *params)
+{
+  //TODO
+  printf("READ CONFIG: %s\n", params->configFilename[CONFIG_READ].c_str());
+
+  return false;
+}
+
+/*
+ * Writes the config to the config file defined in configFilename[CONFIG_WRITE]
+ */
+bool writeConfigToFile(BubbleScopeParameters *params)
+{
+  //TODO
+  printf("WRITE CONFIG: %s\n", params->configFilename[CONFIG_WRITE].c_str());
+
+  return false;
 }

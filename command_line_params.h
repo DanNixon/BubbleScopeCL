@@ -36,6 +36,8 @@ enum ParameterType
   SINGLE_STILL,
   SAMPLE_FPS,
   FORCE_FPS,
+  LOAD_CONFIG,
+  SAVE_CONFIG,
   NO_UNWRAP,
 
   HELP = 255

@@ -31,14 +31,15 @@ CLParameter clParams[] = {
   CLParameter{OUTPUT_TIMELAPSE, "-t",     "--timelapse",      "Output timelapse",   "Output captured frames as timelapse at specified interval"},
   CLParameter{SINGLE_STILL,     "-sin"    "--single",         "Capture 1 still",    "Capture a single still image and exit"},
   CLParameter{SAMPLE_FPS,       "-sfr",   "--samplefps",      "Sample frame rate",  "Specifies how many samples to use in measuring capture frame rate"},
-  CLParameter{FORCE_FPS,        "-fps",   "--forcefps",       "Force frame rate",   "Force a specified frame rate"},
-  CLParameter{NO_UNWRAP,        "-nuw",   "--nounwrap",       "Do not unwrap image","Does not unwrap the captured image"}
+  CLParameter{NO_UNWRAP,        "-nuw",   "--nounwrap",       "Do not unwrap image","Does not unwrap the captured image"},
+  CLParameter{LOAD_CONFIG,      "-lc",    "--config",         "Load config",        "Load unwrap config from file"},
+  CLParameter{SAVE_CONFIG,      "-sc",    "--saveconf",       "Save config",        "Save unwrap config to file"}
 };
 
 /*
  * Size of params array
  */
-int clParamCount = 23;
+int clParamCount = 24;
 
 /*
  * Populates a set of BubbleScopeParameters based on contents of argv
@@ -160,6 +161,13 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
             params->unwrapCapture = false;
             params->mode[MODE_SHOW_UNWRAP] = false;
             i--;
+            break;
+          case LOAD_CONFIG:
+            params->configFilename[CONFIG_READ] = argv[i];
+            readConfigFromFile(params);
+            break;
+          case SAVE_CONFIG:
+            params->configFilename[CONFIG_WRITE] = argv[i];
             break;
         }
       }

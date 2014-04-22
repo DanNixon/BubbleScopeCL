@@ -29,6 +29,8 @@ Short parameter | Long paremetr         | Description
 ```-sfr```      |```--samplefps```      |Specifies how many samples to use in measuring capture frame rate (V4L2 only)
 ```-fps```      |```--forcefps```       |Force the video output frame rate to a specified value
 ```-nuw```      |```--nounwrap```       |Keeps captures in original "wrapped" format
+```-lc```       |```--config```         |Load unwrap config from file
+```-sc```       |```--saveconf```       |Save unwrap config to file
 
 Examples
 --------
