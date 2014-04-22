@@ -6,6 +6,8 @@
 
 #include "bubblescope_capture_params.h"
 
+using namespace std;
+
 /*
  * Sets a resonable default configuration.
  */
@@ -68,18 +70,18 @@ void printParameters(BubbleScopeParameters *params)
  */
 bool readConfigFromFile(BubbleScopeParameters *params)
 {
-  std::ifstream configFile(params->configFilename[CONFIG_READ].c_str());
+  ifstream configFile(params->configFilename[CONFIG_READ].c_str());
   int lineNo = 0;
 
-  std::string line;
-  while (std::getline(configFile, line))
+  string line;
+  while (getline(configFile, line))
   {
     lineNo++;
-    std::string::size_type pos = line.find_first_of(' ');
-    if(pos != std::string::npos)
+    string::size_type pos = line.find_first_of(' ');
+    if(pos != string::npos)
     {
-      std::string key = line.substr(0, pos);
-      std::string value = line.substr(pos+1, line.length());
+      string key = line.substr(0, pos);
+      string value = line.substr(pos+1, line.length());
 
       if(key == "source_v4l2")
       {
@@ -129,7 +131,7 @@ bool readConfigFromFile(BubbleScopeParameters *params)
       {
         sscanf(value.c_str(), "%f", &(params->vCentre));
       }
-      else if(key == "no_unwrap")
+      else if(key == "unwrap")
       {
         sscanf(value.c_str(), "%d", &(params->unwrapCapture));
       }
@@ -184,6 +186,7 @@ bool readConfigFromFile(BubbleScopeParameters *params)
     }
   }
 
+  configFile.close();
   return true;
 }
 
@@ -192,8 +195,59 @@ bool readConfigFromFile(BubbleScopeParameters *params)
  */
 bool writeConfigToFile(BubbleScopeParameters *params)
 {
-  //TODO
-  printf("WRITE CONFIG: %s\n", params->configFilename[CONFIG_WRITE].c_str());
+  ofstream configFile(params->configFilename[CONFIG_WRITE].c_str());
 
-  return false;
+  switch(params->captureSource)
+  {
+    case SOURCE_V4L2:
+      configFile << "source_v4l2 ";
+      break;
+    case SOURCE_VIDEO:
+      configFile << "source_video ";
+      break;
+    case SOURCE_STILL:
+      configFile << "source_still ";
+      break;
+    case SOURCE_TIMELAPSE:
+      configFile << "source_timelapse ";
+      break;
+  }
+  configFile << params->captureLocation << endl;
+
+  configFile << "original_width " << params->originalWidth << endl;
+  configFile << "original_height " << params->originalHeight << endl;
+  configFile << "unwrap_width " << params->unwrapWidth << endl;
+
+  configFile << "radius_min " << params->radiusMin << endl;
+  configFile << "radius_max " << params->radiusMax << endl;
+  configFile << "centre_u " << params->uCentre << endl;
+  configFile << "centre_v " << params->vCentre << endl;
+
+  configFile << "unwrap " << params->unwrapCapture << endl;
+  configFile << "show_original " << params->mode[MODE_SHOW_ORIGINAL] << endl;
+  configFile << "show_unwrap " << params->mode[MODE_SHOW_UNWRAP] << endl;
+
+  configFile << "force_fps " << params->forceFPS << endl;
+  configFile << "sample_fps " << params->sampleFPS << endl;
+
+  if(params->mode[MODE_STILLS])
+    configFile << "output_stills " << params->outputFilename[MODE_STILLS] << endl;
+
+  if(params->mode[MODE_VIDEO])
+    configFile << "output_video " << params->outputFilename[MODE_VIDEO] << endl;
+
+  if(params->mode[MODE_MJPG])
+    configFile << "output_mjpg " << params->outputFilename[MODE_MJPG] << endl;
+
+  if(params->mode[MODE_SINGLE_STILL])
+    configFile << "output_single_still " << params->outputFilename[MODE_MJPG] << endl;
+
+  if(params->mode[MODE_TIMELAPSE] > 0)
+  {
+    configFile << "output_timelapse " << params->outputFilename[MODE_TIMELAPSE] << endl;
+    configFile << "output_timelapse_delay " << params->mode[MODE_TIMELAPSE] << endl;
+  }
+
+  configFile.close();
+  return true;
 }
