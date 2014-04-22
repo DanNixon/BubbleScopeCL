@@ -7,3 +7,12 @@ install_manifest.txt
 
 # Executable
 bubblescope
+
+# Config files
+*.conf
+
+# Media files
+*.mp4
+*.avi
+*.mkv
+*.jpg
