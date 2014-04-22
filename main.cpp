@@ -18,6 +18,7 @@
 #include "unwrap.h"
 #include "command_line_params.h"
 #include "Timer.h"
+#include "config_file.h"
 
 #include "frame_source/frame_source.h"
 #include "frame_source/source_v4l2.h"

@@ -8,9 +8,6 @@
 #define BUBBLESCOPECAPPARMAS_H
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
-#include <fstream>
 #include <string>
 
 enum BubbleScopeCaptureMode
@@ -64,8 +61,5 @@ struct BubbleScopeParameters
 
 void setupDefaultParameters(BubbleScopeParameters *);
 void printParameters(BubbleScopeParameters *);
-
-bool readConfigFromFile(BubbleScopeParameters *);
-bool writeConfigToFile(BubbleScopeParameters *);
 
 #endif
