@@ -135,7 +135,7 @@ bool OCVCapture::open(const char *deviceName)
 	m_camera_handle = v4l2_open(deviceName, O_RDWR | O_NONBLOCK, 0);
 	if (m_camera_handle <= 0)
 	{
-		reportError("failed to open /dev/video0");
+		reportError("failed to open V4L2 device");
 		close();
 		return false;
 	}

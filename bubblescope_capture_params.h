@@ -8,6 +8,9 @@
 #define BUBBLESCOPECAPPARMAS_H
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <fstream>
 #include <string>
 
 enum BubbleScopeCaptureMode

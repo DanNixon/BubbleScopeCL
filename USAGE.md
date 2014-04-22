@@ -4,7 +4,7 @@ Usage
 Parameters
 ----------
 
-Short parameter | Long paremetr         | Description
+Short parameter | Long parameter        | Description
 ----------------|-----------------------|-----------------------------------------------------------------------
 ```-h```        |```--help```           |Shows in app help text
 ```-d```        |```--device```         |Sets the capture source to V4L2 and specifies the path to the device

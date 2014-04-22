@@ -14,7 +14,7 @@ CLParameter clParams[] = {
   CLParameter{CAPTURE_DEVICE,   "-d",     "--device",         "Capture device",     "Specifies a V4L2 capture device"},
   CLParameter{P_SOURCE_STILL,   "-ss",    "--sourcestill",    "Source still",       "Specifies a pre captured still to unwrap"},
   CLParameter{P_SOURCE_VIDEO,   "-sv",    "--sourcevideo",    "Source video",       "Specifies a pre recorded video to unwrap"},
-  CLParameter{P_SOURCE_TLAPSE,  "-stl",   "--sourcetimelapse","Source timelapse",  "Specifies a set of pre captured timelapse frames to unwrap"},
+  CLParameter{P_SOURCE_TLAPSE,  "-stl",   "--sourcetimelapse","Source timelapse",   "Specifies a set of pre captured timelapse frames to unwrap"},
   CLParameter{ORIGINAL_WIDTH,   "-iw",    "--inwidth",        "Original width",     "Set desired capture width (V4L2 only)"},
   CLParameter{ORIGINAL_HEIGHT,  "-ih",    "--inheight",       "Original height",    "Set desired capture height (V4L2 only)"},
   CLParameter{UNWRAP_WIDTH,     "-ow",    "--outwidth",       "Unwrap width",       "Set width of unwrapped image"},
