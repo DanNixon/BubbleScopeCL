@@ -127,15 +127,23 @@ int main(int argc, char **argv)
   }
   cap->open(params.captureLocation);
 
-  //Set filenames
+  //Get filename without type
+  std::string::size_type dotIndex = params.captureLocation.find('.');
+  std::string filenameBase;
+  if(dotIndex == std::string::npos)
+    filenameBase = params.captureLocation;
+  else
+    filenameBase = params.captureLocation.substr(0, dotIndex);
+
+  //Set default filenames
   if(params.outputFilename[MODE_VIDEO] == "NONE")
-    params.outputFilename[MODE_VIDEO] = params.captureLocation + "_unwrap.mkv";
+    params.outputFilename[MODE_VIDEO] = filenameBase + "_unwrap.mkv";
   if(params.outputFilename[MODE_STILLS] == "NONE")
-    params.outputFilename[MODE_STILLS] = params.captureLocation + "_unwrap_%d.jpg";
+    params.outputFilename[MODE_STILLS] = filenameBase + "_unwrap_%d.jpg";
   if(params.outputFilename[MODE_TIMELAPSE] == "NONE")
-    params.outputFilename[MODE_TIMELAPSE] = params.captureLocation + "_unwrap_tl_%d.jpg";
+    params.outputFilename[MODE_TIMELAPSE] = filenameBase + "_unwrap_tl_%d.jpg";
   if(params.outputFilename[MODE_MJPG] == "NONE")
-    params.outputFilename[MODE_MJPG] = params.captureLocation + "_unwrap_frame.jpg";
+    params.outputFilename[MODE_MJPG] = filenameBase + "_unwrap_frame.jpg";
 
   //Dont show video display windows unless using V4L2
   if(params.captureSource != SOURCE_V4L2)
@@ -153,7 +161,7 @@ int main(int argc, char **argv)
     return 2;
   }
 
-  //Update some vars for user feedback
+  //Update capture parameters with actual values
   params.originalWidth = cap->getWidth();
   params.originalHeight = cap->getHeight();
 
@@ -165,8 +173,6 @@ int main(int argc, char **argv)
     unwrapper.originalCentre(params.uCentre, params.vCentre);
     unwrapper.imageRadius(params.radiusMin, params.radiusMax);
     unwrapper.offsetAngle(params.offsetAngle);
-
-    //After capture size is determined setup transformation array
     unwrapper.originalSize(params.originalWidth, params.originalHeight);
     unwrapper.generateTransformation();
   }
