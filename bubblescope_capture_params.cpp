@@ -36,6 +36,8 @@ void setupDefaultParameters(BubbleScopeParameters *params)
   params->fps = 10.0f;
   params->sampleFPS = 0;
   params->forceFPS = -1.0;
+  params->configFilename[CONFIG_READ] = "NONE";  //TODO: There must be a better way to do this
+  params->configFilename[CONFIG_WRITE] = "NONE";
 }
 
 /*
@@ -57,4 +59,5 @@ void printParameters(BubbleScopeParameters *params)
   printf("MJPG output: %d, Single still mode: %d, filename: %s\n", params->mode[MODE_MJPG], params->mode[MODE_SINGLE_STILL],
       params->outputFilename[MODE_MJPG].c_str());
   printf("Timelapse output delay: %dms, filename: %s\n", params->mode[MODE_TIMELAPSE], params->outputFilename[MODE_TIMELAPSE].c_str());
+  printf("Read config: %s, write config: %s\n", params->configFilename[CONFIG_READ].c_str(), params->configFilename[CONFIG_WRITE].c_str());
 }

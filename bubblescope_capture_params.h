@@ -29,6 +29,12 @@ enum BubbleScopeCaptureSource
   SOURCE_TIMELAPSE
 };
 
+enum BubbleScopeConfigFile
+{
+  CONFIG_READ,
+  CONFIG_WRITE
+};
+
 /*
  * Stores user options defining capture properties.
  */
@@ -50,6 +56,7 @@ struct BubbleScopeParameters
   float fps;
   unsigned int sampleFPS;
   float forceFPS;
+  std::string configFilename[2];
 };
 
 void setupDefaultParameters(BubbleScopeParameters *);

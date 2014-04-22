@@ -18,6 +18,7 @@
 #include "unwrap.h"
 #include "command_line_params.h"
 #include "Timer.h"
+#include "config_file.h"
 
 #include "frame_source/frame_source.h"
 #include "frame_source/source_v4l2.h"
@@ -226,6 +227,11 @@ int main(int argc, char **argv)
   printf("Capture parameters:\n");
   printParameters(&params);
   printf("\n");
+
+  //Save the config to file
+  if(params.configFilename[CONFIG_WRITE] != "NONE")
+    if(!writeConfigToFile(&params))
+      printf("Could not write config file %s\n", params.configFilename[CONFIG_WRITE].c_str());
 
   //Number of still frames already captures, used for filename formatting
   unsigned long stillFrameNumber = 0;

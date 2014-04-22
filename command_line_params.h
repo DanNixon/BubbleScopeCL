@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "bubblescope_capture_params.h"
+#include "config_file.h"
 
 enum ParameterType
 {
@@ -36,6 +36,8 @@ enum ParameterType
   SINGLE_STILL,
   SAMPLE_FPS,
   FORCE_FPS,
+  LOAD_CONFIG,
+  SAVE_CONFIG,
   NO_UNWRAP,
 
   HELP = 255
