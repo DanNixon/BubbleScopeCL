@@ -30,6 +30,9 @@ void BubbleScopeUnwrapper::generateTransformation()
   float radius_delta = this->f_radiusMax - this->f_radiusMin;
   float aspect = (float) this->i_originalWidth / (float) this->i_originalHeight;
 
+  unsigned int pixelSpan = this->i_originalWidth * this->f_radiusMax * 2;
+  assert(("Max. radius is too high for aspect ratio", pixelSpan <= this->i_originalHeight));
+
   unsigned long index = 0;
   unsigned int i, j;
   for (i = this->i_unwrapHeight - 1; i > 0; i--)
