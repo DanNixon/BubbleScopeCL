@@ -145,6 +145,8 @@ int main(int argc, char **argv)
     params.outputFilename[MODE_TIMELAPSE] = filenameBase + "_unwrap_tl_%d.jpg";
   if(params.outputFilename[MODE_MJPG] == "NONE")
     params.outputFilename[MODE_MJPG] = filenameBase + "_unwrap_frame.jpg";
+  if(params.configFilename[CONFIG_WRITE] == "DEFAULT")
+    params.configFilename[CONFIG_WRITE] = filenameBase + ".conf";
 
   //Dont show video display windows unless using V4L2
   if(params.captureSource != SOURCE_V4L2)

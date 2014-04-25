@@ -114,28 +114,28 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
           case OUTPUT_STILLS:
             params->mode[MODE_SHOW_UNWRAP] = true;
             params->mode[MODE_STILLS] = true;
-            if(argv[i][0] != '-')
+            if(i < argc && argv[i][0] != '-')
               params->outputFilename[MODE_STILLS] = argv[i];
             else
               params->outputFilename[MODE_STILLS] = "NONE";
             break;
           case OUTPUT_VIDEO:
             params->mode[MODE_VIDEO] = true;
-            if(argv[i][0] != '-')
+            if(i < argc && argv[i][0] != '-')
               params->outputFilename[MODE_VIDEO] = argv[i];
             else
               params->outputFilename[MODE_VIDEO] = "NONE";
             break;
           case OUTPUT_MJPG:
             params->mode[MODE_MJPG] = true;
-            if(argv[i][0] != '-')
+            if(i < argc && argv[i][0] != '-')
               params->outputFilename[MODE_MJPG] = argv[i];
             else
               params->outputFilename[MODE_MJPG] = "NONE";
             break;
           case OUTPUT_TIMELAPSE:
             sscanf(argv[i], "%d", &params->mode[MODE_TIMELAPSE]);
-            if(argv[i + 1][0] != '-')
+            if(i < argc && argv[i + 1][0] != '-')
               params->outputFilename[MODE_TIMELAPSE] = argv[i + 1];
             else
               params->outputFilename[MODE_TIMELAPSE] = "NONE";
@@ -167,7 +167,10 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
             readConfigFromFile(params);
             break;
           case SAVE_CONFIG:
-            params->configFilename[CONFIG_WRITE] = argv[i];
+            if(i < argc && argv[i][0] != '-')
+              params->configFilename[CONFIG_WRITE] = argv[i];
+            else
+              params->configFilename[CONFIG_WRITE] = "DEFAULT";
             break;
         }
       }
