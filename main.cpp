@@ -91,7 +91,8 @@ int main(int argc, char **argv)
       break;
     case HELP:  //User wants help
       printf("BubbleScopeCL\n");
-      printf("See https://github.com/DanNixon/BubbleScopeCL for more info.\n\n");
+      printf("See https://github.com/DanNixon/BubbleScopeCL for more info.\n");
+      printf("\n");
       printParameterUsage();
       return 0;
       break;
@@ -108,7 +109,8 @@ int main(int argc, char **argv)
   {
     case SOURCE_V4L2:
       cap = new V4L2Source();
-      dynamic_cast<V4L2Source *>(cap)->setCaptureSize(params.originalWidth, params.originalHeight);
+      dynamic_cast<V4L2Source *>(cap)->setCaptureSize(
+          params.originalWidth, params.originalHeight);
       break;
     case SOURCE_VIDEO:
       cap = new VideoFileSource();
@@ -187,9 +189,12 @@ int main(int argc, char **argv)
   //The container for captured frames
   cv::Mat frame;
 
-  if(params.sampleFPS && params.mode[MODE_VIDEO] && params.captureSource == SOURCE_V4L2)
+  if(params.sampleFPS &&
+      params.mode[MODE_VIDEO] &&
+      params.captureSource == SOURCE_V4L2)
   {
-    printf("Measuring V4L2 capture frame rate over %d frames...\n", params.sampleFPS);
+    printf("Measuring V4L2 capture frame rate over %d frames...\n",
+        params.sampleFPS);
     unsigned int frames = 0;
     Timer fpsSampleTimer;
     fpsSampleTimer.start();
@@ -200,7 +205,8 @@ int main(int argc, char **argv)
       frames++;
     }
     fpsSampleTimer.stop();
-    double measuredFPS = (double) params.sampleFPS / (fpsSampleTimer.getElapsedTimeInMilliSec() / 1000.0f);
+    double measuredFPS = (double) params.sampleFPS /
+      (fpsSampleTimer.getElapsedTimeInMilliSec() / 1000.0f);
     printf("Measured %f FPS\n", measuredFPS);
     params.fps = measuredFPS;
   }
@@ -217,7 +223,8 @@ int main(int argc, char **argv)
       videoSize = cv::Size(params.unwrapWidth, unwrapper.getUnwrapHeight());
     else
       videoSize = cv::Size(params.originalWidth, params.originalHeight);
-    videoOut.open(params.outputFilename[MODE_VIDEO].c_str(), CV_FOURCC('M','J','P','G'), params.fps, videoSize, true);
+    videoOut.open(params.outputFilename[MODE_VIDEO].c_str(),
+        CV_FOURCC('M','J','P','G'), params.fps, videoSize, true);
     if(!videoOut.isOpened())
       printf("Can't open video output file! (will continue with capture)\n");
   }
@@ -232,8 +239,13 @@ int main(int argc, char **argv)
 
   //Save the config to file
   if(params.configFilename[CONFIG_WRITE] != "NONE")
+  {
     if(!writeConfigToFile(&params))
-      printf("Could not write config file %s\n", params.configFilename[CONFIG_WRITE].c_str());
+    {
+      printf("Could not write config file %s\n",
+          params.configFilename[CONFIG_WRITE].c_str());
+    }
+  }
 
   //Number of still frames already captures, used for filename formatting
   unsigned long stillFrameNumber = 0;
@@ -283,13 +295,16 @@ int main(int argc, char **argv)
 
     //If time has elepsed save a timelapse frame
     if(params.mode[MODE_TIMELAPSE] &&
-        ((timelapseTimer->getElapsedTimeInMilliSec() > params.mode[MODE_TIMELAPSE])
+        ((timelapseTimer->getElapsedTimeInMilliSec() >
+         params.mode[MODE_TIMELAPSE])
          || params.captureSource == SOURCE_TIMELAPSE))
     {
       //Format filename with frame number
-      int filenameLen = strlen(params.outputFilename[MODE_TIMELAPSE].c_str()) + 5;
+      int filenameLen =
+        strlen(params.outputFilename[MODE_TIMELAPSE].c_str()) + 5;
       char timelapseFilename[filenameLen];
-      sprintf(timelapseFilename, params.outputFilename[MODE_TIMELAPSE].c_str(), timelapseFrameNumber);
+      sprintf(timelapseFilename, params.outputFilename[MODE_TIMELAPSE].c_str(),
+          timelapseFrameNumber);
       //Save timelapse frame
       imwrite(timelapseFilename, unwrap);
       timelapseFrameNumber++;
@@ -337,7 +352,8 @@ int main(int argc, char **argv)
       //Format filename with frame number
       int filenameLen = strlen(params.outputFilename[MODE_STILLS].c_str()) + 5;
       char stillFilename[filenameLen];
-      sprintf(stillFilename, params.outputFilename[MODE_STILLS].c_str(), stillFrameNumber);
+      sprintf(stillFilename, params.outputFilename[MODE_STILLS].c_str(),
+          stillFrameNumber);
       printf("Saving still image: %s\n", stillFilename);
       //Save still image
       imwrite(stillFilename, unwrap);

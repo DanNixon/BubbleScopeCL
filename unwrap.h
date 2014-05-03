@@ -1,6 +1,7 @@
 /*
  * BubbleScope 360 image unwrap
- * Allows fast video processing/unwrapping using a pre-computed pixel transformation array.
+ * Allows fast video processing/unwrapping using a pre-computed pixel
+ * transformation array.
  * 
  * Dan Nixon
  */

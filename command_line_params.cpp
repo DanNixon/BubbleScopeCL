@@ -51,7 +51,8 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
   {
     for(j = 0; j < clParamCount; j++)
     {
-      if((strcmp(clParams[j].shortParam, argv[i]) == 0) || (strcmp(clParams[j].longParam, argv[i]) == 0))
+      if((strcmp(clParams[j].shortParam, argv[i]) == 0) ||
+          (strcmp(clParams[j].longParam, argv[i]) == 0))
       {
         i++;
         char buffer[100];

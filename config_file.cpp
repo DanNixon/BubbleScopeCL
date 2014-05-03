@@ -178,38 +178,64 @@ bool writeConfigToFile(BubbleScopeParameters *params)
   }
   configFile << params->captureLocation << endl;
 
-  configFile << configStrings[CFG_ORIGINAL_WIDTH] << " " << params->originalWidth << endl;
-  configFile << configStrings[CFG_ORIGINAL_HEIGHT] << " " << params->originalHeight << endl;
-  configFile << configStrings[CFG_UNWRAP_WIDTH] << " " << params->unwrapWidth << endl;
+  configFile << configStrings[CFG_ORIGINAL_WIDTH] <<
+    " " << params->originalWidth << endl;
+  configFile << configStrings[CFG_ORIGINAL_HEIGHT] <<
+    " " << params->originalHeight << endl;
+  configFile << configStrings[CFG_UNWRAP_WIDTH] <<
+    " " << params->unwrapWidth << endl;
 
-  configFile << configStrings[CFG_RADIUS_MIN] << " " << params->radiusMin << endl;
-  configFile << configStrings[CFG_RADIUS_MAX] << " " << params->radiusMax << endl;
-  configFile << configStrings[CFG_CENTRE_U] << " " << params->uCentre << endl;
-  configFile << configStrings[CFG_CENTRE_V] << " " << params->vCentre << endl;
+  configFile << configStrings[CFG_RADIUS_MIN] <<
+    " " << params->radiusMin << endl;
+  configFile << configStrings[CFG_RADIUS_MAX] <<
+    " " << params->radiusMax << endl;
+  configFile << configStrings[CFG_CENTRE_U] <<
+    " " << params->uCentre << endl;
+  configFile << configStrings[CFG_CENTRE_V] <<
+    " " << params->vCentre << endl;
 
-  configFile << configStrings[CFG_UNWRAP] << " " << params->unwrapCapture << endl;
-  configFile << configStrings[CFG_SHOW_ORIGINAL] << " " << params->mode[MODE_SHOW_ORIGINAL] << endl;
-  configFile << configStrings[CFG_SHOW_UNWRAP] << " " << params->mode[MODE_SHOW_UNWRAP] << endl;
+  configFile << configStrings[CFG_UNWRAP] <<
+    " " << params->unwrapCapture << endl;
+  configFile << configStrings[CFG_SHOW_ORIGINAL] <<
+    " " << params->mode[MODE_SHOW_ORIGINAL] << endl;
+  configFile << configStrings[CFG_SHOW_UNWRAP] <<
+    " " << params->mode[MODE_SHOW_UNWRAP] << endl;
 
-  configFile << configStrings[CFG_FORCE_FPS] << " " << params->forceFPS << endl;
-  configFile << configStrings[CFG_SAMPLE_FPS] << " " << params->sampleFPS << endl;
+  configFile << configStrings[CFG_FORCE_FPS] <<
+    " " << params->forceFPS << endl;
+  configFile << configStrings[CFG_SAMPLE_FPS] <<
+    " " << params->sampleFPS << endl;
 
   if(params->mode[MODE_STILLS])
-    configFile << configStrings[CFG_OUTPUT_STILLS] << " " << params->outputFilename[MODE_STILLS] << endl;
+  {
+    configFile << configStrings[CFG_OUTPUT_STILLS] <<
+      " " << params->outputFilename[MODE_STILLS] << endl;
+  }
 
   if(params->mode[MODE_VIDEO])
-    configFile << configStrings[CFG_OUTPUT_VIDEO] << " " << params->outputFilename[MODE_VIDEO] << endl;
+  {
+    configFile << configStrings[CFG_OUTPUT_VIDEO] <<
+      " " << params->outputFilename[MODE_VIDEO] << endl;
+  }
 
   if(params->mode[MODE_MJPG])
-    configFile << configStrings[CFG_OUTPUT_MJPG] << " " << params->outputFilename[MODE_MJPG] << endl;
+  {
+    configFile << configStrings[CFG_OUTPUT_MJPG] <<
+      " " << params->outputFilename[MODE_MJPG] << endl;
+  }
 
   if(params->mode[MODE_SINGLE_STILL])
-    configFile << configStrings[CFG_OUTPUT_SINGLE_STILL] << " " << params->outputFilename[MODE_MJPG] << endl;
+  {
+    configFile << configStrings[CFG_OUTPUT_SINGLE_STILL] <<
+      " " << params->outputFilename[MODE_MJPG] << endl;
+  }
 
   if(params->mode[MODE_TIMELAPSE] > 0)
   {
-    configFile << configStrings[CFG_OUTPUT_TIMELAPSE] << " " << params->outputFilename[MODE_TIMELAPSE] << endl;
-    configFile << configStrings[CFG_OUTPUT_TIMELAPSE_DELAY] << " " << params->mode[MODE_TIMELAPSE] << endl;
+    configFile << configStrings[CFG_OUTPUT_TIMELAPSE] <<
+      " " << params->outputFilename[MODE_TIMELAPSE] << endl;
+    configFile << configStrings[CFG_OUTPUT_TIMELAPSE_DELAY] <<
+      " " << params->mode[MODE_TIMELAPSE] << endl;
   }
 
   configFile.close();

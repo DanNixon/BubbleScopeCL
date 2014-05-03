@@ -1,9 +1,29 @@
 cmake_minimum_required(VERSION 2.8)
+
 project(bubblescope)
 set(CMAKE_BUILD_TYPE Debug)
+
 find_package(OpenCV REQUIRED)
 find_path(V4L_INCLUDE_DIR NAMES libv4l2.h)
 find_library(V4L_LIB NAMES v4l2)
-add_executable(bubblescope main.cpp unwrap.cpp bubblescope_capture_params.cpp command_line_params.cpp Timer.cpp OCVCapture.cpp frame_source/source_v4l2.cpp frame_source/source_imagefile.cpp frame_source/source_videofile.cpp frame_source/source_timelapse.cpp config_file.cpp)
-target_link_libraries(bubblescope ${OpenCV_LIBS} ${V4L_LIB})
+
+add_executable(bubblescope
+  main.cpp
+  unwrap.cpp
+  bubblescope_capture_params.cpp
+  command_line_params.cpp
+  Timer.cpp
+  OCVCapture.cpp
+  frame_source/source_v4l2.cpp
+  frame_source/source_imagefile.cpp
+  frame_source/source_videofile.cpp
+  frame_source/source_timelapse.cpp
+  config_file.cpp
+)
+
+target_link_libraries(bubblescope
+  ${OpenCV_LIBS}
+  ${V4L_LIB}
+)
+
 install(TARGETS bubblescope DESTINATION bin)
