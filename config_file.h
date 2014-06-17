@@ -38,7 +38,8 @@ enum ConfigFileElements
   CFG_OUTPUT_TIMELAPSE,
   CFG_OUTPUT_TIMELAPSE_DELAY,
   CFG_OUTPUT_MJPG,
-  CFG_OUTPUT_SINGLE_STILL
+  CFG_OUTPUT_SINGLE_STILL,
+  CFG_OFFSET_ANGLE
 };
 
 bool readConfigFromFile(BubbleScopeParameters *);

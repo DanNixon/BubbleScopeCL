@@ -25,7 +25,8 @@ string configStrings[] =
   "output_timelapse",
   "output_timelapse_delay",
   "output_mjpg",
-  "output_single_still"
+  "output_single_still",
+  "offset_angle"
 };
 
 /*
@@ -143,6 +144,10 @@ bool readConfigFromFile(BubbleScopeParameters *params)
         params->mode[MODE_SINGLE_STILL] = true;
         params->outputFilename[MODE_MJPG] = value;
       }
+      else if(key == configStrings[CFG_OFFSET_ANGLE])
+      {
+        sscanf(value.c_str(), "%f", &(params->offsetAngle));
+      }
     }
     else
     {
@@ -193,6 +198,8 @@ bool writeConfigToFile(BubbleScopeParameters *params)
     " " << params->uCentre << endl;
   configFile << configStrings[CFG_CENTRE_V] <<
     " " << params->vCentre << endl;
+  configFile << configStrings[CFG_OFFSET_ANGLE] <<
+    " " << params->offsetAngle << endl;
 
   configFile << configStrings[CFG_UNWRAP] <<
     " " << params->unwrapCapture << endl;

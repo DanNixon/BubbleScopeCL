@@ -18,7 +18,7 @@ Short parameter | Long parameter        | Description
 ```-rmax```     |```--maxradius```      |Set the upper unwrap radius (0 - 0.5)
 ```-uc```       |```--ucentre```        |Set U original image centre (0 - 1)
 ```-vc```       |```--vcentre```        |Set V original image centre (0 - 1)
-```-a```        |```--offset```         |Set the unwrap image offset angle (equivalent of rotating camera on scope)
+```-a```        |```--offset```         |Set the unwrap image offset angle in degrees (equivalent of rotating camera on scope)
 ```-o```        |```--original```       |Shows the raw frame captured (V4L2 only, useful for camera positioning/calibration)
 ```-u```        |```--unwrap```         |Show unwrapped video (V4L2 only)
 ```-s```        |```--stills```         |Capture stills on spacebar press or SIGUSR1 (V4L2) or specify output location of converted image
@@ -31,6 +31,11 @@ Short parameter | Long parameter        | Description
 ```-nuw```      |```--nounwrap```       |Keeps captures in original "wrapped" format
 ```-lc```       |```--config```         |Load unwrap config from file
 ```-sc```       |```--saveconf```       |Save unwrap config to file
+
+Notes
+-----
+
+The ```-lc``` parameter parses the config file and sets the parameters whilst parsing parameters hence any parameters set before the ```-lc``` parameter will be overridden with the values form the config file.
 
 Examples
 --------

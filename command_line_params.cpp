@@ -22,7 +22,7 @@ CLParameter clParams[] = {
   CLParameter{RADIUS_MAX,       "-rmax",  "--maxradius",      "Radius max",         "Set upper unwrap radius"},
   CLParameter{U_CENTRE,         "-uc",    "--ucentre",        "U centre",           "Set U original image centre"},
   CLParameter{V_CENTRE,         "-vc",    "--vcentre",        "V centre",           "Set V original image centre"},
-  CLParameter{OFFSET_ANGLE,     "-a",     "--offset",         "Offset angle",       "Set unwrap image offset angle"},
+  CLParameter{OFFSET_ANGLE,     "-a",     "--offset",         "Offset angle",       "Set unwrap image offset angle in degrees"},
   CLParameter{SHOW_ORIGINAL,    "-o",     "--original",       "Show original",      "Show original video"},
   CLParameter{SHOW_UNWRAP,      "-u",     "--unwrap",         "Show unwrap",        "Show unwrapped video"},
   CLParameter{OUTPUT_STILLS,    "-s",     "--stills",         "Output stills",      "Capture stills on spacebar press"},
