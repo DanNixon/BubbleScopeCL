@@ -38,6 +38,7 @@ bool V4L2Source::isOpen()
  * \param out The matrix for the captured frame
  *
  * \return True on successful capture, false otherwise
+ */
 bool V4L2Source::grab(cv::Mat *out)
 {
   this->o_capture->grab();
