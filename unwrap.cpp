@@ -1,11 +1,3 @@
-/*
- * BubbleScope 360 image unwrap
- * Allows fast video processing/unwrapping using a pre-computed pixel
- * transformation array.
- * 
- * Dan Nixon
- */
-
 #include "unwrap.h"
 
 BubbleScopeUnwrapper::BubbleScopeUnwrapper()
@@ -13,17 +5,25 @@ BubbleScopeUnwrapper::BubbleScopeUnwrapper()
   this->m_transformation = NULL;
 }
 
+/**
+ * \brief Destructor
+ *
+ * Cleans up memory allocated to transformation matrix
+ */
 BubbleScopeUnwrapper::~BubbleScopeUnwrapper()
 {
   //Deallocate memory used for transformation array
   delete this->m_transformation;
 }
 
-/*
- * Computes the pixel transformation array.
- * All unwrap paremeters must be set beforehand.
+/**
+ * \brief Computes the pixel transformation array.
+ *
+ * All unwrap parameters must be set beforehand.
  * Any changes to unwrap parameters must be followed by a call to this function
  * before any further calls to unwrap()
+ *
+ * \return True if transformation is computed successfully
  */
 bool BubbleScopeUnwrapper::generateTransformation()
 {
@@ -82,9 +82,16 @@ bool BubbleScopeUnwrapper::generateTransformation()
   return true;
 }
 
-/*
- * Creates a 360 degree unwrap using the pre-computed array.
+/**
+ * \brief Creates a 360 degree unwrap using the pre-computed array.
+ *
  * Must call generateTransformation() before calling this function.
+ *
+ * \param imageIn Pointer to image to be converted
+ *
+ * \param imageOut Double pointer to output image
+ *
+ * \return True if unwrapped successfully, false otherwise
  */
 bool BubbleScopeUnwrapper::unwrap(cv::Mat *imageIn, cv::Mat **imageOut)
 {
@@ -103,10 +110,15 @@ bool BubbleScopeUnwrapper::unwrap(cv::Mat *imageIn, cv::Mat **imageOut)
   return true;
 }
 
-/*
- * Width of unwrapped image.
+/**
+ * \brief Sets width of unwrapped image.
+ *
  * Used to calculate height of unwrapped image and to allocate memory for
  * transformation array.
+ *
+ * \param width Desired width of unwrapped image
+ *
+ * \return True if setting was applied successfully, false otherwise
  */
 bool BubbleScopeUnwrapper::unwrapWidth(int width)
 {
@@ -120,9 +132,16 @@ bool BubbleScopeUnwrapper::unwrapWidth(int width)
   return true;
 }
 
-/*
- * Sets the width and height of the original captured image.
+/**
+ * \brief Sets the width and height of the original captured image.
+ *
  * Used to generate pixel transformation values.
+ *
+ * \param width Width of original image
+ *
+ * \param height Height of original image
+ *
+ * \return True if setting was applied successfully, false otherwise
  */
 bool BubbleScopeUnwrapper::originalSize(int width, int height)
 {
@@ -135,8 +154,14 @@ bool BubbleScopeUnwrapper::originalSize(int width, int height)
   return true;
 }
 
-/*
- * Sets the centre of the image relative to it's dimensions.
+/**
+ * \brief Sets the centre of the image relative to it's dimensions.
+ *
+ * \param u U centre
+ *
+ * \param v V centre
+ *
+ * \return True if setting was applied successfully, false otherwise
  */
 bool BubbleScopeUnwrapper::originalCentre(float u, float v)
 {
@@ -151,9 +176,15 @@ bool BubbleScopeUnwrapper::originalCentre(float u, float v)
   return true;
 }
 
-/*
- * Sets the upper and lower radii defining the section of the original image
+/**
+ * \brief Sets the upper and lower radii defining the section of the original image
  * to unwrap.
+ *
+ * \param min Minimum radius
+ *
+ * \param max Maximum radius
+ *
+ * \return True if setting was applied successfully, false otherwise
  */
 bool BubbleScopeUnwrapper::imageRadius(float min, float max)
 {
@@ -170,9 +201,14 @@ bool BubbleScopeUnwrapper::imageRadius(float min, float max)
   return true;
 }
 
-/*
- * Sets offset angle for unwrapped image.
+/**
+ * \brief Sets offset angle for unwrapped image.
+ *
  * Equivalent of rotating BubbleScope on camera.
+ *
+ * \param angle Offset angle in degrees
+ *
+ * \return True if setting was applied successfully, false otherwise
  */
 bool BubbleScopeUnwrapper::offsetAngle(float angle)
 {
@@ -184,8 +220,10 @@ bool BubbleScopeUnwrapper::offsetAngle(float angle)
   return true;
 }
 
-/*
- * Gets the computed height of the unwrapped images.
+/**
+ * \brief Gets the computed height of the unwrapped images.
+ *
+ * \return Calculated height of unwrapped image
  */
 unsigned int BubbleScopeUnwrapper::getUnwrapHeight()
 {

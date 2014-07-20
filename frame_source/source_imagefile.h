@@ -1,8 +1,11 @@
-/*
- * Still image frame grabber
+/**
+ * \class ImageFileSource
+ *
+ * \brief Still image frame grabber
+ *
  * Grabs still image frame and image information from file
  *
- * Dan Nixon
+ * \author Dan Nixon
  */
 
 #ifndef IMAGEFILESOURCE_H

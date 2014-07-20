@@ -1,8 +1,11 @@
-/*
- * Video file frame grabber
+/**
+ * \class VideoFileSource
+ *
+ * \brief Video file frame grabber
+ *
  * Grabs frames and image information for a video file
  *
- * Dan Nixon
+ * \author Dan Nixon
  */
 
 #ifndef VIDEOFILESOURCE_H

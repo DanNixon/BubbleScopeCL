@@ -1,12 +1,10 @@
-/*
- * Still image frame grabber
- * Grabs still image frame and image information from file
- *
- * Dan Nixon
- */
-
 #include "source_imagefile.h"
 
+/**
+ * \brief Open a still image file from disk
+ *
+ * \param imageFile The image file to open
+ */
 void ImageFileSource::open(std::string imageFile)
 {
   this->b_open = true;
@@ -22,6 +20,13 @@ bool ImageFileSource::isOpen()
   return this->b_open;
 }
 
+/**
+ * \brief Gets the contents of the still image
+ *
+ * \param out The matrix to copy image to
+ *
+ * \return If the capture was successfull
+ */
 bool ImageFileSource::grab(cv::Mat *out)
 {
   *out = this->o_image;

@@ -1,10 +1,3 @@
-/*
- * Timelapse frame grabber
- * Grabs still image frames using filename pattern with incrementing number
- *
- * Dan Nixon
- */
-
 #include "source_timelapse.h"
 
 TimelapseSource::TimelapseSource()
@@ -17,6 +10,11 @@ TimelapseSource::~TimelapseSource()
   delete this->filenamePattern;
 }
 
+/**
+ * \brief Sets filename pattern for timelapse frames
+ *
+ * \param path The path with filename pattern
+ */
 void TimelapseSource::open(std::string path)
 {
   this->filenamePattern = (char *) path.c_str();
@@ -34,6 +32,13 @@ bool TimelapseSource::isOpen()
   return (this->filenamePattern != NULL);
 }
 
+/**
+ * \brief Grabs the next frame mathing the naming pattern
+ *
+ * \param out The matrix to copy image to
+ *
+ * \return True on successful capture, false otherwise
+ */
 bool TimelapseSource::grab(cv::Mat *out)
 {
   //Generate filename

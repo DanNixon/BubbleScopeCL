@@ -1,13 +1,15 @@
-/*
- * BubbleScopeCL capture parameter functions.
+/**
+ * \brief BubbleScopeCL capture parameter functions.
  *
- * Dan Nixon
+ * \author Dan Nixon
  */
 
 #include "bubblescope_capture_params.h"
 
-/*
- * Sets a resonable default configuration.
+/**
+ * \brief Sets a resonable default configuration.
+ *
+ * \param params Pointer to param struct to be set
  */
 void setupDefaultParameters(BubbleScopeParameters *params)
 {
@@ -40,8 +42,10 @@ void setupDefaultParameters(BubbleScopeParameters *params)
   params->configFilename[CONFIG_WRITE] = "NONE";
 }
 
-/*
- * Prints the current configuration to stdout.
+/**
+ * \brief Prints the current configuration to stdout.
+ *
+ * \param params The parameter struct to be printed
  */
 void printParameters(BubbleScopeParameters *params)
 {
@@ -61,7 +65,7 @@ void printParameters(BubbleScopeParameters *params)
   printf("Unwrap image radius: min=%f, max=%f\n",
       params->radiusMin,
       params->radiusMax);
-  printf("Orignal image centre: u=%f, v=%f\n",
+  printf("Original image centre: u=%f, v=%f\n",
       params->uCentre,
       params->vCentre);
   printf("Offset angle: %fdeg.\n",

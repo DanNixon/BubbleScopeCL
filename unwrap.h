@@ -1,9 +1,14 @@
-/*
- * BubbleScope 360 image unwrap
+/**
+ * \class BubbleScopeUnwrapper
+ *
+ * \brief BubbleScope 360 image unwrap
+ *
  * Allows fast video processing/unwrapping using a pre-computed pixel
  * transformation array.
  * 
- * Dan Nixon
+ * \author Dan Nixon
+ *
+ * \date 20/07/2014
  */
 
 #ifndef UNWRAP_H

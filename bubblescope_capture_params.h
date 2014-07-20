@@ -1,7 +1,7 @@
-/*
- * BubbleScopeCL capture parameter functions.
+/**
+ * \brief BubbleScopeCL capture parameter functions.
  *
- * Dan Nixon
+ * \author Dan Nixon
  */
 
 #ifndef BUBBLESCOPECAPPARMAS_H
@@ -10,6 +10,9 @@
 #include <stdio.h>
 #include <string>
 
+/**
+ * \brief Defines capture modes
+ */
 enum BubbleScopeCaptureMode
 {
   MODE_STILLS         = 0,
@@ -21,6 +24,9 @@ enum BubbleScopeCaptureMode
   MODE_SHOW_UNWRAP
 };
 
+/**
+ * \brief Defines selected caputre source
+ */
 enum BubbleScopeCaptureSource
 {
   SOURCE_V4L2,
@@ -29,14 +35,17 @@ enum BubbleScopeCaptureSource
   SOURCE_TIMELAPSE
 };
 
+/**
+ * \brief Config file directions
+ */
 enum BubbleScopeConfigFile
 {
   CONFIG_READ,
   CONFIG_WRITE
 };
 
-/*
- * Stores user options defining capture properties.
+/**
+ * \brief Stores user options defining capture properties.
  */
 struct BubbleScopeParameters
 {

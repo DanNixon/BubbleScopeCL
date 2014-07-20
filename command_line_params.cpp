@@ -1,13 +1,13 @@
-/*
- * Command line argument parser for BubbleScopeCL parameters.
+/**
+ * \brief Command line argument parser for BubbleScopeCL parameters.
  *
- * Dan Nixon
+ * \author Dan Nixon
  */
 
 #include "command_line_params.h"
 
-/*
- * Array of parameters which may be passed to BubbleScope app
+/**
+ * \brief Array of parameters which may be passed to BubbleScope app
  */
 CLParameter clParams[] = {
   CLParameter{HELP,             "-h",     "--help",           "Show help",          "Shows this help text"},
@@ -36,13 +36,21 @@ CLParameter clParams[] = {
   CLParameter{SAVE_CONFIG,      "-sc",    "--saveconf",       "Save config",        "Save unwrap config to file"}
 };
 
-/*
- * Size of params array
+/**
+ * \brief Size of params array
  */
 int clParamCount = 24;
 
-/*
- * Populates a set of BubbleScopeParameters based on contents of argv
+/**
+ * \brief Populates a set of BubbleScopeParameters based on contents of argv
+ *
+ * \param params The parameter struct to populate
+ *
+ * \param argc Argument count
+ *
+ * \param argv Argument vector
+ *
+ * \return 0 on success
  */
 int getParameters(BubbleScopeParameters *params, int argc, char **argv)
 {
@@ -195,8 +203,8 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
   return 0;
 }
 
-/*
- * Prints the parameters and their usage to stdout
+/**
+ * \brief Prints the parameters and their usage to stdout
  */
 void printParameterUsage()
 {

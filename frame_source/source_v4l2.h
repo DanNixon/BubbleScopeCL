@@ -1,8 +1,11 @@
-/*
- * V4L2 frame grabber
+/**
+ * \class V4L2Source
+ *
+ * \brief V4L2 frame grabber
+ *
  * Grabs frames and image information from a V4L2 source
  *
- * Dan Nixon
+ * \author Dan Nixon
  */
 
 #ifndef V4L2SOURCE_H

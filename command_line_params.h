@@ -1,7 +1,7 @@
-/*
- * Command line argument parser for BubbleScopeCL parameters.
+/**
+ * \brief Command line argument parser for BubbleScopeCL parameters.
  *
- * Dan Nixon
+ * \author Dan Nixon
  */
 
 #ifndef COMMANDLINEPARAMS_H
@@ -13,6 +13,9 @@
 
 #include "config_file.h"
 
+/**
+ * \brief Sets the type of a parameter
+ */
 enum ParameterType
 {
   CAPTURE_DEVICE,
@@ -43,6 +46,9 @@ enum ParameterType
   HELP = 255
 };
 
+/**
+ * \brief Stores details about a command line parameter
+ */
 struct CLParameter
 {
   ParameterType type;

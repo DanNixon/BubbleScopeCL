@@ -1,8 +1,11 @@
-/*
- * Timelapse frame grabber
+/**
+ * \class TimelapseSource
+ *
+ * \brief Timelapse frame grabber
+ *
  * Grabs still image frames using filename pattern with incrementing number
  *
- * Dan Nixon
+ * \author Dan Nixon
  */
 
 #ifndef TIMELAPSESOURCE_H
