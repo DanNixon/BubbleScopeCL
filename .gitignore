@@ -16,3 +16,6 @@ bubblescope
 *.avi
 *.mkv
 *.jpg
+
+# Generated documentation
+docs/

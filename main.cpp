@@ -271,11 +271,11 @@ int main(int argc, char **argv)
     }
 
     //Unwrap it
-    cv::Mat unwrap;
+    cv::Mat *unwrap;
     if(params.unwrapCapture)
-      unwrap = unwrapper.unwrap(&frame);
+      unwrapper.unwrap(&frame, &unwrap);
     else
-      unwrap = frame;
+      unwrap = &frame;
 
     //Show the original image if asked to
     if(params.mode[MODE_SHOW_ORIGINAL])
@@ -283,15 +283,15 @@ int main(int argc, char **argv)
 
     //Show the unwrapped image if asked to
     if(params.mode[MODE_SHOW_UNWRAP])
-      imshow("BubbleScope Unwrapped Image", unwrap);
+      imshow("BubbleScope Unwrapped Image", *unwrap);
   
     //Record video if asked to
     if(params.mode[MODE_VIDEO])
-      videoOut.write(unwrap);
+      videoOut.write(*unwrap);
 
     //Save an MJPG frame if asked to
     if(params.mode[MODE_MJPG] || params.mode[MODE_SINGLE_STILL])
-      imwrite(params.outputFilename[MODE_MJPG], unwrap);
+      imwrite(params.outputFilename[MODE_MJPG], *unwrap);
 
     //If time has elepsed save a timelapse frame
     if(params.mode[MODE_TIMELAPSE] &&
@@ -306,7 +306,7 @@ int main(int argc, char **argv)
       sprintf(timelapseFilename, params.outputFilename[MODE_TIMELAPSE].c_str(),
           timelapseFrameNumber);
       //Save timelapse frame
-      imwrite(timelapseFilename, unwrap);
+      imwrite(timelapseFilename, *unwrap);
       timelapseFrameNumber++;
       //Restart timer
       timelapseTimer->stop();
@@ -356,7 +356,7 @@ int main(int argc, char **argv)
           stillFrameNumber);
       printf("Saving still image: %s\n", stillFilename);
       //Save still image
-      imwrite(stillFilename, unwrap);
+      imwrite(stillFilename, *unwrap);
       stillFrameNumber++;
       captureStill = false;
     }

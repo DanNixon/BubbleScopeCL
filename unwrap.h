@@ -28,35 +28,35 @@ class BubbleScopeUnwrapper
     BubbleScopeUnwrapper();
     ~BubbleScopeUnwrapper();
 
-    void generateTransformation();
-    cv::Mat unwrap(cv::Mat *);
+    bool generateTransformation();
+    bool unwrap(cv::Mat *, cv::Mat **);
 
     unsigned int getUnwrapHeight();
 
     //Unwrap parameter setters
-    void unwrapWidth(int);
-    void originalSize(int, int);
-    void originalCentre(float, float);
-    void imageRadius(float, float);
-    void offsetAngle(float);
+    bool unwrapWidth(int);
+    bool originalSize(int, int);
+    bool originalCentre(float, float);
+    bool imageRadius(float, float);
+    bool offsetAngle(float);
 
   private:
     //Pixel transformation array
-    unsigned long *ia_transformation;
+    unsigned long *m_transformation;
 
     //Unwrap parameters
-    unsigned int i_originalWidth;
-    unsigned int i_originalHeight;
-    unsigned int i_unwrapWidth;
-    float f_uCentre;
-    float f_vCentre;
-    float f_radiusMin;
-    float f_radiusMax;
-    float f_offsetAngle;
+    unsigned int m_originalWidth;
+    unsigned int m_originalHeight;
+    unsigned int m_unwrapWidth;
+    float m_uCentre;
+    float m_vCentre;
+    float m_radiusMin;
+    float m_radiusMax;
+    float m_offsetAngle;
 
     //Computed unwrap parameters
-    unsigned int i_unwrapHeight;
-    unsigned long i_outMatSize;
+    unsigned int m_unwrapHeight;
+    unsigned long m_outMatSize;
 };
 
 #endif
