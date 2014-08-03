@@ -6,7 +6,15 @@ compiler:
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get install libv4l-0 libv4l-dev libopencv-dev libopencv-core2.3 libopencv-core2.3-dev
+  - sudo apt-get install libv4l-0 libv4l-dev
+  - git clone https://github.com/Itseez/opencv.git
+  - cd opencv
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make -j4
+  - sudo make -j4 install
+  - cd ../..
 
 before_script:
   - cmake .
