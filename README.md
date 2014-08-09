@@ -1,7 +1,7 @@
 BubbleScopeCL
 =============
 
-A BubbleScope 360 degree image capture tool for V4L2 sources
+A BubbleScope 360 degree image capture and processing tool
 
 [![Build Status](https://travis-ci.org/DanNixon/BubbleScopeCL.svg?branch=master)](https://travis-ci.org/DanNixon/BubbleScopeCL)
 

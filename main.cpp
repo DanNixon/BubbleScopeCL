@@ -15,7 +15,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "bubblescope_capture_params.h"
-#include "Unwrap.h"
+#include "BubbleScopeUnwrapper.h"
 #include "command_line_params.h"
 #include "Timer.h"
 #include "config_file.h"

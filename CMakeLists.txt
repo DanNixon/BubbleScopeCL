@@ -9,7 +9,7 @@ find_library(V4L_LIB NAMES v4l2)
 
 add_executable(bubblescope
   main.cpp
-  Unwrap.cpp
+  BubbleScopeUnwrapper.cpp
   bubblescope_capture_params.cpp
   command_line_params.cpp
   Timer.cpp
