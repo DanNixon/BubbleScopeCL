@@ -11,11 +11,11 @@
 #ifndef TIMELAPSESOURCE_H
 #define TIMELAPSESOURCE_H
 
+#include "FrameSource.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-
-#include "frame_source.h"
 
 #include <opencv2/core/core.hpp>
 

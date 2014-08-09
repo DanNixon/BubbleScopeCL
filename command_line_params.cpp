@@ -10,30 +10,30 @@
  * \brief Array of parameters which may be passed to BubbleScope app
  */
 CLParameter clParams[] = {
-  CLParameter{HELP,             "-h",     "--help",           "Show help",          "Shows this help text"},
-  CLParameter{CAPTURE_DEVICE,   "-d",     "--device",         "Capture device",     "Specifies a V4L2 capture device"},
-  CLParameter{P_SOURCE_STILL,   "-ss",    "--sourcestill",    "Source still",       "Specifies a pre captured still to unwrap"},
-  CLParameter{P_SOURCE_VIDEO,   "-sv",    "--sourcevideo",    "Source video",       "Specifies a pre recorded video to unwrap"},
-  CLParameter{P_SOURCE_TLAPSE,  "-stl",   "--sourcetimelapse","Source timelapse",   "Specifies a set of pre captured timelapse frames to unwrap"},
-  CLParameter{ORIGINAL_WIDTH,   "-iw",    "--inwidth",        "Original width",     "Set desired capture width (V4L2 only)"},
-  CLParameter{ORIGINAL_HEIGHT,  "-ih",    "--inheight",       "Original height",    "Set desired capture height (V4L2 only)"},
-  CLParameter{UNWRAP_WIDTH,     "-ow",    "--outwidth",       "Unwrap width",       "Set width of unwrapped image"},
-  CLParameter{RADIUS_MIN,       "-rmin",  "--minradius",      "Radius min",         "Set lower unwrap radius"},
-  CLParameter{RADIUS_MAX,       "-rmax",  "--maxradius",      "Radius max",         "Set upper unwrap radius"},
-  CLParameter{U_CENTRE,         "-uc",    "--ucentre",        "U centre",           "Set U original image centre"},
-  CLParameter{V_CENTRE,         "-vc",    "--vcentre",        "V centre",           "Set V original image centre"},
-  CLParameter{OFFSET_ANGLE,     "-a",     "--offset",         "Offset angle",       "Set unwrap image offset angle in degrees"},
-  CLParameter{SHOW_ORIGINAL,    "-o",     "--original",       "Show original",      "Show original video"},
-  CLParameter{SHOW_UNWRAP,      "-u",     "--unwrap",         "Show unwrap",        "Show unwrapped video"},
-  CLParameter{OUTPUT_STILLS,    "-s",     "--stills",         "Output stills",      "Capture stills on spacebar press"},
-  CLParameter{OUTPUT_VIDEO,     "-v",     "--video",          "Output video",       "Capture AVI video"},
-  CLParameter{OUTPUT_MJPG,      "-m",     "--mjpg",           "Output MJPG stream", "Output frames for MJPG streamer"},
-  CLParameter{OUTPUT_TIMELAPSE, "-t",     "--timelapse",      "Output timelapse",   "Output captured frames as timelapse at specified interval"},
-  CLParameter{SINGLE_STILL,     "-sin"    "--single",         "Capture 1 still",    "Capture a single still image and exit"},
-  CLParameter{SAMPLE_FPS,       "-sfr",   "--samplefps",      "Sample frame rate",  "Specifies how many samples to use in measuring capture frame rate"},
-  CLParameter{NO_UNWRAP,        "-nuw",   "--nounwrap",       "Do not unwrap image","Does not unwrap the captured image"},
-  CLParameter{LOAD_CONFIG,      "-lc",    "--config",         "Load config",        "Load unwrap config from file"},
-  CLParameter{SAVE_CONFIG,      "-sc",    "--saveconf",       "Save config",        "Save unwrap config to file"}
+  CLParameter(HELP,             "-h",     "--help",           "Show help",          "Shows this help text"),
+  CLParameter(CAPTURE_DEVICE,   "-d",     "--device",         "Capture device",     "Specifies a V4L2 capture device"),
+  CLParameter(P_SOURCE_STILL,   "-ss",    "--sourcestill",    "Source still",       "Specifies a pre captured still to unwrap"),
+  CLParameter(P_SOURCE_VIDEO,   "-sv",    "--sourcevideo",    "Source video",       "Specifies a pre recorded video to unwrap"),
+  CLParameter(P_SOURCE_TLAPSE,  "-stl",   "--sourcetimelapse","Source timelapse",   "Specifies a set of pre captured timelapse frames to unwrap"),
+  CLParameter(ORIGINAL_WIDTH,   "-iw",    "--inwidth",        "Original width",     "Set desired capture width (V4L2 only)"),
+  CLParameter(ORIGINAL_HEIGHT,  "-ih",    "--inheight",       "Original height",    "Set desired capture height (V4L2 only)"),
+  CLParameter(UNWRAP_WIDTH,     "-ow",    "--outwidth",       "Unwrap width",       "Set width of unwrapped image"),
+  CLParameter(RADIUS_MIN,       "-rmin",  "--minradius",      "Radius min",         "Set lower unwrap radius"),
+  CLParameter(RADIUS_MAX,       "-rmax",  "--maxradius",      "Radius max",         "Set upper unwrap radius"),
+  CLParameter(U_CENTRE,         "-uc",    "--ucentre",        "U centre",           "Set U original image centre"),
+  CLParameter(V_CENTRE,         "-vc",    "--vcentre",        "V centre",           "Set V original image centre"),
+  CLParameter(OFFSET_ANGLE,     "-a",     "--offset",         "Offset angle",       "Set unwrap image offset angle in degrees"),
+  CLParameter(SHOW_ORIGINAL,    "-o",     "--original",       "Show original",      "Show original video"),
+  CLParameter(SHOW_UNWRAP,      "-u",     "--unwrap",         "Show unwrap",        "Show unwrapped video"),
+  CLParameter(OUTPUT_STILLS,    "-s",     "--stills",         "Output stills",      "Capture stills on spacebar press"),
+  CLParameter(OUTPUT_VIDEO,     "-v",     "--video",          "Output video",       "Capture AVI video"),
+  CLParameter(OUTPUT_MJPG,      "-m",     "--mjpg",           "Output MJPG stream", "Output frames for MJPG streamer"),
+  CLParameter(OUTPUT_TIMELAPSE, "-t",     "--timelapse",      "Output timelapse",   "Output captured frames as timelapse at specified interval"),
+  CLParameter(SINGLE_STILL,     "-sin",   "--single",         "Capture 1 still",    "Capture a single still image and exit"),
+  CLParameter(SAMPLE_FPS,       "-sfr",   "--samplefps",      "Sample frame rate",  "Specifies how many samples to use in measuring capture frame rate"),
+  CLParameter(NO_UNWRAP,        "-nuw",   "--nounwrap",       "Do not unwrap image","Does not unwrap the captured image"),
+  CLParameter(LOAD_CONFIG,      "-lc",    "--config",         "Load config",        "Load unwrap config from file"),
+  CLParameter(SAVE_CONFIG,      "-sc",    "--saveconf",       "Save config",        "Save unwrap config to file")
 };
 
 /**
@@ -59,12 +59,12 @@ int getParameters(BubbleScopeParameters *params, int argc, char **argv)
   {
     for(j = 0; j < clParamCount; j++)
     {
-      if((strcmp(clParams[j].shortParam, argv[i]) == 0) ||
-          (strcmp(clParams[j].longParam, argv[i]) == 0))
+      if((strcmp(clParams[j].m_shortParam, argv[i]) == 0) ||
+          (strcmp(clParams[j].m_longParam, argv[i]) == 0))
       {
         i++;
         char buffer[100];
-        switch(clParams[j].type)
+        switch(clParams[j].m_type)
         {
           case HELP:
             return HELP;
@@ -212,7 +212,7 @@ void printParameterUsage()
   for(i = 0; i < clParamCount; i++)
   {
     printf(" %-4s\t%-20s\t: %-25s%s\n",
-        clParams[i].shortParam, clParams[i].longParam,
-        clParams[i].name, clParams[i].description);
+        clParams[i].m_shortParam, clParams[i].m_longParam,
+        clParams[i].m_name, clParams[i].m_description);
   }
 }

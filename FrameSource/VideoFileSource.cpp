@@ -1,4 +1,4 @@
-#include "source_videofile.h"
+#include "VideoFileSource.h"
 
 VideoFileSource::VideoFileSource()
 {

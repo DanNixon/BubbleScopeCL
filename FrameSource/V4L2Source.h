@@ -11,10 +11,10 @@
 #ifndef V4L2SOURCE_H
 #define V4L2SOURCE_H
 
+#include "FrameSource.h"
+
 #include <stdio.h>
 #include <stdlib.h>
-
-#include "frame_source.h"
 
 #include <opencv2/core/core.hpp>
 #include "../OCVCapture.h"

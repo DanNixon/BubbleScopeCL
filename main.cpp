@@ -15,16 +15,16 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "bubblescope_capture_params.h"
-#include "unwrap.h"
+#include "Unwrap.h"
 #include "command_line_params.h"
 #include "Timer.h"
 #include "config_file.h"
 
-#include "frame_source/frame_source.h"
-#include "frame_source/source_v4l2.h"
-#include "frame_source/source_imagefile.h"
-#include "frame_source/source_videofile.h"
-#include "frame_source/source_timelapse.h"
+#include "FrameSource/FrameSource.h"
+#include "FrameSource/V4L2Source.h"
+#include "FrameSource/ImageFileSource.h"
+#include "FrameSource/VideoFileSource.h"
+#include "FrameSource/TimelapseSource.h"
 
 //Cross platform delay, taken from: http://www.cplusplus.com/forum/unices/10491/
 #if defined(__WIN32__) || defined(_WIN32) || defined(WIN32) || defined(__WINDOWS__) || defined(__TOS_WIN__)

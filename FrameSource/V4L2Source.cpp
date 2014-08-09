@@ -1,4 +1,4 @@
-#include "source_v4l2.h"
+#include "V4L2Source.h"
 
 V4L2Source::V4L2Source()
 {

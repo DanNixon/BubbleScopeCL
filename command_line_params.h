@@ -51,11 +51,18 @@ enum ParameterType
  */
 struct CLParameter
 {
-  ParameterType type;
-  char *shortParam;
-  char *longParam;
-  char *name;
-  char *description;
+  ParameterType m_type;
+  char *m_shortParam;
+  char *m_longParam;
+  char *m_name;
+  char *m_description;
+
+  CLParameter(ParameterType type, char *shortParam, char *longParam,
+      char *name, char *description) :
+    m_type(type), m_shortParam(shortParam), m_longParam(longParam),
+    m_name(name), m_description(description)
+  {
+  }
  };
 
 int getParameters(BubbleScopeParameters *, int, char **);

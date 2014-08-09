@@ -1,4 +1,4 @@
-#include "source_timelapse.h"
+#include "TimelapseSource.h"
 
 TimelapseSource::TimelapseSource()
 {

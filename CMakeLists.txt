@@ -9,15 +9,15 @@ find_library(V4L_LIB NAMES v4l2)
 
 add_executable(bubblescope
   main.cpp
-  unwrap.cpp
+  Unwrap.cpp
   bubblescope_capture_params.cpp
   command_line_params.cpp
   Timer.cpp
   OCVCapture.cpp
-  frame_source/source_v4l2.cpp
-  frame_source/source_imagefile.cpp
-  frame_source/source_videofile.cpp
-  frame_source/source_timelapse.cpp
+  FrameSource/V4L2Source.cpp
+  FrameSource/ImageFileSource.cpp
+  FrameSource/VideoFileSource.cpp
+  FrameSource/TimelapseSource.cpp
   config_file.cpp
 )
 

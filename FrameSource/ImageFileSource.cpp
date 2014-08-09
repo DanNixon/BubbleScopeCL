@@ -1,4 +1,4 @@
-#include "source_imagefile.h"
+#include "ImageFileSource.h"
 
 /**
  * \brief Open a still image file from disk

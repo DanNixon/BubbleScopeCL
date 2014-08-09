@@ -11,10 +11,10 @@
 #ifndef VIDEOFILESOURCE_H
 #define VIDEOFILESOURCE_H
 
+#include "FrameSource.h"
+
 #include <stdlib.h>
 #include <stdio.h>
-
-#include "frame_source.h"
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
