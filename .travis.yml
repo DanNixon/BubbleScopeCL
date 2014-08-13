@@ -9,7 +9,7 @@ before_install:
   - sudo apt-get update
 
 install:
-  - sudo apt-get install libv4l-0 libv4l-dev libcv-dev libcvaux-dev libhighgui-dev libopencv-dev
+  - sudo apt-get install libv4l-0 libv4l-dev libcv-dev libopencv-dev
 
 before_script:
   - cmake .
