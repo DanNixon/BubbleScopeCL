@@ -1,14 +1,8 @@
-/**
- * \brief BubbleScopeCL capture parameter functions.
- *
- * \author Dan Nixon
- */
+#ifndef CONFIGURATION_H
+#define CONFIGURATION_H
 
-#ifndef BUBBLESCOPECAPPARMAS_H
-#define BUBBLESCOPECAPPARMAS_H
-
-#include <stdio.h>
-#include <string>
+#include <iostream>
+#include <map>
 
 /**
  * \brief Defines capture modes
@@ -36,39 +30,43 @@ enum BubbleScopeCaptureSource
 };
 
 /**
- * \brief Config file directions
+ * \brief Stores user options defining capture properties.
  */
-enum BubbleScopeConfigFile
+struct CaptureParams
 {
-  CONFIG_READ,
-  CONFIG_WRITE
+  std::map<BubbleScopeCaptureMode, bool> mode;
+  std::map<BubbleScopeCaptureMode, std::string> outputFilename;
+
+  BubbleScopeCaptureSource captureSource;
+  std::string captureLocation;
+
+  unsigned int originalWidth;
+  unsigned int originalHeight;
+
+  bool unwrapCapture;
+
+  float fps;
+  unsigned int sampleFPS;
+  float forceFPS;
+
+  void print(std::ostream);
 };
 
 /**
- * \brief Stores user options defining capture properties.
+ * \brief Stores user options defining unwrap parameters.
  */
-struct BubbleScopeParameters
+struct UnwrapParams
 {
-  BubbleScopeCaptureSource captureSource;
-  std::string captureLocation;
-  unsigned int originalWidth;
-  unsigned int originalHeight;
-  bool unwrapCapture;
   unsigned int unwrapWidth;
   float radiusMin;
   float radiusMax;
   float uCentre;
   float vCentre;
   float offsetAngle;
-  unsigned int mode[7];
-  std::string outputFilename[4];
-  float fps;
-  unsigned int sampleFPS;
-  float forceFPS;
-  std::string configFilename[2];
-};
 
-void setupDefaultParameters(BubbleScopeParameters *);
-void printParameters(BubbleScopeParameters *);
+  void print(std::ostream);
+  void load(std::string);
+  void save(std::string);
+};
 
 #endif

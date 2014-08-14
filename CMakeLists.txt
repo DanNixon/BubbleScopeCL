@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 2.8)
 project(bubblescope)
 set(CMAKE_BUILD_TYPE Debug)
 
+set(Boost_USE_STATIC_LIBS OFF) 
+set(Boost_USE_MULTITHREADED ON)  
+set(Boost_USE_STATIC_RUNTIME OFF) 
+find_package(Boost 1.45.0 COMPONENTS program_options) 
+
 find_package(OpenCV REQUIRED)
 find_path(V4L_INCLUDE_DIR NAMES libv4l2.h)
 find_library(V4L_LIB NAMES v4l2)
@@ -10,15 +15,14 @@ find_library(V4L_LIB NAMES v4l2)
 add_executable(bubblescope
   main.cpp
   BubbleScopeUnwrapper.cpp
-  bubblescope_capture_params.cpp
-  command_line_params.cpp
-  Timer.cpp
+  CommandLineParser.cpp
+  Configuration.cpp
   OCVCapture.cpp
+  Timer.cpp
   FrameSource/V4L2Source.cpp
   FrameSource/ImageFileSource.cpp
   FrameSource/VideoFileSource.cpp
   FrameSource/TimelapseSource.cpp
-  config_file.cpp
 )
 
 target_link_libraries(bubblescope
