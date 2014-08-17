@@ -92,6 +92,10 @@ int main(int argc, char **argv)
   BubbleScopeCaptureParams captureParams = parser.getCaptureParams();
   BubbleScopeUnwrapParams unwrapParams = parser.getUnwrapParams();
 
+  //TODO: Temp.
+  captureParams.print(std::cout);
+  unwrapParams.print(std::cout);
+
   //Get the correct capture source and open it
   FrameSource *cap;
   switch(captureParams.captureSource)
@@ -220,7 +224,8 @@ int main(int argc, char **argv)
   Timer *timelapseTimer;
 
   //Tell the user how things are going to happen
-  //TODO
+  captureParams.print(std::cout);
+  unwrapParams.print(std::cout);
 
   //Save the config to file
   //TODO

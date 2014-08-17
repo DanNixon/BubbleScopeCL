@@ -57,7 +57,7 @@ CommandLineParser::~CommandLineParser()
 BubbleScopeCaptureParams CommandLineParser::getCaptureParams()
 {
   if(!m_captureParams)
-    throw std::exception();
+    throw std::runtime_error("No options have been parsed");
 
   //TODO
 }
@@ -65,7 +65,7 @@ BubbleScopeCaptureParams CommandLineParser::getCaptureParams()
 BubbleScopeUnwrapParams CommandLineParser::getUnwrapParams()
 {
   if(!m_unwrapParams)
-    throw std::exception();
+    throw std::runtime_error("No options have been parsed");
 
   //TODO
 }
