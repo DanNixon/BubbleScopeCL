@@ -45,11 +45,13 @@ struct BubbleScopeCaptureParams
 
   bool unwrapCapture;
 
-  float fps;
+  double fps;
   unsigned int sampleFPS;
-  float forceFPS;
+  double forceFPS;
 
   void print(std::ostream& stream);
+
+  BubbleScopeCaptureParams();
 };
 
 /**
@@ -67,6 +69,8 @@ struct BubbleScopeUnwrapParams
   void print(std::ostream& stream);
   void load(std::string filename);
   void save(std::string filename);
+
+  BubbleScopeUnwrapParams();
 };
 
 #endif

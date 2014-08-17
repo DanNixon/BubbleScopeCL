@@ -224,7 +224,9 @@ int main(int argc, char **argv)
   Timer *timelapseTimer;
 
   //Tell the user how things are going to happen
+  std::cout << "Capture/output properties:" << std::endl;
   captureParams.print(std::cout);
+  std::cout << "Unwrap properties:" << std::endl;
   unwrapParams.print(std::cout);
 
   //Save the config to file
