@@ -32,7 +32,7 @@ enum BubbleScopeCaptureSource
 /**
  * \brief Stores user options defining capture properties.
  */
-struct CaptureParams
+struct BubbleScopeCaptureParams
 {
   std::map<BubbleScopeCaptureMode, bool> mode;
   std::map<BubbleScopeCaptureMode, std::string> outputFilename;
@@ -49,13 +49,13 @@ struct CaptureParams
   unsigned int sampleFPS;
   float forceFPS;
 
-  void print(std::ostream);
+  void print(std::ostream& stream);
 };
 
 /**
  * \brief Stores user options defining unwrap parameters.
  */
-struct UnwrapParams
+struct BubbleScopeUnwrapParams
 {
   unsigned int unwrapWidth;
   float radiusMin;
@@ -64,9 +64,9 @@ struct UnwrapParams
   float vCentre;
   float offsetAngle;
 
-  void print(std::ostream);
-  void load(std::string);
-  void save(std::string);
+  void print(std::ostream& stream);
+  void load(std::string filename);
+  void save(std::string filename);
 };
 
 #endif

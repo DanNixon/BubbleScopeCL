@@ -28,6 +28,7 @@ add_executable(bubblescope
 target_link_libraries(bubblescope
   ${OpenCV_LIBS}
   ${V4L_LIB}
+  ${Boost_LIBRARIES}
 )
 
 install(TARGETS bubblescope DESTINATION bin)

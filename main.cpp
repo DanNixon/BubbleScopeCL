@@ -79,12 +79,18 @@ int main(int argc, char **argv)
   stillCapSigHandler.sa_flags = 0;
   sigaction(SIGUSR1, &stillCapSigHandler, NULL);
 
-  //Get some storage for parameters
-  CaptureParams captureParams;
-  UnwrapParams unwrapParams;
-
   //Get command line parameters
-  //TODO
+  CommandLineParser parser;
+  parser.parse(argc, argv);
+
+  if(parser.helpWanted())
+  {
+    parser.printUsage(std::cout);
+    return 0;
+  }
+
+  BubbleScopeCaptureParams captureParams = parser.getCaptureParams();
+  BubbleScopeUnwrapParams unwrapParams = parser.getUnwrapParams();
 
   //Get the correct capture source and open it
   FrameSource *cap;
