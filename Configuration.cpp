@@ -1,5 +1,10 @@
 #include "Configuration.h"
 
+#include <fstream>
+
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+
 BubbleScopeCaptureParams::BubbleScopeCaptureParams() :
   captureSource(SOURCE_V4L2), captureLocation("\\dev\\video0"),
   originalWidth(640), originalHeight(480),
@@ -38,12 +43,29 @@ void BubbleScopeUnwrapParams::print(std::ostream &stream)
   stream << "Offset Angle: "  << offsetAngle  << std::endl;
 }
 
+template<class Archive>
+void BubbleScopeUnwrapParams::serialize(Archive & ar,
+    const unsigned int version)
+{
+  ar & unwrapWidth;
+  ar & radiusMin;
+  ar & radiusMax;
+  ar & uCentre;
+  ar & vCentre;
+  ar & offsetAngle;
+}
+
+
 void BubbleScopeUnwrapParams::load(std::string filename)
 {
-  //TODO
+  std::ifstream inputStream(filename.c_str());
+  boost::archive::text_iarchive inputArchive(inputStream);
+  inputArchive >> *this;
 }
 
 void BubbleScopeUnwrapParams::save(std::string filename)
 {
-  //TODO
+  std::ofstream outputStream(filename.c_str());
+  boost::archive::text_oarchive outputArchive(outputStream);
+  outputArchive << *this;
 }

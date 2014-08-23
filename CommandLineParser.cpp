@@ -11,8 +11,8 @@ CommandLineParser::CommandLineParser() :
     ("help,h",              "Show usage and help")
     ("show-original,so",    po::value<bool>(),        "Show the original capture in a window")
     ("show-unwrap,su",      po::value<bool>(),        "Show the unwrapped image in a window")
-    ("config,c",            po::value<std::string>(), "Load a config file fro unwrap parameters")
-    ("overwrite-config,oc", "Overwrite the config file with new parameters")
+    ("config,c",            po::value<std::string>(), "Load unwrap parameters from config file")
+    ("output-config,oc",    po::value<std::string>(), "Overwrite the config file with new parameters")
     ;
 
   m_captureOptions.add_options()
@@ -96,16 +96,6 @@ void CommandLineParser::parse(int argc, char **argv)
   m_unwrapParams = new BubbleScopeUnwrapParams();
 
   //GENERAL OPTIONS
-  if(vm.count("config"))
-  {
-    //TODO
-  }
-
-  if(vm.count("overwrite-config"))
-  {
-    //TODO
-  }
-
   if(vm.count("show-original"))
   {
     m_captureParams->mode[MODE_SHOW_ORIGINAL] = vm["show-original"].as<bool>();
@@ -162,6 +152,14 @@ void CommandLineParser::parse(int argc, char **argv)
   }
 
   //UNWRAP OPTIONS
+  
+  // Load config file before parsing other options
+  if(vm.count("config"))
+  {
+    std::string filename = vm["config"].as<std::string>();
+    m_unwrapParams->load(filename);
+  }
+
   if(vm.count("unwrap-width"))
   {
     m_unwrapParams->unwrapWidth = vm["unwrap-width"].as<int>();
@@ -190,6 +188,13 @@ void CommandLineParser::parse(int argc, char **argv)
   if(vm.count("offset-angle"))
   {
     m_unwrapParams->offsetAngle = vm["offset-angle"].as<double>();
+  }
+
+  //Save config file after parsing unwrap options
+  if(vm.count("output-config"))
+  {
+    std::string filename = vm["output-config"].as<std::string>();
+    m_unwrapParams->save(filename);
   }
    
   if(vm.count("no-unwrap"))

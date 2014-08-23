@@ -66,6 +66,10 @@ struct BubbleScopeUnwrapParams
   float vCentre;
   float offsetAngle;
 
+  template<class Archive>
+  void serialize(Archive & ar,
+      const unsigned int version);
+
   void print(std::ostream& stream);
   void load(std::string filename);
   void save(std::string filename);
