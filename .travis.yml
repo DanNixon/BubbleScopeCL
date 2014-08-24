@@ -21,3 +21,17 @@ notifications:
   email:
     on_success: change
     on_failure: always
+
+env:
+  global:
+    - secure: "qv1TfmSmWAsitSK46t88KmjDCfRCE1psIHKrpdu8iccBsgE7k6M4MBaIbEWu2QG+4gFBXp+xJKl0OFI+Lsnz1+JyvVf3EHSVNGDhUduQcCTFPRnJseT+DNBxfPiSTxDiv5FiDtU28c8iCVC85of7CbqaRG4XMGDjC25YG+TcBLY="
+
+addons:
+  coverity_scan:
+    project:
+      name: "DanNixon/BubbleScopeCL"
+      description: "A BubbleScope 360 degree image capture and processing tool"
+    notification_email: dan@dan-nixon.com
+    build_command_prepend: "cmake ."
+    build_command: "make -j4"
+    branch_pattern: coverity_scan
