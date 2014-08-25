@@ -1,5 +1,10 @@
 #include "ImageFileSource.h"
 
+ImageFileSource::ImageFileSource():
+  m_open(false)
+{
+}
+
 /**
  * \brief Open a still image file from disk
  *
@@ -7,8 +12,8 @@
  */
 void ImageFileSource::open(std::string imageFile)
 {
-  this->b_open = true;
-  this->o_image = cv::imread(imageFile);
+  m_open = true;
+  m_image = cv::imread(imageFile);
 }
 
 void ImageFileSource::close()
@@ -17,7 +22,7 @@ void ImageFileSource::close()
 
 bool ImageFileSource::isOpen()
 {
-  return this->b_open;
+  return m_open;
 }
 
 /**
@@ -29,16 +34,16 @@ bool ImageFileSource::isOpen()
  */
 bool ImageFileSource::grab(cv::Mat *out)
 {
-  *out = this->o_image;
+  *out = m_image;
   return true;
 }
 
 unsigned int ImageFileSource::getWidth()
 {
-  return this->o_image.cols;
+  return m_image.cols;
 }
 
 unsigned int ImageFileSource::getHeight()
 {
-  return this->o_image.rows;
+  return m_image.rows;
 }

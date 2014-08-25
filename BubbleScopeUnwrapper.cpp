@@ -1,8 +1,14 @@
 #include "BubbleScopeUnwrapper.h"
 
-BubbleScopeUnwrapper::BubbleScopeUnwrapper()
+BubbleScopeUnwrapper::BubbleScopeUnwrapper() :
+  m_transformation(NULL),
+  m_originalWidth(0), m_originalHeight(0),
+  m_unwrapWidth(0),
+  m_uCentre(0.0), m_vCentre(0.0),
+  m_radiusMin(0.0), m_radiusMax(0.0),
+  m_offsetAngle(0.0),
+  m_unwrapHeight(0), m_outMatSize(0)
 {
-  this->m_transformation = NULL;
 }
 
 /**
@@ -13,7 +19,7 @@ BubbleScopeUnwrapper::BubbleScopeUnwrapper()
 BubbleScopeUnwrapper::~BubbleScopeUnwrapper()
 {
   //Deallocate memory used for transformation array
-  delete this->m_transformation;
+  delete[] this->m_transformation;
 }
 
 /**

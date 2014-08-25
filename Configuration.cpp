@@ -8,7 +8,8 @@
 BubbleScopeCaptureParams::BubbleScopeCaptureParams() :
   captureSource(SOURCE_V4L2), captureLocation("/dev/video0"),
   originalWidth(640), originalHeight(480),
-  unwrapCapture(true), sampleFPS(0), forceFPS(-1.0)
+  unwrapCapture(true),
+  fps(0.0), sampleFPS(0), forceFPS(-1.0)
 {
 }
 

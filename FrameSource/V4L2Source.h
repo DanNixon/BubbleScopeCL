@@ -36,7 +36,7 @@ class V4L2Source: public FrameSource
     double getFrameRate();
 
   private:
-    OCVCapture *o_capture;
+    OCVCapture *m_capture;
 };
 
 #endif

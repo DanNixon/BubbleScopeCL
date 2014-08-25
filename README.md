@@ -4,6 +4,10 @@ BubbleScopeCL
 A BubbleScope 360 degree image capture and processing tool
 
 [![Build Status](https://travis-ci.org/DanNixon/BubbleScopeCL.svg?branch=master)](https://travis-ci.org/DanNixon/BubbleScopeCL)
+<a href="https://scan.coverity.com/projects/2865">
+  <img alt="Coverity Scan Build Status"
+       src="https://scan.coverity.com/projects/2865/badge.svg"/>
+</a>
 
 Allows capture of 360 degree unwrapped and raw images and videos from a video capture device fitted with a [BubbleScope](http://store.bubblepix.com/).
 

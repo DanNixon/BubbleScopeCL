@@ -4,6 +4,7 @@ namespace po = boost::program_options;
 
 CommandLineParser::CommandLineParser() :
   m_captureParams(NULL), m_unwrapParams(NULL),
+  m_helpWanted(false),
   m_generalOptions("General options"), m_captureOptions("Capture options"),
   m_unwrapOptions("Unwrap options"), m_outputOptions("Output options")
 {

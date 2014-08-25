@@ -1,14 +1,14 @@
 #include "VideoFileSource.h"
 
-VideoFileSource::VideoFileSource()
+VideoFileSource::VideoFileSource() :
+  m_capture(NULL),
+  m_grabbedFrameCount(0)
 {
-  this->o_capture = NULL;
-  this->i_grabbedFrameCount = 0;
 }
 
 VideoFileSource::~VideoFileSource()
 {
-  delete this->o_capture;
+  delete m_capture;
 }
 
 /**
@@ -18,9 +18,9 @@ VideoFileSource::~VideoFileSource()
  */
 void VideoFileSource::open(std::string videoFile)
 {
-  this->o_capture = new cv::VideoCapture(videoFile);
-  this->o_capture->set(CV_CAP_PROP_CONVERT_RGB, 1);
-  this->i_grabbedFrameCount = 0;
+  m_capture = new cv::VideoCapture(videoFile);
+  m_capture->set(CV_CAP_PROP_CONVERT_RGB, 1);
+  m_grabbedFrameCount = 0;
 }
 
 /**
@@ -28,12 +28,12 @@ void VideoFileSource::open(std::string videoFile)
  */
 void VideoFileSource::close()
 {
-  this->o_capture->release();
+  m_capture->release();
 }
 
 bool VideoFileSource::isOpen()
 {
-  return this->o_capture->isOpened();
+  return m_capture->isOpened();
 }
 
 /**
@@ -45,20 +45,20 @@ bool VideoFileSource::isOpen()
  */
 bool VideoFileSource::grab(cv::Mat *out)
 {
-  bool result = this->o_capture->read(*out);
+  bool result = m_capture->read(*out);
   if(result)
-    this->i_grabbedFrameCount++;
+    m_grabbedFrameCount++;
   return result;
 }
 
 unsigned int VideoFileSource::getWidth()
 {
-  return this->o_capture->get(CV_CAP_PROP_FRAME_WIDTH);
+  return m_capture->get(CV_CAP_PROP_FRAME_WIDTH);
 }
 
 unsigned int VideoFileSource::getHeight()
 {
-  return this->o_capture->get(CV_CAP_PROP_FRAME_HEIGHT);
+  return m_capture->get(CV_CAP_PROP_FRAME_HEIGHT);
 }
 
 /**
@@ -68,7 +68,7 @@ unsigned int VideoFileSource::getHeight()
  */
 double VideoFileSource::getFrameRate()
 {
-  return this->o_capture->get(CV_CAP_PROP_FPS);
+  return m_capture->get(CV_CAP_PROP_FPS);
 }
 
 /**
@@ -78,7 +78,7 @@ double VideoFileSource::getFrameRate()
  */
 unsigned int VideoFileSource::getGrabbedFrameCount()
 {
-  return this->i_grabbedFrameCount;
+  return m_grabbedFrameCount;
 }
 
 /**
@@ -88,7 +88,7 @@ unsigned int VideoFileSource::getGrabbedFrameCount()
  */
 unsigned int VideoFileSource::getFrameCount()
 {
-  return this->o_capture->get(CV_CAP_PROP_FRAME_COUNT);
+  return m_capture->get(CV_CAP_PROP_FRAME_COUNT);
 }
 
 /**
@@ -98,5 +98,5 @@ unsigned int VideoFileSource::getFrameCount()
  */
 bool VideoFileSource::atEndOfVideo()
 {
-  return (this->getGrabbedFrameCount() >= this->getFrameCount());
+  return (getGrabbedFrameCount() >= getFrameCount());
 }

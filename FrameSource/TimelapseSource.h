@@ -33,9 +33,9 @@ class TimelapseSource: public FrameSource
     unsigned int getHeight();
 
   private:
-    cv::Mat o_frame;
-    char *filenamePattern;
-    unsigned long frameNumber;
+    cv::Mat m_frame;
+    char *m_filenamePattern;
+    unsigned long m_frameNumber;
 };
 
 #endif

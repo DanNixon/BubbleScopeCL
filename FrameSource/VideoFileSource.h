@@ -39,8 +39,8 @@ class VideoFileSource: public FrameSource
     bool atEndOfVideo();
 
   private:
-    cv::VideoCapture *o_capture;
-    unsigned int i_grabbedFrameCount;
+    cv::VideoCapture *m_capture;
+    unsigned int m_grabbedFrameCount;
 };
 
 #endif

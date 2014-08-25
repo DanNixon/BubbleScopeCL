@@ -1,13 +1,14 @@
 #include "TimelapseSource.h"
 
-TimelapseSource::TimelapseSource()
+TimelapseSource::TimelapseSource():
+  m_filenamePattern(NULL),
+  m_frameNumber(0)
 {
-  this->frameNumber = 0;
 }
 
 TimelapseSource::~TimelapseSource()
 {
-  delete this->filenamePattern;
+  delete m_filenamePattern;
 }
 
 /**
@@ -17,19 +18,19 @@ TimelapseSource::~TimelapseSource()
  */
 void TimelapseSource::open(std::string path)
 {
-  this->filenamePattern = (char *) path.c_str();
-  this->frameNumber = 0;
+  m_filenamePattern = (char *) path.c_str();
+  m_frameNumber = 0;
 }
 
 void TimelapseSource::close()
 {
-  this->filenamePattern = NULL;
-  this->frameNumber = 0;
+  m_filenamePattern = NULL;
+  m_frameNumber = 0;
 }
 
 bool TimelapseSource::isOpen()
 {
-  return (this->filenamePattern != NULL);
+  return (m_filenamePattern != NULL);
 }
 
 /**
@@ -42,19 +43,19 @@ bool TimelapseSource::isOpen()
 bool TimelapseSource::grab(cv::Mat *out)
 {
   //Generate filename
-  unsigned int filenameLen = strlen(this->filenamePattern) + 5;
+  unsigned int filenameLen = strlen(m_filenamePattern) + 5;
   char *imageFilename = new char[filenameLen];
-  sprintf(imageFilename, this->filenamePattern, this->frameNumber);
+  sprintf(imageFilename, m_filenamePattern, m_frameNumber);
   
   struct stat buffer;   
   if(stat (imageFilename, &buffer))
     return false;
 
-  this->o_frame = cv::imread(imageFilename);
-  *out = this->o_frame;
+  m_frame = cv::imread(imageFilename);
+  *out = m_frame;
 
   //Increment frame number
-  this->frameNumber++;
+  m_frameNumber++;
 
   return true;
 }
@@ -62,15 +63,15 @@ bool TimelapseSource::grab(cv::Mat *out)
 unsigned int TimelapseSource::getWidth()
 {
   cv::Mat frame;
-  this->grab(&frame);
-  this->frameNumber--;
+  grab(&frame);
+  m_frameNumber--;
   return frame.cols;
 }
 
 unsigned int TimelapseSource::getHeight()
 {
   cv::Mat frame;
-  this->grab(&frame);
-  this->frameNumber--;
+  grab(&frame);
+  m_frameNumber--;
   return frame.rows;
 }

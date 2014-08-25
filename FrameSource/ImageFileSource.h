@@ -23,6 +23,8 @@
 class ImageFileSource : public FrameSource
 {
   public:
+    ImageFileSource();
+
     void open(std::string);
     void close();
     bool isOpen();
@@ -31,8 +33,8 @@ class ImageFileSource : public FrameSource
     unsigned int getHeight();
 
   private:
-    cv::Mat o_image;
-    bool b_open;
+    cv::Mat m_image;
+    bool m_open;
 };
 
 #endif
