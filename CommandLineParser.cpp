@@ -9,8 +9,8 @@ CommandLineParser::CommandLineParser() :
 {
   m_generalOptions.add_options()
     ("help,h",              "Show usage and help")
-    ("show-original,so",    po::value<bool>(),        "Show the original capture in a window")
-    ("show-unwrap,su",      po::value<bool>(),        "Show the unwrapped image in a window")
+    ("show-original,so",    "Show the original capture in a window")
+    ("show-unwrap,su",      "Show the unwrapped image in a window")
     ("config,c",            po::value<std::string>(), "Load unwrap parameters from config file")
     ("output-config,oc",    po::value<std::string>(), "Overwrite the config file with new parameters")
     ;
@@ -98,12 +98,12 @@ void CommandLineParser::parse(int argc, char **argv)
   //GENERAL OPTIONS
   if(vm.count("show-original"))
   {
-    m_captureParams->mode[MODE_SHOW_ORIGINAL] = vm["show-original"].as<bool>();
+    m_captureParams->mode[MODE_SHOW_ORIGINAL] = true;
   }
 
   if(vm.count("show-unwrap"))
   {
-    m_captureParams->mode[MODE_SHOW_UNWRAP] = vm["show-unwrap"].as<bool>();
+    m_captureParams->mode[MODE_SHOW_UNWRAP] = true;
   }
 
   //CAPTURE OPTIONS

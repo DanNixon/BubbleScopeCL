@@ -92,10 +92,6 @@ int main(int argc, char **argv)
   BubbleScopeCaptureParams captureParams = parser.getCaptureParams();
   BubbleScopeUnwrapParams unwrapParams = parser.getUnwrapParams();
 
-  //TODO: Temp.
-  captureParams.print(std::cout);
-  unwrapParams.print(std::cout);
-
   //Get the correct capture source and open it
   FrameSource *cap;
   switch(captureParams.captureSource)

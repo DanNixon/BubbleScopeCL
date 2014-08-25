@@ -23,7 +23,7 @@ enum BubbleScopeCaptureMode
  */
 enum BubbleScopeCaptureSource
 {
-  SOURCE_V4L2,
+  SOURCE_V4L2     = 0,
   SOURCE_VIDEO,
   SOURCE_STILL,
   SOURCE_TIMELAPSE
