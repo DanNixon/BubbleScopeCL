@@ -14,11 +14,10 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
-#include "bubblescope_capture_params.h"
 #include "BubbleScopeUnwrapper.h"
-#include "command_line_params.h"
+#include "CommandLineParser.h"
+#include "Configuration.h"
 #include "Timer.h"
-#include "config_file.h"
 
 #include "FrameSource/FrameSource.h"
 #include "FrameSource/V4L2Source.h"
@@ -80,84 +79,45 @@ int main(int argc, char **argv)
   stillCapSigHandler.sa_flags = 0;
   sigaction(SIGUSR1, &stillCapSigHandler, NULL);
 
-  //Get some storage for parameters
-  BubbleScopeParameters params;
-  setupDefaultParameters(&params);
+  //Get command line parameters
+  CommandLineParser parser;
+  parser.parse(argc, argv);
 
-  //Get parameters
-  switch(getParameters(&params, argc, argv))
+  if(parser.helpWanted())
   {
-    case 0:     //All is good, carry on
-      break;
-    case HELP:  //User wants help
-      printf("BubbleScopeCL\n");
-      printf("See https://github.com/DanNixon/BubbleScopeCL for more info.\n");
-      printf("\n");
-      printParameterUsage();
-      return 0;
-      break;
-    default:    //Parameter error
-      printf("Invalid parameters!\n");
-      printf("See https://github.com/DanNixon/BubbleScopeCL for more info.\n");
-      printParameterUsage();
-      return 1;
+    parser.printUsage(std::cout);
+    return 0;
   }
+
+  BubbleScopeCaptureParams captureParams = parser.getCaptureParams();
+  BubbleScopeUnwrapParams unwrapParams = parser.getUnwrapParams();
 
   //Get the correct capture source and open it
   FrameSource *cap;
-  switch(params.captureSource)
+  switch(captureParams.captureSource)
   {
     case SOURCE_V4L2:
       cap = new V4L2Source();
       dynamic_cast<V4L2Source *>(cap)->setCaptureSize(
-          params.originalWidth, params.originalHeight);
+          captureParams.originalWidth, captureParams.originalHeight);
       break;
     case SOURCE_VIDEO:
       cap = new VideoFileSource();
-      params.unwrapCapture = true;
+      captureParams.unwrapCapture = true;
       loopDelayTime = 0;
       break;
     case SOURCE_STILL:
       cap = new ImageFileSource();
-      params.unwrapCapture = true;
+      captureParams.unwrapCapture = true;
       loopDelayTime = 0;
       break;
     case SOURCE_TIMELAPSE:
       cap = new TimelapseSource();
-      params.unwrapCapture = true;
+      captureParams.unwrapCapture = true;
       loopDelayTime = 0;
       break;
   }
-  cap->open(params.captureLocation);
-
-  //Get filename without type
-  std::string::size_type dotIndex = params.captureLocation.find('.');
-  std::string filenameBase;
-  if(dotIndex == std::string::npos)
-    filenameBase = params.captureLocation;
-  else
-    filenameBase = params.captureLocation.substr(0, dotIndex);
-
-  //Set default filenames
-  if(params.outputFilename[MODE_VIDEO] == "NONE")
-    params.outputFilename[MODE_VIDEO] = filenameBase + "_unwrap.mkv";
-  if(params.outputFilename[MODE_STILLS] == "NONE")
-    params.outputFilename[MODE_STILLS] = filenameBase + "_unwrap_%d.jpg";
-  if(params.outputFilename[MODE_TIMELAPSE] == "NONE")
-    params.outputFilename[MODE_TIMELAPSE] = filenameBase + "_unwrap_tl_%d.jpg";
-  if(params.outputFilename[MODE_MJPG] == "NONE")
-    params.outputFilename[MODE_MJPG] = filenameBase + "_unwrap_frame.jpg";
-  if(params.configFilename[CONFIG_WRITE] == "DEFAULT")
-    params.configFilename[CONFIG_WRITE] = filenameBase + ".conf";
-
-  //Dont show video display windows unless using V4L2
-  if(params.captureSource != SOURCE_V4L2)
-  {
-    params.mode[MODE_SHOW_ORIGINAL] = 0;
-    params.mode[MODE_SHOW_UNWRAP] = 0;
-    params.mode[MODE_MJPG] = 0;
-    params.mode[MODE_VIDEO] = 0;
-  }
+  cap->open(captureParams.captureLocation);
 
   //Check capture is working
   if(!cap->isOpen())
@@ -166,65 +126,92 @@ int main(int argc, char **argv)
     return 2;
   }
 
+  //Get filename without type
+  std::string::size_type dotIndex = captureParams.captureLocation.find('.');
+  std::string filenameBase;
+  if(dotIndex == std::string::npos)
+    filenameBase = captureParams.captureLocation;
+  else
+    filenameBase = captureParams.captureLocation.substr(0, dotIndex);
+
+  //Set default filenames
+  if(captureParams.outputFilename[MODE_VIDEO] == "NONE")
+    captureParams.outputFilename[MODE_VIDEO] = filenameBase + "_unwrap.mkv";
+  if(captureParams.outputFilename[MODE_STILLS] == "NONE")
+    captureParams.outputFilename[MODE_STILLS] = filenameBase + "_unwrap_%d.jpg";
+  if(captureParams.outputFilename[MODE_TIMELAPSE] == "NONE")
+    captureParams.outputFilename[MODE_TIMELAPSE] = filenameBase + "_unwrap_tl_%d.jpg";
+  if(captureParams.outputFilename[MODE_MJPG] == "NONE")
+    captureParams.outputFilename[MODE_MJPG] = filenameBase + "_unwrap_frame.jpg";
+
+  //Dont show video display windows unless using V4L2
+  if(captureParams.captureSource != SOURCE_V4L2)
+  {
+    captureParams.mode[MODE_SHOW_ORIGINAL] = 0;
+    captureParams.mode[MODE_SHOW_UNWRAP] = 0;
+    captureParams.mode[MODE_MJPG] = 0;
+    captureParams.mode[MODE_VIDEO] = 0;
+  }
+
   //Update capture parameters with actual values
-  params.originalWidth = cap->getWidth();
-  params.originalHeight = cap->getHeight();
+  captureParams.originalWidth = cap->getWidth();
+  captureParams.originalHeight = cap->getHeight();
 
   //Setup the image unwrapper
   BubbleScopeUnwrapper unwrapper;
-  if(params.unwrapCapture)
+  if(captureParams.unwrapCapture)
   {
-    unwrapper.unwrapWidth(params.unwrapWidth);
-    unwrapper.originalCentre(params.uCentre, params.vCentre);
-    unwrapper.imageRadius(params.radiusMin, params.radiusMax);
-    unwrapper.offsetAngle(params.offsetAngle);
-    unwrapper.originalSize(params.originalWidth, params.originalHeight);
+    unwrapper.unwrapWidth(unwrapParams.unwrapWidth);
+    unwrapper.originalCentre(unwrapParams.uCentre, unwrapParams.vCentre);
+    unwrapper.imageRadius(unwrapParams.radiusMin, unwrapParams.radiusMax);
+    unwrapper.offsetAngle(unwrapParams.offsetAngle);
+    unwrapper.originalSize(captureParams.originalWidth, captureParams.originalHeight);
     unwrapper.generateTransformation();
   }
 
   //Get the input video frame rate if used
-  if(params.captureSource == SOURCE_VIDEO)
-    params.fps = dynamic_cast<VideoFileSource *>(cap)->getFrameRate();
+  if(captureParams.captureSource == SOURCE_VIDEO)
+    captureParams.fps = dynamic_cast<VideoFileSource *>(cap)->getFrameRate();
 
   //The container for captured frames
   cv::Mat frame;
 
-  if(params.sampleFPS &&
-      params.mode[MODE_VIDEO] &&
-      params.captureSource == SOURCE_V4L2)
+  if(captureParams.sampleFPS &&
+      captureParams.mode[MODE_VIDEO] &&
+      captureParams.captureSource == SOURCE_V4L2)
   {
     printf("Measuring V4L2 capture frame rate over %d frames...\n",
-        params.sampleFPS);
+        captureParams.sampleFPS);
     unsigned int frames = 0;
     Timer fpsSampleTimer;
     fpsSampleTimer.start();
-    while(frames < params.sampleFPS)
+    while(frames < captureParams.sampleFPS)
     {
       cap->grab(&frame);
       delay(loopDelayTime);
       frames++;
     }
     fpsSampleTimer.stop();
-    double measuredFPS = (double) params.sampleFPS /
+    double measuredFPS = (double) captureParams.sampleFPS /
       (fpsSampleTimer.getElapsedTimeInMilliSec() / 1000.0f);
     printf("Measured %f FPS\n", measuredFPS);
-    params.fps = measuredFPS;
+    captureParams.fps = measuredFPS;
   }
 
-  if(params.forceFPS > 0.0f)
-    params.fps = params.forceFPS;
+  if(captureParams.forceFPS > 0.0f)
+    captureParams.fps = captureParams.forceFPS;
 
   //Setup video output
   cv::VideoWriter videoOut;
-  if(params.mode[MODE_VIDEO])
+  if(captureParams.mode[MODE_VIDEO])
   {
     cv::Size videoSize;
-    if(params.unwrapCapture)
-      videoSize = cv::Size(params.unwrapWidth, unwrapper.getUnwrapHeight());
+    if(captureParams.unwrapCapture)
+      videoSize = cv::Size(unwrapParams.unwrapWidth, unwrapper.getUnwrapHeight());
     else
-      videoSize = cv::Size(params.originalWidth, params.originalHeight);
-    videoOut.open(params.outputFilename[MODE_VIDEO].c_str(),
-        CV_FOURCC('M','J','P','G'), params.fps, videoSize, true);
+      videoSize = cv::Size(captureParams.originalWidth, captureParams.originalHeight);
+    videoOut.open(captureParams.outputFilename[MODE_VIDEO].c_str(),
+        CV_FOURCC('M','J','P','G'), captureParams.fps, videoSize, true);
     if(!videoOut.isOpened())
       printf("Can't open video output file! (will continue with capture)\n");
   }
@@ -233,19 +220,13 @@ int main(int argc, char **argv)
   Timer *timelapseTimer;
 
   //Tell the user how things are going to happen
-  printf("Capture parameters:\n");
-  printParameters(&params);
-  printf("\n");
+  std::cout << "Capture/output properties:" << std::endl;
+  captureParams.print(std::cout);
+  std::cout << "Unwrap properties:" << std::endl;
+  unwrapParams.print(std::cout);
 
   //Save the config to file
-  if(params.configFilename[CONFIG_WRITE] != "NONE")
-  {
-    if(!writeConfigToFile(&params))
-    {
-      printf("Could not write config file %s\n",
-          params.configFilename[CONFIG_WRITE].c_str());
-    }
-  }
+  //TODO
 
   //Number of still frames already captures, used for filename formatting
   unsigned long stillFrameNumber = 0;
@@ -254,7 +235,7 @@ int main(int argc, char **argv)
   printf("Starting capture/conversion.\n");
 
   //Start timelapse timing
-  if(params.mode[MODE_TIMELAPSE])
+  if(captureParams.mode[MODE_TIMELAPSE])
   {
     timelapseTimer = new Timer();
     timelapseTimer->start();
@@ -272,38 +253,38 @@ int main(int argc, char **argv)
 
     //Unwrap it
     cv::Mat *unwrap;
-    if(params.unwrapCapture)
+    if(captureParams.unwrapCapture)
       unwrapper.unwrap(&frame, &unwrap);
     else
       unwrap = &frame;
 
     //Show the original image if asked to
-    if(params.mode[MODE_SHOW_ORIGINAL])
+    if(captureParams.mode[MODE_SHOW_ORIGINAL])
       imshow("BubbleScope Original Image", frame);
 
     //Show the unwrapped image if asked to
-    if(params.mode[MODE_SHOW_UNWRAP])
+    if(captureParams.mode[MODE_SHOW_UNWRAP])
       imshow("BubbleScope Unwrapped Image", *unwrap);
   
     //Record video if asked to
-    if(params.mode[MODE_VIDEO])
+    if(captureParams.mode[MODE_VIDEO])
       videoOut.write(*unwrap);
 
     //Save an MJPG frame if asked to
-    if(params.mode[MODE_MJPG] || params.mode[MODE_SINGLE_STILL])
-      imwrite(params.outputFilename[MODE_MJPG], *unwrap);
+    if(captureParams.mode[MODE_MJPG] || captureParams.mode[MODE_SINGLE_STILL])
+      imwrite(captureParams.outputFilename[MODE_MJPG], *unwrap);
 
     //If time has elepsed save a timelapse frame
-    if(params.mode[MODE_TIMELAPSE] &&
+    if(captureParams.mode[MODE_TIMELAPSE] &&
         ((timelapseTimer->getElapsedTimeInMilliSec() >
-         params.mode[MODE_TIMELAPSE])
-         || params.captureSource == SOURCE_TIMELAPSE))
+         captureParams.mode[MODE_TIMELAPSE])
+         || captureParams.captureSource == SOURCE_TIMELAPSE))
     {
       //Format filename with frame number
       int filenameLen =
-        strlen(params.outputFilename[MODE_TIMELAPSE].c_str()) + 5;
+        strlen(captureParams.outputFilename[MODE_TIMELAPSE].c_str()) + 5;
       char timelapseFilename[filenameLen];
-      sprintf(timelapseFilename, params.outputFilename[MODE_TIMELAPSE].c_str(),
+      sprintf(timelapseFilename, captureParams.outputFilename[MODE_TIMELAPSE].c_str(),
           timelapseFrameNumber);
       //Save timelapse frame
       imwrite(timelapseFilename, *unwrap);
@@ -314,7 +295,7 @@ int main(int argc, char **argv)
       timelapseTimer->start();
     }
 
-    if(params.mode[MODE_SHOW_ORIGINAL] || params.mode[MODE_SHOW_UNWRAP])
+    if(captureParams.mode[MODE_SHOW_ORIGINAL] || captureParams.mode[MODE_SHOW_UNWRAP])
     {
       char keyPress = cv::waitKey(loopDelayTime);
       switch(keyPress)
@@ -334,7 +315,7 @@ int main(int argc, char **argv)
       delay(loopDelayTime);
     
     //Handle specific capture loop exit conditions
-    switch(params.captureSource)
+    switch(captureParams.captureSource)
     {
       case SOURCE_STILL:
         run = false;
@@ -347,12 +328,12 @@ int main(int argc, char **argv)
         break;
     }
 
-    if(params.mode[MODE_STILLS] && captureStill)
+    if(captureParams.mode[MODE_STILLS] && captureStill)
     {
       //Format filename with frame number
-      int filenameLen = strlen(params.outputFilename[MODE_STILLS].c_str()) + 5;
+      int filenameLen = strlen(captureParams.outputFilename[MODE_STILLS].c_str()) + 5;
       char stillFilename[filenameLen];
-      sprintf(stillFilename, params.outputFilename[MODE_STILLS].c_str(),
+      sprintf(stillFilename, captureParams.outputFilename[MODE_STILLS].c_str(),
           stillFrameNumber);
       printf("Saving still image: %s\n", stillFilename);
       //Save still image
@@ -362,7 +343,7 @@ int main(int argc, char **argv)
     }
 
     //Done a single capture, can now exit
-    if(params.mode[MODE_SINGLE_STILL])
+    if(captureParams.mode[MODE_SINGLE_STILL])
       run = false;
   }
 

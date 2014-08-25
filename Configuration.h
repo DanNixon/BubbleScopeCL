@@ -1,14 +1,8 @@
-/**
- * \brief BubbleScopeCL capture parameter functions.
- *
- * \author Dan Nixon
- */
+#ifndef CONFIGURATION_H
+#define CONFIGURATION_H
 
-#ifndef BUBBLESCOPECAPPARMAS_H
-#define BUBBLESCOPECAPPARMAS_H
-
-#include <stdio.h>
-#include <string>
+#include <iostream>
+#include <map>
 
 /**
  * \brief Defines capture modes
@@ -29,46 +23,58 @@ enum BubbleScopeCaptureMode
  */
 enum BubbleScopeCaptureSource
 {
-  SOURCE_V4L2,
+  SOURCE_V4L2     = 0,
   SOURCE_VIDEO,
   SOURCE_STILL,
   SOURCE_TIMELAPSE
 };
 
 /**
- * \brief Config file directions
+ * \brief Stores user options defining capture properties.
  */
-enum BubbleScopeConfigFile
+struct BubbleScopeCaptureParams
 {
-  CONFIG_READ,
-  CONFIG_WRITE
+  std::map<BubbleScopeCaptureMode, bool> mode;
+  std::map<BubbleScopeCaptureMode, std::string> outputFilename;
+
+  BubbleScopeCaptureSource captureSource;
+  std::string captureLocation;
+
+  unsigned int originalWidth;
+  unsigned int originalHeight;
+
+  bool unwrapCapture;
+
+  double fps;
+  unsigned int sampleFPS;
+  double forceFPS;
+
+  void print(std::ostream& stream);
+
+  BubbleScopeCaptureParams();
 };
 
 /**
- * \brief Stores user options defining capture properties.
+ * \brief Stores user options defining unwrap parameters.
  */
-struct BubbleScopeParameters
+struct BubbleScopeUnwrapParams
 {
-  BubbleScopeCaptureSource captureSource;
-  std::string captureLocation;
-  unsigned int originalWidth;
-  unsigned int originalHeight;
-  bool unwrapCapture;
   unsigned int unwrapWidth;
   float radiusMin;
   float radiusMax;
   float uCentre;
   float vCentre;
   float offsetAngle;
-  unsigned int mode[7];
-  std::string outputFilename[4];
-  float fps;
-  unsigned int sampleFPS;
-  float forceFPS;
-  std::string configFilename[2];
-};
 
-void setupDefaultParameters(BubbleScopeParameters *);
-void printParameters(BubbleScopeParameters *);
+  template<class Archive>
+  void serialize(Archive & ar,
+      const unsigned int version);
+
+  void print(std::ostream& stream);
+  void load(std::string filename);
+  void save(std::string filename);
+
+  BubbleScopeUnwrapParams();
+};
 
 #endif
