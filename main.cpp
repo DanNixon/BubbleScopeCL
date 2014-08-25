@@ -119,6 +119,13 @@ int main(int argc, char **argv)
   }
   cap->open(captureParams.captureLocation);
 
+  //Check capture is working
+  if(!cap->isOpen())
+  {
+    printf("Can't open image capture source!\n");
+    return 2;
+  }
+
   //Get filename without type
   std::string::size_type dotIndex = captureParams.captureLocation.find('.');
   std::string filenameBase;
@@ -144,13 +151,6 @@ int main(int argc, char **argv)
     captureParams.mode[MODE_SHOW_UNWRAP] = 0;
     captureParams.mode[MODE_MJPG] = 0;
     captureParams.mode[MODE_VIDEO] = 0;
-  }
-
-  //Check capture is working
-  if(!cap->isOpen())
-  {
-    printf("Can't open image capture source!\n");
-    return 2;
   }
 
   //Update capture parameters with actual values
