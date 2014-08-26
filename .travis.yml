@@ -29,7 +29,7 @@ env:
 addons:
   coverity_scan:
     project:
-      name: "DanNixon/BubbleScopeCL"
+      name: "BubbleScopeCL"
       description: "A BubbleScope 360 degree image capture and processing tool"
     notification_email: dan@dan-nixon.com
     build_command_prepend: "cmake ."
