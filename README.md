@@ -17,13 +17,8 @@ Note that there are very few cameras that this works well with,
 the best I can find, the best ones are those with a very short distance between
 the focusing lens and the image sensor (similar to the Raspberry Pi camera).
 
-Usage
-=====
-
-TODO
-
-Examples
---------
+Usage Examples
+--------------
 
 Note that calibration parameters (`--min-radius`, `--max-radius`, `--u-centre`,
 `--v-centre`) will almost always be needed in addition to any other parameters
